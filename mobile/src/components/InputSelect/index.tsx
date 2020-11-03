@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { RectButton } from 'react-native-gesture-handler';
-import ModalPicker from '../ModalPicker';
+import Modal from 'react-native-modal';
+
+import ModalPicker from '../ModalPicker'; 
+
 
 interface InputSelectProps {
   placeholder: string;
   icon: string;
-  titlePrimary?: string;
-  titleSecondary?: string;
+  // titlePrimary?: string;
+  // titleSecondary?: string;
   onClose?: () => void;
   // visible: boolean;
   // items: string[];
   // title: string;
   // onClose: () => void;
-  // onSelect: (value: string) => void;
+  onSelect?: (value: string) => void;
   // value?: string;
 }
 
-export default function InputSelect({placeholder,icon,titlePrimary,titleSecondary}: InputSelectProps) {
+export default function InputSelect({placeholder,icon}: InputSelectProps) {
   const [visible, setVisible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
-
-  function closeModal() {
-    setVisible(!visible)
-  }
+  const [selectedMasculino, setSelectedMasculino] = useState(false);
+  const [selectedFeminino, setSelectedFeminino] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -41,31 +41,29 @@ export default function InputSelect({placeholder,icon,titlePrimary,titleSecondar
           color="#f0f0f5" 
         />
       </RectButton>
-      {/* <Modal 
-        animationType="fade"
-        visible={visible}
-        transparent
-        onRequestClose={closeModal}
+      <Modal 
+        onBackButtonPress={() => setVisible(!visible)}
+        onBackdropPress={() => setVisible(!visible)}
+        isVisible={visible}
+        
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.pickerContainer}>
-            <RectButton style={styles.buttonPickerContainer} onPress={closeModal}>
-              <Text style={styles.title} >Masculino</Text>
-            </RectButton>
-            <RectButton style={styles.buttonPickerContainer}>
-              <Text style={styles.title}>{titleSecondary}</Text>
-            </RectButton>
-          </View>
+        <View style={styles.pickerContainer}>
+          <Pressable 
+            style={styles.buttonPickerContainer}
+            android_ripple={{color: "#222"}} 
+            onPress={() => setVisible(!visible)}
+          >
+            <Text style={styles.title} >Masculino</Text>
+          </Pressable>
+          <Pressable 
+            style={styles.buttonPickerContainer}
+            android_ripple={{color: "#222"}} 
+            onPress={() => setVisible(!visible)}
+          >
+            <Text style={styles.title}>Feminino</Text>
+          </Pressable>
         </View>
-      </Modal> */}
-      <ModalPicker 
-        visible={visible} 
-        titlePrimary="Masculino" 
-        titleSecondary="Feminino" 
-        onClose={() => { setVisible(!visible) }}
-        selectedValue={selectedValue}
-        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-      />
+      </Modal>
     </View>
   );
 }

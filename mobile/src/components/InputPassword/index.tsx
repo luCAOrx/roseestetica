@@ -25,21 +25,16 @@ export default function InputPassword({ placeholder,  returnKeyType, icon }: Inp
         returnKeyType={returnKeyType}
         autoCorrect={false}
       />
-    <BorderlessButton 
-      style={styles.iconVisibility} 
-      onPress={
-        ()=>{
-          setShow(!show)
-          setVisible(!visible)
-        }
-      }>
-      <MaterialIcons 
-        name={show === false ? 'visibility-off' : 'visibility'} 
-        size={20} 
-        color={show === false ? '#7a7a7a' : '#f0f0f5'} 
-      />
-    </BorderlessButton>
-
+      <BorderlessButton 
+        style={styles.iconVisibility} 
+        onPress={() => {setShow(!show), setVisible(!visible)}}
+      >
+        <MaterialIcons 
+          name={show === false ? 'visibility-off' : 'visibility'} 
+          size={20} 
+          color={show === false ? '#7a7a7a' : '#f0f0f5'} 
+        />
+      </BorderlessButton>
     </View>
   )
 }
