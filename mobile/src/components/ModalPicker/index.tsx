@@ -1,65 +1,65 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { PickerProps, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import Modal from 'react-native-modal';
 
-interface ModalPickerProps extends PickerProps {
-  placeholder?: string;
-  icon?: string;
+type ItemValue = string | number;
+
+interface PickerItemProps {
+	label?: string;
+	value: ItemValue;
+	color?: string;
+	testID?: string;
+}
+
+interface ModalPickerProps {
   visible?: boolean;
-  items?: string[];
   titlePrimary: string;
   titleSecondary: string;
-  onClose?: () => void;
-  onSelect?: (value: string) => void;
-  iTemValue?: string;
+  onClose: () => void;
+  onValueChange?: (itemValue: ItemValue, itemIndex: number) => void;
+  selectedValue?: ItemValue;
+	value?: ItemValue;
 }
 
 export default function ModalPicker(
   {
-    placeholder,
-    icon,
     visible,
-    items,
     titlePrimary,
     titleSecondary,
-    iTemValue,
+    selectedValue,
     onClose,
-    onSelect,
     onValueChange,
-    selectedValue
+    value,
   }: ModalPickerProps) {
   return (
-  <View style={styles.container}>
-    <Modal 
-      // animationType="slide"
-      // visible={visible}
-      // transparent
-      // onRequestClose={onClose}
-      onBackButtonPress={onClose}
-      onBackdropPress={onClose}
-      isVisible={visible}
-      
-    >
-      <View style={styles.pickerContainer}>
-        <Pressable 
-          style={styles.buttonContainer}
-          android_ripple={{color: "#222"}} 
-          onPress={onClose}
-        >
-          <Text style={styles.title}>{titlePrimary}</Text>
-        </Pressable>
-        <Pressable 
-          style={styles.buttonContainer}
-          android_ripple={{color: "#222"}} 
-          onPress={onClose}
-        >
-          <Text style={styles.title}>{titleSecondary}</Text>
-        </Pressable>
-      </View>
-    </Modal>
-  </View>
+    <View style={styles.container}>
+      <Modal 
+        onBackButtonPress={onClose}
+        onBackdropPress={onClose}
+        isVisible={visible}
+      >
+        <View style={styles.pickerContainer}>
+          <Pressable 
+            style={styles.buttonContainer}
+            android_ripple={{color: "#222"}} 
+            onPress={onClose}
+            {...selectedValue}
+            {...onValueChange}
+          >
+            <Text style={styles.title} {...value}>{titlePrimary}</Text>
+          </Pressable>
+          <Pressable 
+            style={styles.buttonContainer}
+            android_ripple={{color: "#222"}} 
+            onPress={onClose}
+          >
+            <Text style={styles.title}>{titleSecondary}</Text>
+          </Pressable>
+        </View>
+      </Modal>
+    </View>
   );
 }
 

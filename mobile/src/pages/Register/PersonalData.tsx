@@ -5,12 +5,12 @@ import { useNavigation } from '@react-navigation/native';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import InputSelect from '../../components/InputSelect';
+import CustomPicker from '../../components/CustomPicker';
 
 export default function PersonalData() {
   const navigation = useNavigation();
 
-  const customStyles = {
+  const stepStyles = {
     stepStrokeCurrentColor: "#2FB86E",
     stepIndicatorCurrentColor: "#f0f0f5",
     stepIndicatorFinishedColor: "#2FB86E",
@@ -27,7 +27,7 @@ export default function PersonalData() {
 
   return (
     <View style={styles.container}>
-      <StepIndicator stepCount={3} customStyles={customStyles}/>
+      <StepIndicator stepCount={3} customStyles={stepStyles}/>
       <View style={styles.input}>
         <Input 
           placeholder="Nome completo"
@@ -45,7 +45,7 @@ export default function PersonalData() {
           />
       </View>
       <View style={styles.inputChildren}>
-        <InputSelect placeholder="Sexo" icon="face"/>
+        <CustomPicker placeholder="Sexo" icon="face"/>
       </View>
       <View style={styles.inputChildren}>
         <Input 

@@ -12,7 +12,7 @@ interface InputPasswordProps {
 
 export default function InputPassword({ placeholder,  returnKeyType, icon }: InputPasswordProps) {
   const [show, setShow] = useState(false);
-  const [visible, setVisible] = useState(true);
+  const [visiblePassword, setVisiblePassword] = useState(true);
   
   return (
     <View style={styles.container}>
@@ -21,13 +21,13 @@ export default function InputPassword({ placeholder,  returnKeyType, icon }: Inp
         style={{flex: 1, color: '#f0f0f5'}}
         placeholder={placeholder}
         placeholderTextColor='#7A7A7A'
-        secureTextEntry={visible}
+        secureTextEntry={visiblePassword}
         returnKeyType={returnKeyType}
         autoCorrect={false}
       />
       <BorderlessButton 
         style={styles.iconVisibility} 
-        onPress={() => {setShow(!show), setVisible(!visible)}}
+        onPress={() => {setShow(!show), setVisiblePassword(!visiblePassword)}}
       >
         <MaterialIcons 
           name={show === false ? 'visibility-off' : 'visibility'} 
