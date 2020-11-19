@@ -3,13 +3,11 @@ import { KeyboardType, ReturnKeyType, StyleSheet, TextInput, TextInputProps, Vie
 import { MaterialIcons } from '@expo/vector-icons';
 
 interface InputProps extends TextInputProps {
-  placeholder: string;
-  keyboardType?: KeyboardType;
-  returnKeyType?: ReturnKeyType;
-  icon: string;
+  placeholder?: string;
+  icon?: string | any;
 }
 
-export default function Input({ placeholder, keyboardType, returnKeyType, icon }: InputProps) {
+export default function Input({ placeholder, icon, ...rest }: InputProps) {
   return (
     <View style={styles.container}>
       <MaterialIcons style={styles.icon} name={icon} size={20} color={'#f0f0f5'} />
@@ -17,8 +15,7 @@ export default function Input({ placeholder, keyboardType, returnKeyType, icon }
         style={{flex: 1, color: '#f0f0f5'}}
         placeholder={placeholder}
         autoCorrect={false}
-        keyboardType={keyboardType}
-        returnKeyType={returnKeyType}
+        {...rest}
         keyboardAppearance='dark'
         placeholderTextColor='#7A7A7A'
       />

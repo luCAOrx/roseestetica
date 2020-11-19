@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import CustomPicker from '../../components/CustomPicker';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function PersonalData() {
   const navigation = useNavigation();
@@ -26,64 +27,47 @@ export default function PersonalData() {
   }
 
   return (
-    <View style={styles.container}>
-      <StepIndicator stepCount={3} customStyles={stepStyles}/>
-      <View style={styles.input}>
-        <Input 
-          placeholder="Nome completo"
-          icon="person"
-          autoCapitalize="words"
-          returnKeyType="next"
-        />
-      </View>
-      <View style={styles.inputChildren}>
-        <Input 
-          placeholder="Cpf"
-          icon="fingerprint"
-          keyboardType="numeric"
-          returnKeyType="next"
+    <ScrollView>
+      <View style={styles.container}>
+        <StepIndicator stepCount={3} customStyles={stepStyles}/>
+        <View style={styles.inputContainer}>
+          <Input 
+            placeholder="Nome completo"
+            icon="person"
+            autoCapitalize="words"
+            returnKeyType="next"
           />
+          <Input 
+            placeholder="Cpf"
+            icon="fingerprint"
+            keyboardType="numeric"
+            returnKeyType="next"
+            />
+          <CustomPicker />
+          <Input 
+            placeholder="Número de telefone" 
+            icon="local-phone" 
+            keyboardType="number-pad"
+            returnKeyType="next"
+          />
+          <Input 
+            placeholder="Número de celular" 
+            icon="phone-android" 
+            keyboardType="number-pad"
+            returnKeyType="send"
+          />
+          <Button title="PRÓXIMO" onPress={handleNavigateToAddress} />
+        </View>
       </View>
-      <View style={styles.inputChildren}>
-        <CustomPicker placeholder="Sexo" icon="face"/>
-      </View>
-      <View style={styles.inputChildren}>
-        <Input 
-          placeholder="Número de telefone" 
-          icon="local-phone" 
-          keyboardType="number-pad"
-          returnKeyType="next"
-        />
-      </View>
-      <View style={styles.inputChildren}>
-        <Input 
-          placeholder="Número de celular" 
-          icon="phone-android" 
-          keyboardType="number-pad"
-          returnKeyType="send"
-        />
-      </View>
-      <View style={styles.button}>
-        <Button title="PRÓXIMO" onPress={handleNavigateToAddress} />
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // padding: 16,
+    flex: 1
   },
-  input: {
+  inputContainer: {
     marginTop: 40,
-  },
-  inputChildren: {
-    // marginTop: 5,
-  },
-  icon: {
-    marginLeft: 10
-  },
-  button: {
-    marginTop: 60
   }
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,21 +19,23 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={logoImg} />
-      <View style={styles.inputEmail}>
-        <Input 
-          autoCapitalize='words'
-          keyboardType='email-address'
-          returnKeyType='next'
-          placeholder='E-mail'
-          icon='email'
-        />
-      </View>
-      <View style={styles.inputPassword}>
-        <InputPassword 
-          returnKeyType='send'
-          placeholder='Senha'
-          icon='lock'
-        />
+      <View style={styles.inputContainer}>
+        <View style={styles.inputEmail}>
+          <Input 
+            autoCapitalize='words'
+            keyboardType='email-address'
+            returnKeyType='next'
+            placeholder='E-mail'
+            icon='email'
+          />
+        </View>
+        <View style={styles.inputPassword}>
+          <InputPassword 
+            returnKeyType='send'
+            placeholder='Senha'
+            icon='lock'
+          />
+        </View>
       </View>
       <View style={styles.button}>
         <Button title="ENTRAR"/>
@@ -53,24 +55,27 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   container: {
-    // padding: 16,
-    marginTop: 50,
+    flex: 1,
+    // marginTop: 100,
+    justifyContent: "center",
     backgroundColor: '#000',
-    // justifyContent: 'center',
   },
   logo: {
-    width: '100%',
+    marginTop: 50,
+    width: Dimensions.get("window").width,
     resizeMode: 'contain',
-    marginTop: 80
+  },
+  inputContainer: {
+    marginTop: 50
   },
   inputEmail: {
-    marginTop: 100,
+    // marginTop: 5,
   },
   inputPassword: {
-    marginTop: 20,
+    // marginTop: 5,
   },
   button: {
-    marginTop: 50,
+    marginTop: 10,
   },
   title: {
     fontFamily: 'Roboto_700Bold',
@@ -80,13 +85,13 @@ const styles = StyleSheet.create({
   },
   createAnAccount: {
     height: 50,
-    marginTop: 70,
+    marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   forgotPassowrd: {
     height: 50,
-    marginTop: 20,
+    marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },

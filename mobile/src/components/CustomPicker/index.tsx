@@ -1,85 +1,92 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
-import { RectButton } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 
-import ModalPicker from '../ModalPicker'; 
-import Select from './SexPicker/select';
-
-interface InputSelectProps {
-  placeholder: string;
-  icon: string;
-}
-
-export default function CustomPicker({placeholder, icon}: InputSelectProps) {
+export default function CustomPicker() {
   const [visible, setVisible] = useState<boolean>(false);
-  const [male, setMale] = useState<string>("Masculino");
-  const [feminine, setFeminine] = useState<string>("Feminino");
+  const [selectedValue, setSelectedValue] = useState<string>("");
 
   return (
-    <View style={styles.container}>
-      <RectButton 
-        style={styles.buttonContainer} 
-        onPress={() => setVisible(!visible)}
+    <View>
+      <Pressable onPress={() => setVisible(!visible)}>
+        <View style={styles.input} >
+          <MaterialIcons style={styles.icon} name="face" size={20} color={'#f0f0f5'} />
+          <TextInput 
+            style={{flex: 1}}
+            placeholder={`${selectedValue ? selectedValue : "Sexo"}`}
+            placeholderTextColor={selectedValue ? "#f0f0f5" : "#7a7a7a"}
+            editable={false} 
+          />
+        </View>
+      </Pressable>
+      <Modal
+        backdropColor="rgba(0,0,0,0.9)"
+        useNativeDriver={true}
+        onBackButtonPress={() => setVisible(!visible)}
+        onBackdropPress={() => setVisible(!visible)}
+        isVisible={visible}
       >
-        <MaterialIcons style={styles.iconFace} name={icon} size={20} color="#f0f0f5" />
-        <Text style={styles.placeholder} >{<Text style={styles.title}>{male}</Text>}</Text>
-      </RectButton>
-      <Select 
-        visible={visible}
-        onClose={() => setVisible(!visible)}
-        // selectedValue={selectedValue}
-        // onValueChange={(itemValue, itemIndex) => setMale(male)}
-      />
+        <Pressable 
+          style={styles.button} 
+          android_ripple={{color: "rgba(0,0,0,0.1)"}}
+          onPress={() => {setVisible(!visible), setSelectedValue("Masculino"), console.log(selectedValue)}}
+        >
+          <TextInput 
+            style={styles.text} 
+            editable={false} 
+          >
+            Masculino
+          </TextInput>
+        </Pressable>
+        <Pressable 
+          style={styles.button} 
+          android_ripple={{color: "rgba(0,0,0,0.1)"}}
+          onPress={() => {setVisible(!visible), setSelectedValue("Feminino"), console.log(selectedValue)}}
+        >
+          <TextInput 
+            style={styles.text} 
+            editable={false} 
+          >
+            Feminino
+          </TextInput>
+        </Pressable>
+      </Modal>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: 50,
+  input: {
     margin: 15,
+    height: 50,
 
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    backgroundColor: '#1e222b',
+    color: "#f0f0f5",
 
     borderRadius: 8,
-    backgroundColor: "#1e222b"
+    
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  iconFace: {
+  icon: {
     margin: 10
   },
-  iconArroDown: {
-    marginRight: 15
-  },
-  buttonContainer: {
-    height: 50,
-    width: 382,
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  placeholder: {
-    color: "#7a7a7a",
-
-    marginRight: 276
-  },
-  pickerContainer: {
-    margin: 50,
-
-    backgroundColor: "#222"
-  },
-  buttonPickerContainer: {
-    height: 70,
-
-    backgroundColor: "#333",
+  button: {
+    marginTop: 2,
+    height: 60,
+    marginRight: 20,
+    marginLeft: 20,
 
     justifyContent: "center",
     alignItems: "center",
+
+    backgroundColor: "#333"
   },
-  title: {
+  text: {
     color: "#f0f0f5",
-    lineHeight: 16,
+    lineHeight: 16
   }
 });
