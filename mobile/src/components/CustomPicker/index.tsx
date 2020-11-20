@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
+import Optinons from './options';
 
 export default function CustomPicker() {
   const [visible, setVisible] = useState<boolean>(false);
@@ -28,30 +29,8 @@ export default function CustomPicker() {
         onBackdropPress={() => setVisible(!visible)}
         isVisible={visible}
       >
-        <Pressable 
-          style={styles.button} 
-          android_ripple={{color: "rgba(0,0,0,0.1)"}}
-          onPress={() => {setVisible(!visible), setSelectedValue("Masculino"), console.log(selectedValue)}}
-        >
-          <TextInput 
-            style={styles.text} 
-            editable={false} 
-          >
-            Masculino
-          </TextInput>
-        </Pressable>
-        <Pressable 
-          style={styles.button} 
-          android_ripple={{color: "rgba(0,0,0,0.1)"}}
-          onPress={() => {setVisible(!visible), setSelectedValue("Feminino"), console.log(selectedValue)}}
-        >
-          <TextInput 
-            style={styles.text} 
-            editable={false} 
-          >
-            Feminino
-          </TextInput>
-        </Pressable>
+        <Optinons onClose={() => setVisible(!visible)} label="Masculino" />    
+        <Optinons onClose={() => setVisible(!visible)} label="Feminino" />    
       </Modal>
     </View>
   )
@@ -74,19 +53,4 @@ const styles = StyleSheet.create({
   icon: {
     margin: 10
   },
-  button: {
-    marginTop: 2,
-    height: 60,
-    marginRight: 20,
-    marginLeft: 20,
-
-    justifyContent: "center",
-    alignItems: "center",
-
-    backgroundColor: "#333"
-  },
-  text: {
-    color: "#f0f0f5",
-    lineHeight: 16
-  }
 });
