@@ -1,5 +1,5 @@
 import React from 'react';
-import { KeyboardType, ReturnKeyType, StyleSheet, TextInput, TextInputProps, View } from 'react-native';
+import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 interface InputProps extends TextInputProps {
@@ -7,17 +7,21 @@ interface InputProps extends TextInputProps {
   icon?: string | any;
 }
 
-export default function Input({ placeholder, icon, ...rest }: InputProps) {
+export default function Input({ placeholder, icon, ...rest}: InputProps) {
   return (
     <View style={styles.container}>
-      <MaterialIcons style={styles.icon} name={icon} size={20} color={'#f0f0f5'} />
+      <MaterialIcons 
+        style={styles.icon} 
+        name={icon} 
+        size={20} 
+        color={'#333333'} 
+      />
       <TextInput 
-        style={{flex: 1, color: '#f0f0f5'}}
+        style={{flex: 1}}
         placeholder={placeholder}
-        autoCorrect={false}
+        placeholderTextColor="#A0A0B2"
+        keyboardAppearance="dark"
         {...rest}
-        keyboardAppearance='dark'
-        placeholderTextColor='#7A7A7A'
       />
     </View>
   )
@@ -27,7 +31,7 @@ const styles = StyleSheet.create({
   container: {
     margin: 15,
     height: 50,
-    backgroundColor: '#1e222b',
+    backgroundColor: '#fff',
     borderRadius: 8,
     
     flexDirection: 'row',
@@ -36,5 +40,5 @@ const styles = StyleSheet.create({
   },
   icon: {
     margin: 10
-  },
+  }
 });

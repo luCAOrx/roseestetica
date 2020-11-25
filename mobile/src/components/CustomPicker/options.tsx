@@ -1,28 +1,38 @@
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import React from 'react';
+import { GestureResponderEvent, Pressable, StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
-interface DataProps {
-  label: string;
+export interface OptinonsProps {
+  items?: [string];
+  label?: string;
   value?: string;
   key?: number;
   selectedValue?: string;
-  onValueChange?: () => void;
+  onValueChange?: (event: GestureResponderEvent) => void;
+  onClose?: () => void;
 }
 
-interface OptinonsProps extends DataProps {
-  onClose: () => void;
-}
-
-export default function Optinons({onClose, label, value}: OptinonsProps) {
-  const [dataProps, setDataProps] = useState<DataProps[]>([]);
+export default function Optinons({
+  onClose, 
+  label, 
+  value, 
+  selectedValue, 
+  items, 
+  onValueChange
+}: OptinonsProps) {
 
   return (
     <View style={styles.container}>
       <Pressable 
         style={styles.button} 
         android_ripple={{color: "rgba(0,0,0,0.1)"}}
-        onPress={onClose}
+        onPress={() => {
+          onValueChange
+          onClose
+        }}
+        {...value}
+        {...onValueChange}
+        {...items}
       >
         <TextInput style={styles.text} editable={false} > {label} </TextInput>
       </Pressable>

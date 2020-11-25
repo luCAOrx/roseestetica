@@ -1,15 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { BaseButtonProperties, RectButton } from 'react-native-gesture-handler';
+import { RectButton, RectButtonProperties } from 'react-native-gesture-handler';
 
-interface ButtonProps extends BaseButtonProperties {
+interface ButtonProps extends RectButtonProperties {
   title: string;
-  onPress?: (pointerInside: boolean) => void;
 }
 
-export default function Button({title, onPress}: ButtonProps) {
+export default function Button({title, ...rest}: ButtonProps) {
   return(
-    <RectButton style={styles.container} onPress={onPress}>
+    <RectButton style={styles.container} {...rest}>
       <Text style={styles.title}>{title}</Text>
     </RectButton>
     

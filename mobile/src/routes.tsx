@@ -16,7 +16,7 @@ export default function Routes() {
       <Navigator 
         screenOptions={{ 
           headerShown: false, 
-          cardStyle: { backgroundColor: '#000' }
+          cardStyle: { backgroundColor: '#f0f0f5' }
         }}>
         <Screen 
           name="Login" 

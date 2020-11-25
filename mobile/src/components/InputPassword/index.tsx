@@ -1,38 +1,48 @@
 import React, { useState } from 'react'
 import { MaterialIcons } from '@expo/vector-icons';
+import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
+import { BorderlessButton } from 'react-native-gesture-handler';
 
-import { ReturnKeyType, StyleSheet, TextInput, View } from 'react-native';
-import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
-
-interface InputPasswordProps {
+interface InputPasswordProps extends TextInputProps {
   placeholder: string;
-  returnKeyType: ReturnKeyType; 
   icon: string;
 }
 
-export default function InputPassword({ placeholder,  returnKeyType, icon }: InputPasswordProps) {
+export default function InputPassword({ 
+  placeholder, 
+  icon,
+  ...rest 
+}: InputPasswordProps) {
   const [show, setShow] = useState(false);
   const [visiblePassword, setVisiblePassword] = useState(true);
   
   return (
     <View style={styles.container}>
-      <MaterialIcons style={styles.icon} name={icon} size={20} color={'#f0f0f5'} />
+      <MaterialIcons 
+        style={styles.icon} 
+        name={icon} 
+        size={20} 
+        color={'#333333'} 
+      />
       <TextInput 
-        style={{flex: 1, color: '#f0f0f5'}}
+        style={{flex: 1}}
         placeholder={placeholder}
-        placeholderTextColor='#7A7A7A'
+        placeholderTextColor='#A0A0B2'
+        keyboardAppearance="dark"
         secureTextEntry={visiblePassword}
-        returnKeyType={returnKeyType}
-        autoCorrect={false}
+        {...rest}
       />
       <BorderlessButton 
         style={styles.iconVisibility} 
-        onPress={() => {setShow(!show), setVisiblePassword(!visiblePassword)}}
+        onPress={() => {
+          setShow(!show) 
+          setVisiblePassword(!visiblePassword)
+        }}
       >
         <MaterialIcons 
           name={show === false ? 'visibility-off' : 'visibility'} 
           size={20} 
-          color={show === false ? '#7a7a7a' : '#f0f0f5'} 
+          color={show === false ? '#A0A0B2' : '#333333'} 
         />
       </BorderlessButton>
     </View>
@@ -44,7 +54,7 @@ const styles = StyleSheet.create ({
     height: 50,
     margin: 15,
 
-    backgroundColor: '#1e222b',
+    backgroundColor: '#fff',
     borderRadius: 8,
 
     flexDirection: 'row',

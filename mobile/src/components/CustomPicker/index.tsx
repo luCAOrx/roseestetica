@@ -1,13 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
+
 import Optinons from './options';
 
-export default function CustomPicker() {
+export interface OptinonsProps {
+  label?: string;
+  value?: string;
+  key?: number;
+  onValueChange: () => void;
+}
+
+export default function CustomPicker(value: OptinonsProps) {
   const [visible, setVisible] = useState<boolean>(false);
-  const [selectedValue, setSelectedValue] = useState<string>("");
+  const [selectedValue, setSelectedValue] = useState<any>("");
+
+  const Options = ({label, onValueChange, value, key}: OptinonsProps) => {
+
+    return (
+      <View style={styles.buttonContainer}>
+      <Pressable 
+        style={styles.button} 
+        android_ripple={{color: "rgba(0,0,0,0.1)"}}
+        onPress={() => {setVisible(!visible), onValueChange()}}
+      >
+        <TextInput style={styles.text} editable={false} > {label} </TextInput>
+      </Pressable>
+    </View>
+    )
+  }
 
   return (
     <View>
@@ -16,7 +39,7 @@ export default function CustomPicker() {
           <MaterialIcons style={styles.icon} name="face" size={20} color={'#f0f0f5'} />
           <TextInput 
             style={{flex: 1}}
-            placeholder={`${selectedValue ? selectedValue : "Sexo"}`}
+            placeholder={selectedValue ? selectedValue : "Sexo"}
             placeholderTextColor={selectedValue ? "#f0f0f5" : "#7a7a7a"}
             editable={false} 
           />
@@ -29,8 +52,8 @@ export default function CustomPicker() {
         onBackdropPress={() => setVisible(!visible)}
         isVisible={visible}
       >
-        <Optinons onClose={() => setVisible(!visible)} label="Masculino" />    
-        <Optinons onClose={() => setVisible(!visible)} label="Feminino" />    
+        <Options label="Masculino" value="Masculino" onValueChange={() => {setSelectedValue("Masculino"), console.log(selectedValue)}} />    
+        <Options label="Feminino" value="Feminino" onValueChange={() => {setSelectedValue("Feminino"), console.log(selectedValue)}} />    
       </Modal>
     </View>
   )
@@ -53,4 +76,23 @@ const styles = StyleSheet.create({
   icon: {
     margin: 10
   },
+  buttonContainer: {
+    marginRight: 25,
+    marginLeft: 25,
+
+    backgroundColor: "#222"
+  },
+  button: {
+    marginTop: 1,
+    height: 60,
+
+    justifyContent: "center",
+    alignItems: "center",
+
+    backgroundColor: "#333"
+  },
+  text: {
+    color: "#f0f0f5",
+    lineHeight: 16
+  }
 });

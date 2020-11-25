@@ -4,7 +4,7 @@ import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
-import logoImg from '../../images/logo.png';
+import logoImg from '../../images/light-logo.png';
 import Input from '../../components/Input';
 import InputPassword from '../../components/InputPassword';
 import Button from '../../components/Button';
@@ -20,22 +20,18 @@ export default function Login() {
     <View style={styles.container}>
       <Image style={styles.logo} source={logoImg} />
       <View style={styles.inputContainer}>
-        <View style={styles.inputEmail}>
-          <Input 
-            autoCapitalize='words'
-            keyboardType='email-address'
-            returnKeyType='next'
-            placeholder='E-mail'
-            icon='email'
-          />
-        </View>
-        <View style={styles.inputPassword}>
-          <InputPassword 
-            returnKeyType='send'
-            placeholder='Senha'
-            icon='lock'
-          />
-        </View>
+        <Input 
+          placeholder="E-mail"
+          icon="email"
+          autoCapitalize="words"
+          keyboardType="email-address"
+          returnKeyType="next"
+        />
+        <InputPassword 
+          placeholder="Senha"
+          icon="lock"
+          returnKeyType="send"
+        />
       </View>
       <View style={styles.button}>
         <Button title="ENTRAR"/>
@@ -44,10 +40,10 @@ export default function Login() {
         style={styles.createAnAccount}
         onPress={handleNavigateToRegister}
       >
-        <Text style={styles.title}>Criar uma conta</Text>
+        <Text style={styles.buttonTitle}>Criar uma conta</Text>
       </RectButton>
       <RectButton style={styles.forgotPassowrd}>
-        <Text style={styles.title}>Esqueci minha senha</Text>
+        <Text style={styles.buttonTitle}>Esqueci minha senha</Text>
       </RectButton>
     </View>
   );
@@ -58,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // marginTop: 100,
     justifyContent: "center",
-    backgroundColor: '#000',
+    backgroundColor: '#f0f0f5',
   },
   logo: {
     marginTop: 50,
@@ -68,20 +64,14 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 50
   },
-  inputEmail: {
-    // marginTop: 5,
-  },
-  inputPassword: {
-    // marginTop: 5,
-  },
   button: {
     marginTop: 10,
   },
-  title: {
+  buttonTitle: {
     fontFamily: 'Roboto_700Bold',
     fontSize: 15,
     lineHeight: 18,
-    color: '#f0f0f5',
+    color: '#333333',
   },
   createAnAccount: {
     height: 50,
