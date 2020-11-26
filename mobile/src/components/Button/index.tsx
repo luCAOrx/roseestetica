@@ -30,6 +30,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto_900Black',
     fontSize: 15,
     lineHeight: 18,
-    color: '#f0f0f5',
+    color: '#D2D2E3',
   },
 });

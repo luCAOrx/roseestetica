@@ -14,7 +14,7 @@ export default function Header({title}: HeaderProps) {
   return (
     <View style={styles.container}>
       <BorderlessButton onPress={navigation.goBack}>
-        <MaterialIcons name="arrow-back" size={30} color="#333333"/>
+        <MaterialIcons name="arrow-back" size={30} color="#D2D2E3"/>
       </BorderlessButton>
 
       <Text style={styles.title}>{title}</Text>
@@ -25,9 +25,9 @@ export default function Header({title}: HeaderProps) {
 const styles = StyleSheet.create({
   container: {
     padding: 24,
-    backgroundColor: '#f0f0f5',
+    backgroundColor: '#181818',
     borderBottomWidth: 1,
-    borderColor: '#f0f0f5',
+    borderColor: '#181818',
     paddingTop: 50,
 
     flexDirection: 'row',
@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
 
     marginRight: 75,
 
-    color: '#333333',
+    color: '#D2D2E3',
   }
 });

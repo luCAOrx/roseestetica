@@ -7,8 +7,15 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#000"
+      "resizeMode": "cover"
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "#181818",
+      "barStyle": "light-content"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#181818",
+      "barStyle": "light-content"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

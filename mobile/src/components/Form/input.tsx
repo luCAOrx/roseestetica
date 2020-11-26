@@ -24,12 +24,11 @@ export default function Input({ placeholder, icon, name, ...rest}: InputProps) {
 
   return (
     <View style={styles.container}>
-      <MaterialIcons style={styles.icon} name={icon} size={20} color={'#333333'} />
+      <MaterialIcons style={styles.icon} name={icon} size={20} color="#D2D2E3" />
       <TextInput 
         ref={inputRef}
-        style={{flex: 1}}
+        style={{flex: 1, color: "#D2D2E3"}}
         placeholder={placeholder}
-        keyboardAppearance="dark"
         placeholderTextColor="#A0A0B2"
         onChangeText={value => {
           if (inputRef.current) {
@@ -46,7 +45,7 @@ const styles = StyleSheet.create({
   container: {
     margin: 15,
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: '#222325',
     borderRadius: 8,
     
     flexDirection: 'row',

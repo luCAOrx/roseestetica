@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
-import logoImg from '../../images/light-logo.png';
+import logoImg from '../../images/rose.png';
 import Input from '../../components/Input';
 import InputPassword from '../../components/InputPassword';
 import Button from '../../components/Button';
@@ -18,7 +18,10 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.logo} source={logoImg} />
+      <View style={styles.logo}>
+        <Image style={styles.image} source={logoImg} />
+        <Text style={styles.logoText}>Rose Estética</Text>
+      </View>
       <View style={styles.inputContainer}>
         <Input 
           placeholder="E-mail"
@@ -36,15 +39,15 @@ export default function Login() {
       <View style={styles.button}>
         <Button title="ENTRAR"/>
       </View>
-      <RectButton 
-        style={styles.createAnAccount}
+      <Pressable 
+        style={styles.buttonSecondary}
         onPress={handleNavigateToRegister}
       >
         <Text style={styles.buttonTitle}>Criar uma conta</Text>
-      </RectButton>
-      <RectButton style={styles.forgotPassowrd}>
+      </Pressable>
+      <Pressable style={styles.buttonSecondary}>
         <Text style={styles.buttonTitle}>Esqueci minha senha</Text>
-      </RectButton>
+      </Pressable>
     </View>
   );
 }
@@ -52,14 +55,36 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // marginTop: 100,
     justifyContent: "center",
-    backgroundColor: '#f0f0f5',
+    backgroundColor: '#181818',
   },
   logo: {
     marginTop: 50,
     width: Dimensions.get("window").width,
     resizeMode: 'contain',
+
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  image: {
+    marginLeft: 50
+  },
+  logoText: {
+    marginRight: 70,
+
+    fontFamily: "Calligraffitti_400Regular",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontSize: 35,
+    lineHeight: 55,
+
+    alignItems: "center",
+    textAlign: "center",
+    
+    borderStyle: "solid",
+    borderColor: "#D2D2E3",
+    color: "#D2D2E3"
   },
   inputContainer: {
     marginTop: 50
@@ -68,21 +93,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonTitle: {
+    marginTop: 20,
     fontFamily: 'Roboto_700Bold',
     fontSize: 15,
     lineHeight: 18,
-    color: '#333333',
+    color: '#D2D2E3',
   },
-  createAnAccount: {
-    height: 50,
-    marginTop: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  forgotPassowrd: {
+  buttonSecondary: {
     height: 50,
     marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
-  },
+  }
 });
