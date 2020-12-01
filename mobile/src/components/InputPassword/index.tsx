@@ -27,7 +27,7 @@ export default function InputPassword({
       <TextInput 
         style={{flex: 1, color: "#D2D2E3"}}
         placeholder={placeholder}
-        placeholderTextColor='#A0A0B2'
+        placeholderTextColor="#7A7A7A"
         keyboardAppearance="dark"
         secureTextEntry={visiblePassword}
         {...rest}
@@ -40,9 +40,9 @@ export default function InputPassword({
         }}
       >
         <MaterialIcons 
-          name={show === false ? 'visibility-off' : 'visibility'} 
+          name={show === false ? "visibility-off" : "visibility"} 
           size={20} 
-          color={show === false ? '#A0A0B2' : '#D2D2E3'} 
+          color={show === false ? '#7A7A7A' : '#D2D2E3'} 
         />
       </BorderlessButton>
     </View>
@@ -57,8 +57,8 @@ const styles = StyleSheet.create ({
     backgroundColor: '#222325',
     borderRadius: 8,
 
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   icon: {
     margin: 10,

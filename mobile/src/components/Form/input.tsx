@@ -29,7 +29,7 @@ export default function Input({ placeholder, icon, name, ...rest}: InputProps) {
         ref={inputRef}
         style={{flex: 1, color: "#D2D2E3"}}
         placeholder={placeholder}
-        placeholderTextColor="#A0A0B2"
+        placeholderTextColor="#7A7A7A"
         onChangeText={value => {
           if (inputRef.current) {
             inputRef.current.value = value;
@@ -48,9 +48,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#222325',
     borderRadius: 8,
     
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   icon: {
     margin: 10

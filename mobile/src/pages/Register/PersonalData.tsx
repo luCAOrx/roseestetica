@@ -8,6 +8,7 @@ import { FormHandles } from '@unform/core';
 
 import {Input} from '../../components/Form/index';
 import Button from '../../components/Button';
+import Select from '../../components/CustomPicker';
 
 export default function PersonalData() {
   const navigation = useNavigation();
@@ -40,7 +41,8 @@ export default function PersonalData() {
               keyboardType="numeric"
               returnKeyType="next"
               name="cpf"
-              />
+            />
+            <Select />
             <Input 
               placeholder="Número de telefone" 
               icon="local-phone" 
@@ -55,10 +57,13 @@ export default function PersonalData() {
               returnKeyType="send"
               name="celular"
             />
-            <Button title="PRÓXIMO" onPress={() => {
-              formRef.current?.submitForm()
-              handleNavigateToAddress()
-            }} />
+            <Button 
+              title="PRÓXIMO" 
+              onPress={() => {
+                formRef.current?.submitForm()
+                handleNavigateToAddress()
+              }} 
+            />
           </Form>
         </View>
       </View>

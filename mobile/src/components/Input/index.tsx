@@ -19,7 +19,7 @@ export default function Input({ placeholder, icon, ...rest}: InputProps) {
       <TextInput 
         style={{flex: 1, color: "#F2F3F5"}}
         placeholder={placeholder}
-        placeholderTextColor="#A0A0B2"
+        placeholderTextColor="#7A7A7A"
         {...rest}
       />
     </View>
@@ -30,12 +30,12 @@ const styles = StyleSheet.create({
   container: {
     margin: 15,
     height: 50,
-    backgroundColor: '#222325',
+    backgroundColor: "#222325",
     borderRadius: 8,
     
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   icon: {
     margin: 10
