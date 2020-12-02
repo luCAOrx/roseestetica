@@ -1,38 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
 
-
 export default function Select() {
-  // const [visible, setVisible] = useState<boolean>(false);
-  // const [selected, setSelected] = useState<string>("");
+  const [visible, setVisible] = useState<boolean>(false);
+  const [selected, setSelected] = useState<any>("");
 
-  // const Item = () => {
-  //   return (
-  //       <View style={styles.dropdown}>
-  //         <Pressable 
-  //           style={styles.button} 
-  //           onPress={() => {setVisible(!visible), setSelected("Masculino"), console.log(selected)}}
-  //           android_ripple={{color: "rgba(0,0,0,0.1)"}}
-  //         >
-  //           <Text style={{color: "#F2F3F5"}}>Masculino</Text>
-  //         </Pressable>
-  //         <Pressable 
-  //           style={styles.button} 
-  //           onPress={() => {setVisible(!visible),setSelected("Feminino"), console.log(selected)}}
-  //           android_ripple={{color: "rgba(0,0,0,0.1)"}}
-  //         >
-  //           <Text style={{color: "#F2F3F5"}}>Feminino</Text>
-  //         </Pressable>
-  //       </View>
-  //   );
-  // }
+  const selectedRef = useRef();
+  useEffect(() => {
+    selectedRef.current = selected;
+  });
+
+  const Item = () => {
+    return (
+      <View style={styles.dropdown}>
+        <Pressable 
+          style={styles.button} 
+          onPress={() => {setVisible(!visible), setSelected("Masculino"), console.log(selected)}}
+          android_ripple={{color: "rgba(0,0,0,0.1)"}}
+        >
+          <Text style={{color: "#F2F3F5"}}>Masculino</Text>
+        </Pressable>
+        <Pressable 
+          style={styles.button} 
+          onPress={() => {setVisible(!visible),setSelected("Feminino"), console.log(selected)}}
+          android_ripple={{color: "rgba(0,0,0,0.1)"}}
+        >
+          <Text style={{color: "#F2F3F5"}}>Feminino</Text>
+        </Pressable>
+      </View>
+    );
+  }
 
   return(
     <>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <MaterialIcons 
           style={styles.icon} 
           name="face" 
@@ -41,10 +45,10 @@ export default function Select() {
         />
         <RNPickerSelect
           onValueChange={(value) => console.log(value)}
-          placeholder={{}}
+          placeholder={{label: "Sexo", value: "", color: "#7A7A7A"}}
           items={[
-            { label: 'Masculino', value: 'masculino' },
-            { label: 'Feminino', value: 'feminino' },
+            { label: "Masculino", value: "masculino" },
+            { label: "Feminino", value: "feminino" },
           ]}
           style={{
             ...pickerSelectStyles,
@@ -65,8 +69,8 @@ export default function Select() {
             );
           }}
         />
-      </View>
-      {/* <Pressable style={styles.container} onPress={() => setVisible(!visible)}>
+      </View> */}
+      <Pressable style={styles.container} onPress={() => setVisible(!visible)}>
         <MaterialIcons 
           style={styles.icon} 
           name="face" 
@@ -86,7 +90,7 @@ export default function Select() {
           color="#F2F3F5" 
         />
       </Pressable>
-      {visible && ( <Item /> )} */}
+      {visible && ( <Item /> )}
     </>
   );
 }
@@ -123,6 +127,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 60,
+    elevation: 10,
 
     justifyContent: "center",
     alignItems: "center",
