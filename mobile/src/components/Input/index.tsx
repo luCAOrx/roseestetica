@@ -14,10 +14,10 @@ export default function Input({ placeholder, icon, ...rest}: InputProps) {
         style={styles.icon} 
         name={icon} 
         size={20} 
-        color={'#F2F3F5'} 
+        color={"#D2D2E3"} 
       />
       <TextInput 
-        style={{flex: 1, color: "#F2F3F5"}}
+        style={{flex: 1, color: "#D2D2E3"}}
         placeholder={placeholder}
         placeholderTextColor="#7A7A7A"
         {...rest}

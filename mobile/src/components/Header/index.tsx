@@ -18,6 +18,7 @@ export default function Header({title}: HeaderProps) {
       </BorderlessButton>
 
       <Text style={styles.title}>{title}</Text>
+      <View></View>
     </View>
   );
 }
@@ -25,22 +26,19 @@ export default function Header({title}: HeaderProps) {
 const styles = StyleSheet.create({
   container: {
     padding: 24,
-    backgroundColor: '#181818',
-    borderBottomWidth: 1,
-    borderColor: '#181818',
     paddingTop: 50,
+    
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
 
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    backgroundColor: "#181818",
   },
   title: {
     fontFamily: "Roboto_700Bold",
     fontSize: 26,
     lineHeight: 42,
 
-    marginRight: 75,
-
-    color: '#D2D2E3',
+    color: "#D2D2E3",
   }
 });

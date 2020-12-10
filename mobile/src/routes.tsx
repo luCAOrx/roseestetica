@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import PersonalData from './pages/Register/PersonalData';
 import Address from './pages/Register/Address';
 import Header from './components/Header';
+import LoginData from './pages/Register/LoginData';
 
 export default function Routes() {
   return (
@@ -36,6 +37,14 @@ export default function Routes() {
           options={{
             headerShown: true,
             header: () => <Header title="Endereço"/>
+          }}
+        />
+        <Screen 
+          name="LoginData" 
+          component={LoginData}
+          options={{
+            headerShown: true,
+            header: () => <Header title="Dados de Login"/>
           }}
         />
       </Navigator>

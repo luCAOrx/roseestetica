@@ -13,6 +13,11 @@ import Select from '../../components/CustomPicker';
 export default function PersonalData() {
   const navigation = useNavigation();
 
+    const genders = [
+    {label: "Masculino", value: "masculino"},
+    {label: "Feminino", value: "feminino"},
+  ]
+
   function handleNavigateToAddress() {
     navigation.navigate('Address');
   }
@@ -42,7 +47,7 @@ export default function PersonalData() {
               returnKeyType="next"
               name="cpf"
             />
-            <Select />
+            <Select icon="face" placeholder="Sexo" options={genders}/>
             <Input 
               placeholder="Número de telefone" 
               icon="local-phone" 
@@ -81,9 +86,9 @@ const styles = StyleSheet.create({
 });
 
 const stepStyles = {
-  currentStepLabelColor: '#333333',
+  currentStepLabelColor: "#333333",
   stepStrokeCurrentColor: "#2FB86E",
-  stepIndicatorLabelCurrentColor: '#333333',
+  stepIndicatorLabelCurrentColor: "#333333",
   stepIndicatorCurrentColor: "#D2D2E3",
   stepIndicatorFinishedColor: "#2FB86E",
   stepIndicatorUnFinishedColor: "#D2D2E3",

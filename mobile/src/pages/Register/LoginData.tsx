@@ -6,20 +6,11 @@ import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import StepIndicator from 'react-native-step-indicator';
 
-import {Input} from '../../components/Form/index';
+import {Input, InputPassword} from '../../components/Form/index';
 import Button from '../../components/Button';
-import Select from '../../components/CustomPicker';
 
-export default function Address() {
+export default function LoginData() {
   const navigation = useNavigation();
-
-    const city = [
-    {label: "Natal", value: "natal"},
-    {label: "Alto do Rodrigues", value: "alto do rodrigues"},
-    {label: "Pendências", value: "pendências"},
-    {label: "Assu", value: "assu"},
-    {label: "Angicos", value: "angicos"},
-  ]
 
   function handleNavigateToLoginData() {
     navigation.navigate('LoginData');
@@ -34,48 +25,31 @@ export default function Address() {
     <KeyboardAvoidingView>
       <ScrollView>
         <View style={styles.container}>
-          <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>
+          <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={2}/>
 
           <View style={styles.inputContainer}>
             <Form ref={formRef} onSubmit={handleSubmit}>
-              <Select icon="location-city" placeholder="Cidade" options={city}/>
               <Input 
-                placeholder="Bairro"
-                icon="map"
+                placeholder="Email"
+                icon="email"
                 autoCapitalize="words"
                 returnKeyType="next"
-                name="bairro"
+                name="email"
               />
-              <Input 
-                placeholder="Logradouro"
-                icon="home"
+              <InputPassword 
+                placeholder="Senha"
+                icon="lock"
+                name="senha"
+              />
+              <InputPassword 
+                placeholder="Confirme sua senha" 
+                icon="done"
                 autoCapitalize="words"
-                returnKeyType="next"
-                name="logradouro"
-              />
-              <Input 
-                placeholder="Número" 
-                icon="looks-5"
-                keyboardType="numeric" 
-                returnKeyType="next"
-                name="numero"
-              />
-              <Input 
-                placeholder="Complemento" 
-                icon="domain" 
-                autoCapitalize="words"
-                returnKeyType="next"
-                name="complemento"
-              />
-              <Input 
-                placeholder="Cep" 
-                icon="place" 
-                keyboardType="number-pad"
                 returnKeyType="send"
-                name="complemento"
+                name="senha"
               />
               <Button 
-                title="PRÓXIMO" 
+                title="FINALIZAR" 
                 onPress={() => {
                   formRef.current?.submitForm()
                   handleNavigateToLoginData()
