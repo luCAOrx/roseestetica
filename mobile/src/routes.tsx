@@ -10,6 +10,8 @@ import PersonalData from './pages/Register/PersonalData';
 import Address from './pages/Register/Address';
 import Header from './components/Header';
 import LoginData from './pages/Register/LoginData';
+import ForgotMyPassword from './pages/ForgotPassword';
+import RecoverPassword from './pages/ForgotPassword/recoverPassword';
 
 export default function Routes() {
   return (
@@ -45,6 +47,22 @@ export default function Routes() {
           options={{
             headerShown: true,
             header: () => <Header title="Dados de Login"/>
+          }}
+        />
+        <Screen 
+          name="ForgotMyPassword" 
+          component={ForgotMyPassword}
+          options={{
+            headerShown: true,
+            header: () => <Header title="Esqueci Minha Senha"/>
+          }}
+        />
+        <Screen 
+          name="RecoverPassword" 
+          component={RecoverPassword}
+          options={{
+            headerShown: true,
+            header: () => <Header title="Recuperar Senha"/>
           }}
         />
       </Navigator>

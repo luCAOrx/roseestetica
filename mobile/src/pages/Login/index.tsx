@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 import logoImg from '../../images/rose.png';
@@ -14,6 +13,10 @@ export default function Login() {
 
   function handleNavigateToRegister() {
     navigation.navigate('PersonalData');
+  }
+
+  function handleNavigateToForgotMyPassword() {
+    navigation.navigate('ForgotMyPassword');
   }
 
   return (
@@ -45,7 +48,10 @@ export default function Login() {
       >
         <Text style={styles.buttonTitle}>Criar uma conta</Text>
       </Pressable>
-      <Pressable style={styles.buttonSecondary}>
+      <Pressable 
+        style={styles.buttonSecondary}
+        onPress={handleNavigateToForgotMyPassword}
+      >
         <Text style={styles.buttonTitle}>Esqueci minha senha</Text>
       </Pressable>
     </View>
