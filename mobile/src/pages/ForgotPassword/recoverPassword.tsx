@@ -3,18 +3,18 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import Button from '../../components/Button';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
 import Input from '../../components/Input';
 import InputPassword from '../../components/InputPassword';
+import Button from '../../components/Button';
 
 export default function RecoverPassword() {
   const navigation = useNavigation();
 
   function handleNavigateToLogin() {
-    navigation.navigate('Login');
+    navigation.navigate("Login");
   }
 
   return (
@@ -44,6 +44,7 @@ export default function RecoverPassword() {
         returnKeyType="done"
       />
       <InputPassword placeholder="Senha" icon="lock" />
+      
       <Button title="RECUPERAR SENHA" onPress={handleNavigateToLogin} />
     </ScrollView>
   );

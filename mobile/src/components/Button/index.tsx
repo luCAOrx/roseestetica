@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { StyleSheet, Text } from 'react-native';
 import { RectButton, RectButtonProperties } from 'react-native-gesture-handler';
 
@@ -20,16 +21,17 @@ const styles = StyleSheet.create({
     height: 50,
     margin: 15,
 
-    backgroundColor: '#3A4498',
+    backgroundColor: "#3A4498",
     borderRadius: 8,
 
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
+  
   title: {
-    fontFamily: 'Roboto_900Black',
+    fontFamily: "Roboto_900Black",
     fontSize: 15,
     lineHeight: 18,
-    color: '#D2D2E3',
+    color: "#D2D2E3",
   },
 });

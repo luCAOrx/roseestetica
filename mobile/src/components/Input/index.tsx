@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
+
 import { MaterialIcons } from '@expo/vector-icons';
 
 interface InputProps extends TextInputProps {
@@ -11,11 +13,12 @@ export default function Input({ placeholder, icon, ...rest}: InputProps) {
   return (
     <View style={styles.container}>
       <MaterialIcons 
-        style={styles.icon} 
+        style={{margin: 10}} 
         name={icon} 
         size={20} 
         color={"#D2D2E3"} 
       />
+      
       <TextInput 
         style={{flex: 1, color: "#D2D2E3"}}
         placeholder={placeholder}
@@ -30,14 +33,13 @@ const styles = StyleSheet.create({
   container: {
     margin: 15,
     height: 50,
-    backgroundColor: "#222325",
-    borderRadius: 8,
-    
+
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+
+    borderRadius: 8,
+
+    backgroundColor: "#222325",
   },
-  icon: {
-    margin: 10
-  }
 });

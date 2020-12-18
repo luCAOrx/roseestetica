@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
+
 import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
+
 import { MaterialIcons } from '@expo/vector-icons';
 import { useField } from '@unform/core';
 
@@ -18,13 +20,14 @@ export default function Input({ placeholder, icon, name, ...rest}: InputProps) {
     registerField({
       name: fieldName,
       ref: inputRef.current,
-      path: 'value',
+      path: "value",
     });
   }, [fieldName, registerField]);
 
   return (
     <View style={styles.container}>
-      <MaterialIcons style={styles.icon} name={icon} size={20} color="#D2D2E3" />
+      <MaterialIcons style={{margin: 10}} name={icon} size={20} color="#D2D2E3" />
+      
       <TextInput 
         ref={inputRef}
         style={{flex: 1, color: "#D2D2E3"}}
@@ -45,14 +48,14 @@ const styles = StyleSheet.create({
   container: {
     margin: 15,
     height: 50,
-    backgroundColor: '#222325',
-    borderRadius: 8,
     
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-  },
-  icon: {
-    margin: 10
+
+    borderRadius: 8,
+
+    backgroundColor: "#222325",
+    
   },
 });

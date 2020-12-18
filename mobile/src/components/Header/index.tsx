@@ -1,8 +1,10 @@
 import React from 'react';
+
 import { StyleSheet, Text, View } from 'react-native';
 import { BorderlessButton } from 'react-native-gesture-handler';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+
+import { MaterialIcons } from '@expo/vector-icons';
 
 interface HeaderProps {
   title: string
@@ -18,6 +20,7 @@ export default function Header({title}: HeaderProps) {
       </BorderlessButton>
 
       <Text style={styles.title}>{title}</Text>
+      
       <View></View>
     </View>
   );
@@ -34,6 +37,7 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#181818",
   },
+
   title: {
     fontFamily: "Roboto_700Bold",
     fontSize: 26,

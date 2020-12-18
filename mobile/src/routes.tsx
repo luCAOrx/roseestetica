@@ -8,10 +8,11 @@ const { Navigator, Screen } = createStackNavigator();
 import Login from './pages/Login';
 import PersonalData from './pages/Register/PersonalData';
 import Address from './pages/Register/Address';
-import Header from './components/Header';
 import LoginData from './pages/Register/LoginData';
 import ForgotMyPassword from './pages/ForgotPassword';
 import RecoverPassword from './pages/ForgotPassword/recoverPassword';
+
+import Header from './components/Header';
 
 export default function Routes() {
   return (

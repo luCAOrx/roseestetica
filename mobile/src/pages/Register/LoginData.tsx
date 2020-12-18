@@ -1,19 +1,21 @@
 import React, { useRef } from 'react'
-import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+
+import { KeyboardAvoidingView, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
+
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import StepIndicator from 'react-native-step-indicator';
 
-import {Input, InputPassword} from '../../components/Form/index';
+import { Input, InputPassword } from '../../components/Form/index';
 import Button from '../../components/Button';
 
 export default function LoginData() {
   const navigation = useNavigation();
 
   function handleNavigateToLoginData() {
-    navigation.navigate('LoginData');
+    navigation.navigate("LoginData");
   }
 
   const formRef = useRef<FormHandles>(null);
@@ -24,10 +26,10 @@ export default function LoginData() {
   return (
     <KeyboardAvoidingView>
       <ScrollView>
-        <View style={styles.container}>
+        <>
           <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={2}/>
 
-          <View style={styles.inputContainer}>
+          <View style={{marginTop: 40}}>
             <Form ref={formRef} onSubmit={handleSubmit}>
               <Input 
                 placeholder="Email"
@@ -40,14 +42,9 @@ export default function LoginData() {
                 placeholder="Senha"
                 icon="lock"
                 name="senha"
-              />
-              <InputPassword 
-                placeholder="Confirme sua senha" 
-                icon="done"
-                autoCapitalize="words"
                 returnKeyType="send"
-                name="senha"
               />
+
               <Button 
                 title="FINALIZAR" 
                 onPress={() => {
@@ -57,30 +54,24 @@ export default function LoginData() {
               />
             </Form>
           </View>
-        </View>
+        </>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  inputContainer: {
-    marginTop: 40,
-  }
-});
-
 const stepStyles = {
   currentStepLabelColor: "#333333",
+
   stepStrokeCurrentColor: "#2FB86E",
+
   stepIndicatorLabelCurrentColor: "#333333",
   stepIndicatorCurrentColor: "#D2D2E3",
   stepIndicatorFinishedColor: "#2FB86E",
   stepIndicatorUnFinishedColor: "#D2D2E3",
   stepIndicatorLabelFinishedColor: "#333333",
   stepIndicatorLabelUnFinishedColor: "#333333",
+  
   separatorFinishedColor: "#2FB86E",
   separatorUnFinishedColor: "#D2D2E3"
 }

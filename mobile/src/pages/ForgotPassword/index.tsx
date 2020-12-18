@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import Button from '../../components/Button';
@@ -10,7 +9,7 @@ export default function ForgotMyPassword() {
   const navigation = useNavigation();
 
   function handleNavigateToRecoverPassword() {
-    navigation.navigate('RecoverPassword');
+    navigation.navigate("RecoverPassword");
   }
 
   return (
@@ -22,15 +21,11 @@ export default function ForgotMyPassword() {
         keyboardType="email-address"
         returnKeyType="next"
       />
+      
       <Button 
         title="PRÓXIMO" 
-        onPress={handleNavigateToRecoverPassword}/>
+        onPress={handleNavigateToRecoverPassword}
+      />
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    // backgroundColor: '#181818',
-  }
-});

@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { MaterialIcons } from '@expo/vector-icons';
+
 import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
 import { BorderlessButton } from 'react-native-gesture-handler';
+
+import { MaterialIcons } from '@expo/vector-icons';
 import { useField } from '@unform/core';
 
 interface InputPasswordProps extends TextInputProps {
@@ -26,18 +28,14 @@ export default function InputPassword({
     registerField({
       name: fieldName,
       ref: inputRef.current,
-      path: 'value',
+      path: "value",
     });
   }, [fieldName, registerField]);
   
   return (
     <View style={styles.container}>
-      <MaterialIcons 
-        style={styles.icon} 
-        name={icon} 
-        size={20} 
-        color="#D2D2E3"
-      />
+      <MaterialIcons style={{margin: 10,}} name={icon} size={20} color="#D2D2E3" />
+
       <TextInput 
         ref={inputRef}
         style={{flex: 1, color: "#D2D2E3"}}
@@ -52,8 +50,9 @@ export default function InputPassword({
         }}
         {...rest}
       />
+
       <BorderlessButton 
-        style={styles.iconVisibility} 
+        style={{marginRight: 10,}} 
         onPress={() => {
           setShow(!show) 
           setVisiblePassword(!visiblePassword)
@@ -62,7 +61,7 @@ export default function InputPassword({
         <MaterialIcons 
           name={show === false ? "visibility-off" : "visibility"} 
           size={20} 
-          color={show === false ? '#7A7A7A' : '#D2D2E3'} 
+          color={show === false ? "#7A7A7A" : "#D2D2E3"} 
         />
       </BorderlessButton>
     </View>
@@ -74,16 +73,11 @@ const styles = StyleSheet.create ({
     height: 50,
     margin: 15,
 
-    backgroundColor: '#222325',
-    borderRadius: 8,
-
     flexDirection: "row",
     alignItems: "center",
-  },
-  icon: {
-    margin: 10,
-  },
-  iconVisibility: {
-    marginRight: 10,
+
+    borderRadius: 8,
+
+    backgroundColor: '#222325',
   },
 });
