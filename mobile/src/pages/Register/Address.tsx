@@ -15,13 +15,13 @@ import Select from '../../components/CustomPicker';
 export default function Address() {
   const navigation = useNavigation();
 
-    const city = [
-      {label: "Natal", value: "natal"},
-      {label: "Alto do Rodrigues", value: "alto do rodrigues"},
-      {label: "Pendências", value: "pendências"},
-      {label: "Assu", value: "assu"},
-      {label: "Angicos", value: "angicos"},
-    ]
+  const city = [
+    {label: "Natal", value: "natal"},
+    {label: "Alto do Rodrigues", value: "alto do rodrigues"},
+    {label: "Pendências", value: "pendências"},
+    {label: "Assu", value: "assu"},
+    {label: "Angicos", value: "angicos"},
+  ]
 
   function handleNavigateToLoginData() {
     navigation.navigate("LoginData");
@@ -35,63 +35,61 @@ export default function Address() {
   return (
     <KeyboardAvoidingView>
       <ScrollView>
-        <>
-          <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>
+        <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>
 
-          <View style={{marginTop: 40}}>
-            <Form ref={formRef} onSubmit={handleSubmit}>
-              <Select icon="location-city" placeholder="Cidade" options={city}/>
+        <View style={{marginTop: 40}}>
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <Select icon="location-city" placeholder="Cidade" options={city}/>
 
-              <Input 
-                placeholder="Bairro"
-                icon="map"
-                autoCapitalize="words"
-                returnKeyType="next"
-                name="bairro"
-              />
+            <Input 
+              placeholder="Bairro"
+              icon="map"
+              autoCapitalize="words"
+              returnKeyType="next"
+              name="bairro"
+            />
 
-              <Input 
-                placeholder="Logradouro"
-                icon="home"
-                autoCapitalize="words"
-                returnKeyType="next"
-                name="logradouro"
-              />
+            <Input 
+              placeholder="Logradouro"
+              icon="home"
+              autoCapitalize="words"
+              returnKeyType="next"
+              name="logradouro"
+            />
 
-              <Input 
-                placeholder="Número" 
-                icon="looks-5"
-                keyboardType="numeric" 
-                returnKeyType="next"
-                name="numero"
-              />
+            <Input 
+              placeholder="Número" 
+              icon="looks-5"
+              keyboardType="numeric" 
+              returnKeyType="next"
+              name="numero"
+            />
 
-              <Input 
-                placeholder="Complemento" 
-                icon="domain" 
-                autoCapitalize="words"
-                returnKeyType="next"
-                name="complemento"
-              />
-              
-              <Input 
-                placeholder="Cep" 
-                icon="place" 
-                keyboardType="number-pad"
-                returnKeyType="send"
-                name="complemento"
-              />
+            <Input 
+              placeholder="Complemento" 
+              icon="domain" 
+              autoCapitalize="words"
+              returnKeyType="next"
+              name="complemento"
+            />
+            
+            <Input 
+              placeholder="Cep" 
+              icon="place" 
+              keyboardType="number-pad"
+              returnKeyType="send"
+              name="complemento"
+            />
 
-              <Button 
-                title="PRÓXIMO" 
-                onPress={() => {
-                  formRef.current?.submitForm()
-                  handleNavigateToLoginData()
-                }} 
-              />
-            </Form>
-          </View>
-        </>
+            <Button 
+              title="PRÓXIMO" 
+              onPress={() => {
+                formRef.current?.submitForm();
+                handleNavigateToLoginData();
+              }} 
+            />
+          </Form>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
