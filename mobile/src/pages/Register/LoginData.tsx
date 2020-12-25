@@ -1,8 +1,10 @@
 import React, { useRef } from 'react'
 
-import { KeyboardAvoidingView, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import { Feather } from '@expo/vector-icons';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -14,8 +16,17 @@ import Button from '../../components/Button';
 export default function LoginData() {
   const navigation = useNavigation();
 
-  function handleNavigateToLoginData() {
-    navigation.navigate("LoginData");
+  const sucessScreen = () => {
+    return(
+      <View style={styles.sucessScreen}>
+        <Feather name="check-circle" color="#34CB79" size={20}/>
+        <Text>Cadastro concluído!</Text>
+      </View>
+    );
+  }
+
+  function handleNavigateToLogin() {
+    navigation.navigate("Login");
   }
 
   const formRef = useRef<FormHandles>(null);
@@ -38,6 +49,7 @@ export default function LoginData() {
                 returnKeyType="next"
                 name="email"
               />
+
               <InputPassword 
                 placeholder="Senha"
                 icon="lock"
@@ -49,7 +61,8 @@ export default function LoginData() {
                 title="FINALIZAR" 
                 onPress={() => {
                   formRef.current?.submitForm()
-                  handleNavigateToLoginData()
+                  sucessScreen();
+                  handleNavigateToLogin();
                 }} 
               />
             </Form>
@@ -75,3 +88,15 @@ const stepStyles = {
   separatorFinishedColor: "#2FB86E",
   separatorUnFinishedColor: "#D2D2E3"
 }
+
+const styles = StyleSheet.create({
+  sucessScreen: {
+    flex: 1,
+
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
+  }
+});

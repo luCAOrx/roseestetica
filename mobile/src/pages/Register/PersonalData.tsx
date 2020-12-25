@@ -43,6 +43,7 @@ export default function PersonalData() {
               returnKeyType="next"
               name="nome"
             />
+
             <Input 
               placeholder="Cpf"
               icon="fingerprint"
@@ -50,7 +51,9 @@ export default function PersonalData() {
               returnKeyType="next"
               name="cpf"
             />
+
             <Select icon="face" placeholder="Sexo" options={genders}/>
+
             <Input 
               placeholder="Número de telefone" 
               icon="local-phone" 
@@ -58,6 +61,7 @@ export default function PersonalData() {
               returnKeyType="next"
               name="telefone"
             />
+            
             <Input 
               placeholder="Número de celular" 
               icon="phone-android" 

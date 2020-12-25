@@ -22,10 +22,12 @@ export default function Routes() {
           headerShown: false, 
           cardStyle: { backgroundColor: '#181818' }
         }}>
+
         <Screen 
           name="Login" 
           component={Login} 
         />
+
         <Screen 
           name="PersonalData" 
           component={PersonalData}
@@ -34,6 +36,7 @@ export default function Routes() {
             header: () => <Header title="Dados pessoais"/>
           }}
         />
+
         <Screen 
           name="Address" 
           component={Address}
@@ -42,6 +45,7 @@ export default function Routes() {
             header: () => <Header title="Endereço"/>
           }}
         />
+
         <Screen 
           name="LoginData" 
           component={LoginData}
@@ -50,6 +54,7 @@ export default function Routes() {
             header: () => <Header title="Dados de Login"/>
           }}
         />
+
         <Screen 
           name="ForgotMyPassword" 
           component={ForgotMyPassword}
@@ -58,6 +63,7 @@ export default function Routes() {
             header: () => <Header title="Esqueci Minha Senha"/>
           }}
         />
+        
         <Screen 
           name="RecoverPassword" 
           component={RecoverPassword}

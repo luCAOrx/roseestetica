@@ -41,6 +41,7 @@ export default function Address() {
           <View style={{marginTop: 40}}>
             <Form ref={formRef} onSubmit={handleSubmit}>
               <Select icon="location-city" placeholder="Cidade" options={city}/>
+
               <Input 
                 placeholder="Bairro"
                 icon="map"
@@ -48,6 +49,7 @@ export default function Address() {
                 returnKeyType="next"
                 name="bairro"
               />
+
               <Input 
                 placeholder="Logradouro"
                 icon="home"
@@ -55,6 +57,7 @@ export default function Address() {
                 returnKeyType="next"
                 name="logradouro"
               />
+
               <Input 
                 placeholder="Número" 
                 icon="looks-5"
@@ -62,6 +65,7 @@ export default function Address() {
                 returnKeyType="next"
                 name="numero"
               />
+
               <Input 
                 placeholder="Complemento" 
                 icon="domain" 
@@ -69,6 +73,7 @@ export default function Address() {
                 returnKeyType="next"
                 name="complemento"
               />
+              
               <Input 
                 placeholder="Cep" 
                 icon="place" 
