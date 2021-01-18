@@ -11,6 +11,7 @@ import StepIndicator from 'react-native-step-indicator';
 import { Input } from '../../components/Form/index';
 import Button from '../../components/Button';
 import Select from '../../components/CustomPicker';
+import Header from '../../components/Header';
 
 export default function PersonalData() {
   const navigation = useNavigation();
@@ -30,55 +31,58 @@ export default function PersonalData() {
   }
 
   return (
-    <ScrollView>
-      <StepIndicator stepCount={3} customStyles={stepStyles}/>
+    <>
+      <Header title="Dados Pessoais"/>
+      <ScrollView>
+        <StepIndicator stepCount={3} customStyles={stepStyles}/>
 
-      <View style={{marginTop: 40}}>
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <Input 
-            placeholder="Nome completo"
-            icon="person"
-            autoCapitalize="words"
-            returnKeyType="next"
-            name="nome"
-          />
+        <View style={{marginTop: 40}}>
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <Input 
+              placeholder="Nome completo"
+              icon="person"
+              autoCapitalize="words"
+              returnKeyType="next"
+              name="nome"
+            />
 
-          <Input 
-            placeholder="Cpf"
-            icon="fingerprint"
-            keyboardType="numeric"
-            returnKeyType="next"
-            name="cpf"
-          />
+            <Input 
+              placeholder="Cpf"
+              icon="fingerprint"
+              keyboardType="numeric"
+              returnKeyType="next"
+              name="cpf"
+            />
 
-          <Select icon="face" placeholder="Sexo" options={genders}/>
+            <Select icon="face" placeholder="Sexo" options={genders}/>
 
-          <Input 
-            placeholder="Número de telefone" 
-            icon="local-phone" 
-            keyboardType="number-pad"
-            returnKeyType="next"
-            name="telefone"
-          />
-          
-          <Input 
-            placeholder="Número de celular" 
-            icon="phone-android" 
-            keyboardType="number-pad"
-            returnKeyType="send"
-            name="celular"
-          />
+            <Input 
+              placeholder="Número de telefone" 
+              icon="local-phone" 
+              keyboardType="number-pad"
+              returnKeyType="next"
+              name="telefone"
+            />
+            
+            <Input 
+              placeholder="Número de celular" 
+              icon="phone-android" 
+              keyboardType="number-pad"
+              returnKeyType="send"
+              name="celular"
+            />
 
-          <Button 
-            title="PRÓXIMO" 
-            onPress={() => {
-              formRef.current?.submitForm();
-              handleNavigateToAddress();
-            }} 
-          />
-        </Form>
-      </View>
-    </ScrollView>
+            <Button 
+              title="PRÓXIMO" 
+              onPress={() => {
+                formRef.current?.submitForm();
+                handleNavigateToAddress();
+              }} 
+            />
+          </Form>
+        </View>
+      </ScrollView>
+    </>
   );
 }
 

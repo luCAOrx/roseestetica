@@ -31,28 +31,19 @@ export default function Routes() {
         <Screen 
           name="PersonalData" 
           component={PersonalData}
-          options={{
-            headerShown: true,
-            header: () => <Header title="Dados pessoais"/>
-          }}
+          options={{ headerShown: false }}
         />
 
         <Screen 
           name="Address" 
           component={Address}
-          options={{
-            headerShown: true,
-            header: () => <Header title="Endereço"/>
-          }}
+          options={{ headerShown: false }}
         />
 
         <Screen 
           name="LoginData" 
           component={LoginData}
-          options={{
-            headerShown: true,
-            header: () => <Header title="Dados de Login"/>
-          }}
+          options={{ headerShown: false }}
         />
 
         <Screen 

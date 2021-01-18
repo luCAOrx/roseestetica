@@ -11,6 +11,7 @@ import StepIndicator from 'react-native-step-indicator';
 import { Input } from '../../components/Form/index';
 import Button from '../../components/Button';
 import Select from '../../components/CustomPicker';
+import Header from '../../components/Header';
 
 export default function Address() {
   const navigation = useNavigation();
@@ -33,65 +34,68 @@ export default function Address() {
   }
 
   return (
-    <KeyboardAvoidingView>
-      <ScrollView>
-        <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>
+    <>
+      <Header title="Endereço"/>
+      <KeyboardAvoidingView>
+        <ScrollView>
+          <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>
 
-        <View style={{marginTop: 40}}>
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <Select icon="location-city" placeholder="Cidade" options={city}/>
+          <View style={{marginTop: 40}}>
+            <Form ref={formRef} onSubmit={handleSubmit}>
+              <Select icon="location-city" placeholder="Cidade" options={city}/>
 
-            <Input 
-              placeholder="Bairro"
-              icon="map"
-              autoCapitalize="words"
-              returnKeyType="next"
-              name="bairro"
-            />
+              <Input 
+                placeholder="Bairro"
+                icon="map"
+                autoCapitalize="words"
+                returnKeyType="next"
+                name="bairro"
+              />
 
-            <Input 
-              placeholder="Logradouro"
-              icon="home"
-              autoCapitalize="words"
-              returnKeyType="next"
-              name="logradouro"
-            />
+              <Input 
+                placeholder="Logradouro"
+                icon="home"
+                autoCapitalize="words"
+                returnKeyType="next"
+                name="logradouro"
+              />
 
-            <Input 
-              placeholder="Número" 
-              icon="looks-5"
-              keyboardType="numeric" 
-              returnKeyType="next"
-              name="numero"
-            />
+              <Input 
+                placeholder="Número" 
+                icon="looks-5"
+                keyboardType="numeric" 
+                returnKeyType="next"
+                name="numero"
+              />
 
-            <Input 
-              placeholder="Complemento" 
-              icon="domain" 
-              autoCapitalize="words"
-              returnKeyType="next"
-              name="complemento"
-            />
-            
-            <Input 
-              placeholder="Cep" 
-              icon="place" 
-              keyboardType="number-pad"
-              returnKeyType="send"
-              name="complemento"
-            />
+              <Input 
+                placeholder="Complemento" 
+                icon="domain" 
+                autoCapitalize="words"
+                returnKeyType="next"
+                name="complemento"
+              />
+              
+              <Input 
+                placeholder="Cep" 
+                icon="place" 
+                keyboardType="number-pad"
+                returnKeyType="send"
+                name="complemento"
+              />
 
-            <Button 
-              title="PRÓXIMO" 
-              onPress={() => {
-                formRef.current?.submitForm();
-                handleNavigateToLoginData();
-              }} 
-            />
-          </Form>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+              <Button 
+                title="PRÓXIMO" 
+                onPress={() => {
+                  formRef.current?.submitForm();
+                  handleNavigateToLoginData();
+                }} 
+              />
+            </Form>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </>
   );
 }
 

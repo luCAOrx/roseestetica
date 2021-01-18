@@ -11,6 +11,7 @@ import StepIndicator from 'react-native-step-indicator';
 import { Input, InputPassword } from '../../components/Form/index';
 import Button from '../../components/Button';
 import SucessScreen from '../../components/SucessScreen';
+import Header from '../../components/Header';
 
 export default function LoginData() {
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
@@ -29,41 +30,44 @@ export default function LoginData() {
   }
 
   return (
-    <KeyboardAvoidingView>
-      <ScrollView>
-        <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={2}/>
+    <>
+      <Header title="Dados de Login"/>
+      <KeyboardAvoidingView>
+        <ScrollView>
+          <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={2}/>
 
-        <View style={{marginTop: 40}}>
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <Input 
-              placeholder="Email"
-              icon="email"
-              autoCapitalize="words"
-              returnKeyType="next"
-              name="email"
-            />
+          <View style={{marginTop: 40}}>
+            <Form ref={formRef} onSubmit={handleSubmit}>
+              <Input 
+                placeholder="Email"
+                icon="email"
+                autoCapitalize="words"
+                returnKeyType="next"
+                name="email"
+              />
 
-            <InputPassword 
-              placeholder="Senha"
-              icon="lock"
-              name="senha"
-              returnKeyType="send"
-            />
+              <InputPassword 
+                placeholder="Senha"
+                icon="lock"
+                name="senha"
+                returnKeyType="send"
+              />
 
-            <Button 
-              title="FINALIZAR" 
-              onPress={() => {
-                formRef.current?.submitForm();
-                setTimeout(() => {
-                  handleNavigateToLogin();
-                }, 3000);
-              }} 
-            />
-          </Form>
-        </View>
-      </ScrollView>
-      <SucessScreen title="Cadastro concluído!" show={sucessMessage}/>
-    </KeyboardAvoidingView>
+              <Button 
+                title="FINALIZAR" 
+                onPress={() => {
+                  formRef.current?.submitForm();
+                  setTimeout(() => {
+                    handleNavigateToLogin();
+                  }, 3000);
+                }} 
+              />
+            </Form>
+          </View>
+        </ScrollView>
+        <SucessScreen title="Cadastro concluído!" show={sucessMessage}/>
+      </KeyboardAvoidingView>
+    </>
   );
 }
 
