@@ -13,6 +13,7 @@ import ForgotMyPassword from './pages/ForgotPassword';
 import RecoverPassword from './pages/ForgotPassword/recoverPassword';
 
 import Header from './components/Header';
+import Schedule from './pages/Schedule';
 
 export default function Routes() {
   return (
@@ -62,6 +63,12 @@ export default function Routes() {
             headerShown: true,
             header: () => <Header title="Recuperar Senha"/>
           }}
+        />
+
+        <Screen 
+          name="Schedule"
+          component={Schedule}
+          options={{ headerShown: false}}
         />
       </Navigator>
     </NavigationContainer>

@@ -20,6 +20,10 @@ export default function Login() {
     navigation.navigate("ForgotMyPassword");
   }
 
+  function handleNavigateToSchedule() {
+    navigation.navigate("Schedule");
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.logo}>
@@ -43,7 +47,10 @@ export default function Login() {
       </View>
 
       <View style={{marginTop: 10}}>
-        <Button title="ENTRAR" />
+        <Button 
+          title="ENTRAR" 
+          onPress={handleNavigateToSchedule}
+        />
       </View>
 
       <Pressable 
