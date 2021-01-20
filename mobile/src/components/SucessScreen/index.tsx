@@ -20,13 +20,14 @@ export default function SucessScreen({title, show}: SucessScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
 
     marginTop: -100,
 
-    height: Dimensions.get("window").height,
+    height: Dimensions.get("screen").height,
 
     position: "absolute",
 

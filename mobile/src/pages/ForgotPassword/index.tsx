@@ -24,6 +24,7 @@ export default function ForgotMyPassword() {
       
       <Button 
         title="PRÓXIMO" 
+        backgroundColor="#3A4498"
         onPress={handleNavigateToRecoverPassword}
       />
     </>

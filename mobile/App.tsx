@@ -10,7 +10,7 @@ import {
 
 import { Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti';
 
-import Routes from './src/routes';
+import Routes from './src/routes/AppStack';
 
 export default function App() {
   let [fontsLoaded] = useFonts({

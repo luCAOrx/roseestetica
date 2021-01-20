@@ -45,7 +45,11 @@ export default function RecoverPassword() {
       />
       <InputPassword placeholder="Senha" icon="lock" />
       
-      <Button title="RECUPERAR SENHA" onPress={handleNavigateToLogin} />
+      <Button 
+        title="RECUPERAR SENHA"
+        backgroundColor="#3A4498"
+        onPress={handleNavigateToLogin} 
+      />
     </ScrollView>
   );
 }

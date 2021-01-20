@@ -10,18 +10,18 @@ import InputPassword from '../../components/InputPassword';
 import Button from '../../components/Button';
 
 export default function Login() {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation();
 
   function handleNavigateToRegister() {
-    navigation.navigate("PersonalData");
+    navigate("PersonalData");
   }
 
   function handleNavigateToForgotMyPassword() {
-    navigation.navigate("ForgotMyPassword");
+    navigate("ForgotMyPassword");
   }
 
   function handleNavigateToSchedule() {
-    navigation.navigate("Schedule");
+    navigate("Home");
   }
 
   return (
@@ -49,6 +49,7 @@ export default function Login() {
       <View style={{marginTop: 10}}>
         <Button 
           title="ENTRAR" 
+          backgroundColor="#3A4498"
           onPress={handleNavigateToSchedule}
         />
       </View>

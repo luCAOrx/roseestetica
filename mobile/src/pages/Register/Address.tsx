@@ -35,7 +35,7 @@ export default function Address() {
 
   return (
     <>
-      <Header title="Endereço"/>
+      <Header title="Endereço" showIcon={false}/>
       <KeyboardAvoidingView>
         <ScrollView>
           <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>
@@ -86,6 +86,7 @@ export default function Address() {
 
               <Button 
                 title="PRÓXIMO" 
+                backgroundColor="#3A4498"
                 onPress={() => {
                   formRef.current?.submitForm();
                   handleNavigateToLoginData();

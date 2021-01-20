@@ -7,17 +7,22 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 interface HeaderProps {
-  title: string
+  title: string;
+  showIcon: boolean;
 }
 
-export default function Header({title}: HeaderProps) {
+export default function Header({title, showIcon}: HeaderProps) {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      <BorderlessButton onPress={navigation.goBack}>
-        <MaterialIcons name="arrow-back" size={30} color="#D2D2E3"/>
-      </BorderlessButton>
+      {
+        showIcon === true ?
+        <BorderlessButton onPress={navigation.goBack}>
+          <MaterialIcons name="arrow-back" size={30} color="#D2D2E3"/>
+        </BorderlessButton> : 
+        <View />
+      }
 
       <Text style={styles.title}>{title}</Text>
       

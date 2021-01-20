@@ -31,7 +31,7 @@ export default function LoginData() {
 
   return (
     <>
-      <Header title="Dados de Login"/>
+      <Header title="Dados de Login" showIcon={false}/>
       <KeyboardAvoidingView>
         <ScrollView>
           <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={2}/>
@@ -55,6 +55,7 @@ export default function LoginData() {
 
               <Button 
                 title="FINALIZAR" 
+                backgroundColor="#3A4498"
                 onPress={() => {
                   formRef.current?.submitForm();
                   setTimeout(() => {

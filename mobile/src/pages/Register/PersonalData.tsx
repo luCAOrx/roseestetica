@@ -32,7 +32,7 @@ export default function PersonalData() {
 
   return (
     <>
-      <Header title="Dados Pessoais"/>
+      <Header title="Dados Pessoais" showIcon={false}/>
       <ScrollView>
         <StepIndicator stepCount={3} customStyles={stepStyles}/>
 
@@ -74,6 +74,7 @@ export default function PersonalData() {
 
             <Button 
               title="PRÓXIMO" 
+              backgroundColor="#3A4498"
               onPress={() => {
                 formRef.current?.submitForm();
                 handleNavigateToAddress();

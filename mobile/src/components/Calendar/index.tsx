@@ -2,6 +2,8 @@ import React from 'react';
 
 import { View } from 'react-native';
 
+import { MaterialIcons } from '@expo/vector-icons';
+
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import {LocaleConfig} from 'react-native-calendars';
 
@@ -15,11 +17,14 @@ LocaleConfig.locales['pt-BR'] = {
 LocaleConfig.defaultLocale = 'pt-BR';
 
 export default function CustomCalendar() {
+
   return (
     <View>
       <Calendar 
         // disableMonthChange={true}
         // hideArrows={true}
+
+        onDayPress={(day) => {console.log('selected day', day)}}
 
         theme={{
           backgroundColor: "#181818",

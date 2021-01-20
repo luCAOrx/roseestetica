@@ -10,11 +10,11 @@
       "resizeMode": "cover"
     },
     "androidNavigationBar": {
-      "backgroundColor": "#181818",
+      "backgroundColor": "#000000",
       "barStyle": "light-content"
     },
     "androidStatusBar": {
-      "backgroundColor": "#181818",
+      "backgroundColor": "#000000",
       "barStyle": "light-content"
     },
     "updates": {

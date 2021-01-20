@@ -5,15 +5,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 const { Navigator, Screen } = createStackNavigator();
 
-import Login from './pages/Login';
-import PersonalData from './pages/Register/PersonalData';
-import Address from './pages/Register/Address';
-import LoginData from './pages/Register/LoginData';
-import ForgotMyPassword from './pages/ForgotPassword';
-import RecoverPassword from './pages/ForgotPassword/recoverPassword';
+import Login from '../pages/Login';
+import PersonalData from '../pages/Register/PersonalData';
+import Address from '../pages/Register/Address';
+import LoginData from '../pages/Register/LoginData';
+import ForgotPassword from '../pages/ForgotPassword';
+import RecoverPassword from '../pages/ForgotPassword/recoverPassword';
 
-import Header from './components/Header';
-import Schedule from './pages/Schedule';
+import Header from '../components/Header';
+import Schedule from '../pages/Schedule';
+import HomeTabs from './HomeTabs';
 
 export default function Routes() {
   return (
@@ -22,7 +23,8 @@ export default function Routes() {
         screenOptions={{ 
           headerShown: false, 
           cardStyle: { backgroundColor: '#181818' }
-        }}>
+        }}
+      >
 
         <Screen 
           name="Login" 
@@ -49,10 +51,10 @@ export default function Routes() {
 
         <Screen 
           name="ForgotMyPassword" 
-          component={ForgotMyPassword}
+          component={ForgotPassword}
           options={{
             headerShown: true,
-            header: () => <Header title="Esqueci Minha Senha"/>
+            header: () => <Header title="Esqueci Minha Senha" showIcon={false}/>
           }}
         />
         
@@ -61,7 +63,7 @@ export default function Routes() {
           component={RecoverPassword}
           options={{
             headerShown: true,
-            header: () => <Header title="Recuperar Senha"/>
+            header: () => <Header title="Recuperar Senha" showIcon={false}/>
           }}
         />
 
@@ -70,6 +72,8 @@ export default function Routes() {
           component={Schedule}
           options={{ headerShown: false}}
         />
+
+        <Screen name="Home" component={HomeTabs}/>
       </Navigator>
     </NavigationContainer>
   );
