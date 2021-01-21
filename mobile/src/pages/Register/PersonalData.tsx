@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
-import { View } from 'react-native';
+import { BackHandler, KeyboardAvoidingView, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -21,6 +21,20 @@ export default function PersonalData() {
     {label: "Feminino", value: "feminino"},
   ]
 
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate("Login");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   function handleNavigateToAddress() {
     navigation.navigate("Address");
   }
@@ -33,56 +47,59 @@ export default function PersonalData() {
   return (
     <>
       <Header title="Dados Pessoais" showIcon={false}/>
-      <ScrollView>
-        <StepIndicator stepCount={3} customStyles={stepStyles}/>
+      <KeyboardAvoidingView behavior="height" >
 
-        <View style={{marginTop: 40}}>
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <Input 
-              placeholder="Nome completo"
-              icon="person"
-              autoCapitalize="words"
-              returnKeyType="next"
-              name="nome"
-            />
+        <ScrollView>
+          <StepIndicator stepCount={3} customStyles={stepStyles}/>
 
-            <Input 
-              placeholder="Cpf"
-              icon="fingerprint"
-              keyboardType="numeric"
-              returnKeyType="next"
-              name="cpf"
-            />
+          <View style={{marginTop: 40}}>
+            <Form ref={formRef} onSubmit={handleSubmit}>
+              <Input 
+                placeholder="Nome completo"
+                icon="person"
+                autoCapitalize="words"
+                returnKeyType="next"
+                name="nome"
+              />
 
-            <Select icon="face" placeholder="Sexo" options={genders}/>
+              <Input 
+                placeholder="Cpf"
+                icon="fingerprint"
+                keyboardType="numeric"
+                returnKeyType="next"
+                name="cpf"
+              />
 
-            <Input 
-              placeholder="Número de telefone" 
-              icon="local-phone" 
-              keyboardType="number-pad"
-              returnKeyType="next"
-              name="telefone"
-            />
-            
-            <Input 
-              placeholder="Número de celular" 
-              icon="phone-android" 
-              keyboardType="number-pad"
-              returnKeyType="send"
-              name="celular"
-            />
+              <Select icon="face" placeholder="Sexo" options={genders}/>
 
-            <Button 
-              title="PRÓXIMO" 
-              backgroundColor="#3A4498"
-              onPress={() => {
-                formRef.current?.submitForm();
-                handleNavigateToAddress();
-              }} 
-            />
-          </Form>
-        </View>
-      </ScrollView>
+              <Input 
+                placeholder="Número de telefone" 
+                icon="local-phone" 
+                keyboardType="number-pad"
+                returnKeyType="next"
+                name="telefone"
+              />
+              
+              <Input 
+                placeholder="Número de celular" 
+                icon="phone-android" 
+                keyboardType="number-pad"
+                returnKeyType="send"
+                name="celular"
+              />
+
+              <Button 
+                title="PRÓXIMO" 
+                backgroundColor="#3A4498"
+                onPress={() => {
+                  formRef.current?.submitForm();
+                  handleNavigateToAddress();
+                }} 
+              />
+            </Form>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 }
