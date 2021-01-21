@@ -10,8 +10,8 @@ import Header from '../../components/Header';
 export default function Reschedule() {
   return (
     <>
+    <Header title="Selecione o dia" showIcon={true} fontSize ={26} />
     <ScrollView style={{backgroundColor: "#181818"}} >        
-      <Header title="Selecione o dia" showIcon={true} fontSize ={26} />
       <CustomCalendar />
 
       <Header title="Selecione o horário" showIcon={false} fontSize={26} />
