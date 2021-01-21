@@ -31,7 +31,7 @@ export default function LoginData() {
 
   return (
     <>
-      <Header title="Dados de Login" showIcon={false}/>
+      <Header title="Dados de Login" showIcon={false} fontSize={26} />
       <KeyboardAvoidingView>
         <ScrollView>
           <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={2}/>

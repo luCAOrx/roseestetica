@@ -7,10 +7,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Schedule from '../pages/Schedule';
 import Appointments from '../pages/Appointments';
 import Profile from '../pages/Profile';
+import Detail from '../pages/Appointments/Detail';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
-export default function HomeTabs() {
+export default function AppTabs() {
   return (
     <Navigator 
       tabBarOptions={{

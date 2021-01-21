@@ -13,8 +13,11 @@ import ForgotPassword from '../pages/ForgotPassword';
 import RecoverPassword from '../pages/ForgotPassword/recoverPassword';
 
 import Header from '../components/Header';
-import Schedule from '../pages/Schedule';
-import HomeTabs from './HomeTabs';
+
+import AppTabs from './AppTabs';
+import Detail from '../pages/Appointments/Detail';
+import Reschedule from '../pages/Appointments/Reschedule';
+import ChangeProcedure from '../pages/Appointments/ChangeProcedure';
 
 export default function Routes() {
   return (
@@ -54,7 +57,8 @@ export default function Routes() {
           component={ForgotPassword}
           options={{
             headerShown: true,
-            header: () => <Header title="Esqueci Minha Senha" showIcon={false}/>
+            header: () => 
+              <Header title="Esqueci Minha Senha" showIcon={false} fontSize={26}/>
           }}
         />
         
@@ -63,17 +67,18 @@ export default function Routes() {
           component={RecoverPassword}
           options={{
             headerShown: true,
-            header: () => <Header title="Recuperar Senha" showIcon={false}/>
+            header: () => 
+              <Header title="Recuperar Senha" showIcon={false} fontSize={26} />
           }}
         />
 
-        <Screen 
-          name="Schedule"
-          component={Schedule}
-          options={{ headerShown: false}}
-        />
+        <Screen name="Schedule" component={AppTabs}/>
 
-        <Screen name="Home" component={HomeTabs}/>
+        <Screen name="Detail" component={Detail}/>
+
+        <Screen name="Reschedule" component={Reschedule}/>
+
+        <Screen name="ChangeProcedure" component={ChangeProcedure}/>
       </Navigator>
     </NavigationContainer>
   );

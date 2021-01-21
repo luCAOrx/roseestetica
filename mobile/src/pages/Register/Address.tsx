@@ -35,7 +35,7 @@ export default function Address() {
 
   return (
     <>
-      <Header title="Endereço" showIcon={false}/>
+      <Header title="Endereço" showIcon={false} fontSize={26} />
       <KeyboardAvoidingView>
         <ScrollView>
           <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>

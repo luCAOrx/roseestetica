@@ -46,7 +46,7 @@ export default function PersonalData() {
 
   return (
     <>
-      <Header title="Dados Pessoais" showIcon={false}/>
+      <Header title="Dados Pessoais" showIcon={false} fontSize={26} />
       <KeyboardAvoidingView behavior="height" >
 
         <ScrollView>

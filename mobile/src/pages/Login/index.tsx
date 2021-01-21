@@ -21,7 +21,7 @@ export default function Login() {
   }
 
   function handleNavigateToSchedule() {
-    navigate("Home");
+    navigate("Schedule");
   }
 
   return (

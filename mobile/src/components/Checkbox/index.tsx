@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "left",
     fontFamily: "Roboto_400Regular",
+    lineHeight: 18,
     fontSize: 15,
 
     color: "#D2D2E3"
