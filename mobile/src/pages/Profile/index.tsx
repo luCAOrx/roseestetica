@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Switch, Text, View } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 
 import logoImg from '../../images/rose.png';
 
-import { MaterialIcons, Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Profile() {
+  const [darkMode, setDarkMode] = useState(true);
+  
   return (
     <>
       <ScrollView style={{backgroundColor: "#181818"}} >
@@ -26,14 +28,20 @@ export default function Profile() {
         </View>
 
         <View style={styles.buttonContainer} >
-          <RectButton style={styles.button} >
-            <Feather name="toggle-right" color="#D2D2E3" size={22} />
+        <View style={styles.button} >
+          <Switch 
+            style={{margin: -10}}
+            thumbColor="#D2D2E3" 
+            trackColor={{ false: '#ccc', true: '#39CC83' }}
+            value={darkMode}
+            onValueChange={setDarkMode}
+          />
             <Text style={styles.themeMode}>Modo noturno</Text>
-          </RectButton>
+          </View>
 
           <RectButton style={styles.button} >
             <MaterialIcons name="local-phone" color="#4CAF50" size={22} />
-            <Text style={styles.phone}>Entrar em contato</Text>
+            <Text style={styles.phone}>Entrar em contato pelo WhatsApp</Text>
           </RectButton>
 
           <RectButton style={styles.button} >
@@ -66,7 +74,9 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    borderRadius: 20
+    width: 64,
+    height: 64,
+    borderRadius: 25,
   },
 
   textContainer: {
@@ -98,27 +108,29 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     margin: 32,
-    marginTop: 80
+    marginTop: 80,
   },
 
   button: {
+    height: 50,
     marginBottom: 50,
 
     flexDirection: "row",
+    alignItems: "center"
   },
 
   themeMode: {
-    marginLeft: 10,
+    marginLeft: 20,
     color: "#D2D2E3"
   },
 
   phone: {
-    marginLeft: 10,
+    marginLeft: 20,
     color: "#4CAF50"
   },
 
   exit: {
-    marginLeft: 10,
+    marginLeft: 20,
     color: "#FD5151"
   }
 });
