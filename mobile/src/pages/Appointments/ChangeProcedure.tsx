@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Button from '../../components/Button';
+import CustomButton from '../../components/Button';
 import CustonCheckbox from '../../components/Checkbox';
 import Header from '../../components/Header';
 
@@ -12,7 +12,12 @@ export default function ChangeProcedure() {
       <CustonCheckbox text="Limpeza de pele" price="R$ 40,00" />
       <CustonCheckbox text="Tratamento + limpeza de pele" price="R$ 50,00" />
 
-      <Button title="ALTERAR O PROCEDIMENTO" backgroundColor="#3A4498" />
+      <CustomButton 
+        title="ALTERAR O PROCEDIMENTO" 
+        backgroundColor="#3A4498" 
+        height={50}
+        fontSize={15}
+      />
     </>
   );
 }

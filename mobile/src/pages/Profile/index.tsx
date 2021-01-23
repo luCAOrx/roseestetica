@@ -6,22 +6,32 @@ import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import logoImg from '../../images/rose.png';
 
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Profile() {
   const [darkMode, setDarkMode] = useState(true);
+
+  const navigation = useNavigation();
+
+  function changeData() {
+    navigation.navigate("ChangeData");
+  }
   
   return (
     <>
       <ScrollView style={{backgroundColor: "#181818"}} >
         <View style={styles.headerContainer} >
-          <RectButton style={styles.header} >
+          <RectButton 
+            style={styles.header} 
+            onPress={changeData}
+          >
             <Image 
               style={styles.image}
               source={logoImg}
             />
             <View style={styles.textContainer} >
               <Text style={styles.name}>Lucas Matheus</Text>
-              <Text style={styles.description}>Meu perfil</Text>
+              <Text style={styles.description}>Altere endereço, login e dados pessoais</Text>
             </View>
             <MaterialIcons name="keyboard-arrow-right" color="#858585" size={28} />
           </RectButton>

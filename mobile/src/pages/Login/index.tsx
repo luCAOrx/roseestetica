@@ -7,7 +7,7 @@ import logoImg from '../../images/rose.png';
 
 import Input from '../../components/Input';
 import InputPassword from '../../components/InputPassword';
-import Button from '../../components/Button';
+import CustomButton from '../../components/Button';
 
 export default function Login() {
   const { navigate } = useNavigation();
@@ -47,9 +47,11 @@ export default function Login() {
       </View>
 
       <View style={{marginTop: 10}}>
-        <Button 
+        <CustomButton 
           title="ENTRAR" 
           backgroundColor="#3A4498"
+          height={50}
+          fontSize={15}
           onPress={handleNavigateToSchedule}
         />
       </View>

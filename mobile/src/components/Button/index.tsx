@@ -3,18 +3,30 @@ import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { RectButton, RectButtonProperties } from 'react-native-gesture-handler';
 
-interface ButtonProps extends RectButtonProperties {
+interface CustomButtonProps extends RectButtonProperties {
   title: string;
   width?: number;
   backgroundColor: string;
+  height: number;
+  fontSize: number;
+  marginBottom?: number;
 }
 
-export default function Button({title, width, backgroundColor, ...rest}: ButtonProps) {
+export default function CustomButton({
+  title, 
+  width, 
+  backgroundColor, 
+  height,
+  fontSize,
+  marginBottom,
+  ...rest
+}: CustomButtonProps) {
   const styles = StyleSheet.create({
     container: {
-      height: 50,
+      height: height,
       margin: 15,
       width: width,
+      marginBottom: marginBottom,
   
       backgroundColor: backgroundColor,
       borderRadius: 8,
@@ -25,7 +37,7 @@ export default function Button({title, width, backgroundColor, ...rest}: ButtonP
     
     title: {
       fontFamily: "Roboto_900Black",
-      fontSize: 15,
+      fontSize: fontSize,
       lineHeight: 18,
       color: "#D2D2E3",
     },

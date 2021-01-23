@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 
-import Button from '../../components/Button';
+import CustomButton from '../../components/Button';
 import Input from '../../components/Input';
 
 export default function ForgotMyPassword() {
@@ -22,9 +22,11 @@ export default function ForgotMyPassword() {
         returnKeyType="next"
       />
       
-      <Button 
+      <CustomButton 
         title="PRÓXIMO" 
         backgroundColor="#3A4498"
+        height={50}
+        fontSize={15}
         onPress={handleNavigateToRecoverPassword}
       />
     </>

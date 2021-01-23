@@ -3,8 +3,6 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import Header from '../../components/Header';
-
 interface HeaderCardProps {
   title: string;
 }
@@ -20,8 +18,6 @@ function HeaderCard({title}: HeaderCardProps) {
 export default function Detail() {
   return (
     <>
-      <Header title="Detalhes do agendamento" showIcon={true} fontSize={23} />
-
       <ScrollView>
         <View style={styles.card}>
           <HeaderCard title="Data e hora"/>

@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import Header from '../../components/Header';
-import Button from '../../components/Button';
+import CustomButton from '../../components/Button';
 
 export default function Appointments() {
   const navigation = useNavigation();
@@ -34,22 +34,33 @@ export default function Appointments() {
             <MaterialIcons name="event-available" size={20} color="#D2D2E3"/>
             <Text style={styles.text}>Segunda 25/09/2021 ás 08:00 horas</Text>
           </View>
-          <Button 
+          <CustomButton 
             title="VER DETALHES" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToDetail}
           />
-          <Button 
+          <CustomButton 
             title="REMARCAR" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToReschedule}
           />
-          <Button 
+          <CustomButton 
             title="ALTERAR PROCEDIMENTO" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToChangeProcedure}
           />
-          <Button title="CANCELAR" backgroundColor="#AB1010" />
+          <CustomButton 
+            title="CANCELAR" 
+            backgroundColor="#AB1010" 
+            height={50}
+            fontSize={15}
+          />
         </View>
 
         <View style={styles.card}>
@@ -57,22 +68,33 @@ export default function Appointments() {
             <MaterialIcons name="event-available" size={20} color="#D2D2E3"/>
             <Text style={styles.text}>Segunda 25/09/2021 ás 08:00 horas</Text>
           </View>
-          <Button 
+          <CustomButton 
             title="VER DETALHES" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToDetail}
           />
-          <Button 
+          <CustomButton 
             title="REMARCAR" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToReschedule}
           />
-          <Button 
+          <CustomButton 
             title="ALTERAR PROCEDIMENTO" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToChangeProcedure}
           />
-          <Button title="CANCELAR" backgroundColor="#AB1010" />
+          <CustomButton 
+            title="CANCELAR" 
+            backgroundColor="#AB1010" 
+            height={50}
+            fontSize={15}
+          />
         </View>
 
         <View style={styles.card}>
@@ -80,22 +102,33 @@ export default function Appointments() {
             <MaterialIcons name="event-available" size={20} color="#D2D2E3"/>
             <Text style={styles.text}>Segunda 25/09/2021 ás 08:00 horas</Text>
           </View>
-          <Button 
+          <CustomButton 
             title="VER DETALHES" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToDetail}
           />
-          <Button 
+          <CustomButton 
             title="REMARCAR" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToReschedule}
           />
-          <Button 
+          <CustomButton 
             title="ALTERAR PROCEDIMENTO" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToChangeProcedure}
           />
-          <Button title="CANCELAR" backgroundColor="#AB1010" />
+          <CustomButton 
+            title="CANCELAR" 
+            backgroundColor="#AB1010" 
+            height={50}
+            fontSize={15}
+          />
         </View>
 
         <View style={styles.card}>
@@ -103,22 +136,33 @@ export default function Appointments() {
             <MaterialIcons name="event-available" size={20} color="#D2D2E3"/>
             <Text style={styles.text}>Segunda 25/09/2021 ás 08:00 horas</Text>
           </View>
-          <Button 
+          <CustomButton 
             title="VER DETALHES" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToDetail}
           />
-          <Button 
+          <CustomButton 
             title="REMARCAR" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToReschedule}
           />
-          <Button 
+          <CustomButton 
             title="ALTERAR PROCEDIMENTO" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToChangeProcedure}
           />
-          <Button title="CANCELAR" backgroundColor="#AB1010" />
+          <CustomButton 
+            title="CANCELAR" 
+            backgroundColor="#AB1010" 
+            height={50}
+            fontSize={15}
+          />
         </View>
 
         <View style={styles.card}>
@@ -126,22 +170,33 @@ export default function Appointments() {
             <MaterialIcons name="event-available" size={20} color="#D2D2E3"/>
             <Text style={styles.text}>Segunda 25/09/2021 ás 08:00 horas</Text>
           </View>
-          <Button 
+          <CustomButton 
             title="VER DETALHES" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToDetail}
           />
-          <Button 
+          <CustomButton 
             title="REMARCAR" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToReschedule}
           />
-          <Button 
+          <CustomButton 
             title="ALTERAR PROCEDIMENTO" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToChangeProcedure}
           />
-          <Button title="CANCELAR" backgroundColor="#AB1010" />
+          <CustomButton 
+            title="CANCELAR" 
+            backgroundColor="#AB1010" 
+            height={50}
+            fontSize={15}
+          />
         </View>
 
         <View style={styles.card}>
@@ -149,22 +204,33 @@ export default function Appointments() {
             <MaterialIcons name="event-available" size={20} color="#D2D2E3"/>
             <Text style={styles.text}>Segunda 25/09/2021 ás 08:00 horas</Text>
           </View>
-          <Button 
+          <CustomButton 
             title="VER DETALHES" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToDetail}
           />
-          <Button 
+          <CustomButton 
             title="REMARCAR" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToReschedule}
           />
-          <Button 
+          <CustomButton 
             title="ALTERAR PROCEDIMENTO" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToChangeProcedure}
           />
-          <Button title="CANCELAR" backgroundColor="#AB1010" />
+          <CustomButton 
+            title="CANCELAR" 
+            backgroundColor="#AB1010" 
+            height={50}
+            fontSize={15}
+          />
         </View>
 
         <View style={styles.card}>
@@ -172,22 +238,33 @@ export default function Appointments() {
             <MaterialIcons name="event-available" size={20} color="#D2D2E3"/>
             <Text style={styles.text}>Segunda 25/09/2021 ás 08:00 horas</Text>
           </View>
-          <Button 
+          <CustomButton 
             title="VER DETALHES" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToDetail}
           />
-          <Button 
+          <CustomButton 
             title="REMARCAR" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToReschedule}
           />
-          <Button 
+          <CustomButton 
             title="ALTERAR PROCEDIMENTO" 
             backgroundColor="#3A4498" 
+            height={50}
+            fontSize={15}
             onPress={handleNavigateToChangeProcedure}
           />
-          <Button title="CANCELAR" backgroundColor="#AB1010" />
+          <CustomButton 
+            title="CANCELAR" 
+            backgroundColor="#AB1010" 
+            height={50}
+            fontSize={15}
+          />
         </View>
       </ScrollView>
     </>

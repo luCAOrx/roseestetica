@@ -8,7 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import Input from '../../components/Input';
 import InputPassword from '../../components/InputPassword';
-import Button from '../../components/Button';
+import CustomButton from '../../components/Button';
 
 export default function RecoverPassword() {
   const navigation = useNavigation();
@@ -45,9 +45,11 @@ export default function RecoverPassword() {
       />
       <InputPassword placeholder="Senha" icon="lock" />
       
-      <Button 
+      <CustomButton 
         title="RECUPERAR SENHA"
         backgroundColor="#3A4498"
+        height={50}
+        fontSize={15}
         onPress={handleNavigateToLogin} 
       />
     </ScrollView>
