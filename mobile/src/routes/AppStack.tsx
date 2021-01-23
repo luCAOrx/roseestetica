@@ -6,15 +6,22 @@ import { createStackNavigator } from '@react-navigation/stack';
 const { Navigator, Screen } = createStackNavigator();
 
 import Login from '../pages/Login';
+
 import PersonalData from '../pages/Register/PersonalData';
 import Address from '../pages/Register/Address';
 import LoginData from '../pages/Register/LoginData';
+
 import ForgotPassword from '../pages/ForgotPassword';
 import RecoverPassword from '../pages/ForgotPassword/recoverPassword';
+
 import AppTabs from './AppTabs';
+
+import Appointments from '../pages/Appointments';
 import Detail from '../pages/Appointments/Detail';
 import Reschedule from '../pages/Appointments/Reschedule';
 import ChangeProcedure from '../pages/Appointments/ChangeProcedure';
+
+import Profile from '../pages/Profile';
 import ChangeData from '../pages/Profile/ChangeData';
 import ChangePersonalData from '../pages/Profile/ChangePersonalData';
 import ChangeAddress from '../pages/Profile/ChangeAddress';
@@ -22,9 +29,87 @@ import ChangeLoginData from '../pages/Profile/ChangeLoginData';
 
 import Header from '../components/Header';
 
-export default function Routes() {
+function AppointmentsScreen() {
   return (
-    <NavigationContainer>
+    <Navigator
+      screenOptions={{ 
+        headerShown: false, 
+        cardStyle: { backgroundColor: '#181818' }
+      }}
+    >
+      <Screen 
+        name="Appointments"
+        component={Appointments}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Screen 
+        name="Detail" 
+        component={Detail}
+        options={{
+          headerShown: true,
+          header: () => 
+            <Header title="Detalhes do agendamento" showIcon={true} fontSize={23} />
+        }}
+      />
+
+      <Screen 
+        name="Reschedule" 
+        component={Reschedule}
+      />
+
+      <Screen 
+        name="ChangeProcedure" 
+        component={ChangeProcedure}
+      />
+    </Navigator>
+  );
+}
+
+function ProfileScreen() {
+  return (
+    <Navigator
+      screenOptions={{ 
+        headerShown: false, 
+        cardStyle: { backgroundColor: '#181818' }
+      }}
+    >
+      <Screen 
+        name="Perfil" 
+        component={Profile}
+      />
+      <Screen 
+        name="ChangeData"
+        component={ChangeData}
+        options={{
+          headerShown: true,
+          header: () => 
+            <Header title="Alterar dados" showIcon={true} fontSize={23} />
+        }}
+      />
+  
+      <Screen 
+        name="ChangePersonalData"
+        component={ChangePersonalData}
+      />
+  
+      <Screen 
+        name="ChangeAddress"
+        component={ChangeAddress}
+      />
+  
+      <Screen 
+        name="ChangeLoginData"
+        component={ChangeLoginData}
+      />
+    </Navigator>
+  );
+}
+
+function AppStack() {
+  return (
       <Navigator 
         screenOptions={{ 
           headerShown: false, 
@@ -79,52 +164,8 @@ export default function Routes() {
           name="Schedule" 
           component={AppTabs}
         />
-
-        <Screen 
-          name="Detail" 
-          component={Detail}
-          options={{
-            headerShown: true,
-            header: () => 
-              <Header title="Detalhes do agendamento" showIcon={true} fontSize={23} />
-          }}
-        />
-
-        <Screen 
-          name="Reschedule" 
-          component={Reschedule}
-        />
-
-        <Screen 
-          name="ChangeProcedure" 
-          component={ChangeProcedure}
-        />
-
-        <Screen 
-          name="ChangeData"
-          component={ChangeData}
-          options={{
-            headerShown: true,
-            header: () => 
-              <Header title="Alterar dados" showIcon={true} fontSize={23} />
-          }}
-        />
-
-        <Screen 
-          name="ChangePersonalData"
-          component={ChangePersonalData}
-        />
-
-        <Screen 
-          name="ChangeAddress"
-          component={ChangeAddress}
-        />
-
-        <Screen 
-          name="ChangeLoginData"
-          component={ChangeLoginData}
-        />
       </Navigator>
-    </NavigationContainer>
   );
 }
+
+export {AppStack, AppointmentsScreen, ProfileScreen};

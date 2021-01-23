@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AppLoading } from 'expo';
 
 import { 
@@ -10,7 +11,7 @@ import {
 
 import { Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti';
 
-import Routes from './src/routes/AppStack';
+import Routes from './src/routes/routes';
 
 export default function App() {
   let [fontsLoaded] = useFonts({

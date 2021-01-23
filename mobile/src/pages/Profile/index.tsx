@@ -19,7 +19,7 @@ export default function Profile() {
   
   return (
     <>
-      <ScrollView style={{backgroundColor: "#181818"}} >
+      <ScrollView>
         <View style={styles.headerContainer} >
           <RectButton 
             style={styles.header} 

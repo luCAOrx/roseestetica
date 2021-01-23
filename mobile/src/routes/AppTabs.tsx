@@ -1,13 +1,12 @@
 import React from 'react';
 
-import { MaterialIcons } from '@expo/vector-icons';
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+import { MaterialIcons } from '@expo/vector-icons';
+
 import Schedule from '../pages/Schedule';
-import Appointments from '../pages/Appointments';
-import Profile from '../pages/Profile';
-import Detail from '../pages/Appointments/Detail';
+
+import { AppointmentsScreen, ProfileScreen } from './AppStack';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -58,7 +57,7 @@ export default function AppTabs() {
 
       <Screen 
         name="Agendamentos" 
-        component={Appointments}
+        component={AppointmentsScreen}
         options={{
           tabBarLabel: "Agendamentos",
           tabBarIcon: ({ color, size, focused }) => {
@@ -71,7 +70,7 @@ export default function AppTabs() {
 
       <Screen 
         name="Perfil" 
-        component={Profile}
+        component={ProfileScreen}
         options={{
           tabBarLabel: "Perfil",
           tabBarIcon: ({ color, size, focused }) => {

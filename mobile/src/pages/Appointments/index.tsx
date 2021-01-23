@@ -26,7 +26,7 @@ export default function Appointments() {
 
   return (
     <>
-      <ScrollView style={{backgroundColor: "#181818"}} >
+      <ScrollView>
         <Header title="Meus agendamentos" showIcon={false} fontSize={26} />
 
         <View style={styles.card}>

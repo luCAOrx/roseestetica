@@ -25,20 +25,6 @@ export default function ChangePersonalData() {
     {label: "Feminino", value: "feminino"},
   ]
 
-  useEffect(() => {
-    const backAction = () => {
-      navigation.navigate("Login");
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, []);
-
   function handleNavigateToChangeData() {
     navigation.navigate("ChangeData");
   }
