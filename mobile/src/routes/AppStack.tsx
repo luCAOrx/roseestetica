@@ -2,8 +2,6 @@ import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-const { Navigator, Screen } = createStackNavigator();
-
 import Login from '../pages/Login';
 
 import PersonalData from '../pages/Register/PersonalData';
@@ -27,6 +25,8 @@ import ChangeAddress from '../pages/Profile/ChangeAddress';
 import ChangeLoginData from '../pages/Profile/ChangeLoginData';
 
 import Header from '../components/Header';
+
+const { Navigator, Screen } = createStackNavigator();
 
 function AppStack() {
   return (
