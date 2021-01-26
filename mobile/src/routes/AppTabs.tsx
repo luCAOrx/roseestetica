@@ -4,9 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
-import Schedule from '../pages/Schedule';
-
-import { AppointmentsScreen, ProfileScreen } from './AppStack';
+import { AppointmentsScreen, ProfileScreen, ScheduleScreen } from './AppStack';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -44,12 +42,16 @@ export default function AppTabs() {
 
       <Screen 
         name="Agendar" 
-        component={Schedule}
+        component={ScheduleScreen}
         options={{
           tabBarLabel: "Agendar",
           tabBarIcon: ({ color, size, focused }) => {
             return (
-              <MaterialIcons name="control-point" size={size} color={focused ? "#D2D2E3" : color}/>
+              <MaterialIcons 
+                name="control-point" 
+                size={size} 
+                color={focused ? "#D2D2E3" : color}
+              />
             );
           }
         }}
@@ -62,7 +64,11 @@ export default function AppTabs() {
           tabBarLabel: "Agendamentos",
           tabBarIcon: ({ color, size, focused }) => {
             return (
-              <MaterialIcons name="event-available" size={size} color={focused ? "#D2D2E3" : color}/>
+              <MaterialIcons 
+                name="event-available" 
+                size={size} 
+                color={focused ? "#D2D2E3" : color}
+              />
             );
           }
         }}
@@ -75,7 +81,11 @@ export default function AppTabs() {
           tabBarLabel: "Perfil",
           tabBarIcon: ({ color, size, focused }) => {
             return (
-              <MaterialIcons name="person" size={size} color={focused ? "#D2D2E3" : color}/>
+              <MaterialIcons 
+                name="person" 
+                size={size} 
+                color={focused ? "#D2D2E3" : color}
+              />
             );
           }
         }}

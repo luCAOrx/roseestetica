@@ -13,15 +13,15 @@ export default function Login() {
   const { navigate } = useNavigation();
 
   function handleNavigateToRegister() {
-    navigate("PersonalData");
+    navigate("Register");
   }
 
-  function handleNavigateToForgotMyPassword() {
-    navigate("ForgotMyPassword");
+  function handleNavigateToForgotPassword() {
+    navigate("ForgotPassword");
   }
 
   function handleNavigateToSchedule() {
-    navigate("Schedule");
+    navigate("Home");
   }
 
   return (
@@ -65,7 +65,7 @@ export default function Login() {
 
       <Pressable 
         style={styles.button}
-        onPress={handleNavigateToForgotMyPassword}
+        onPress={handleNavigateToForgotPassword}
       >
         <Text style={styles.buttonTitle}>Esqueci minha senha</Text>
       </Pressable>

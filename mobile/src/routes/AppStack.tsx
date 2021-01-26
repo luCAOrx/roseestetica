@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const { Navigator, Screen } = createStackNavigator();
@@ -14,7 +13,7 @@ import LoginData from '../pages/Register/LoginData';
 import ForgotPassword from '../pages/ForgotPassword';
 import RecoverPassword from '../pages/ForgotPassword/recoverPassword';
 
-import AppTabs from './AppTabs';
+import Schedule from '../pages/Schedule';
 
 import Appointments from '../pages/Appointments';
 import Detail from '../pages/Appointments/Detail';
@@ -29,6 +28,106 @@ import ChangeLoginData from '../pages/Profile/ChangeLoginData';
 
 import Header from '../components/Header';
 
+function AppStack() {
+  return (
+    <Navigator
+      screenOptions={{ 
+        headerShown: false, 
+        cardStyle: { backgroundColor: '#181818' }
+      }}
+    >
+
+      <Screen 
+        name="Login" 
+        component={Login} 
+      />
+
+      <Screen
+        name="Register"
+        component={RegisterScreen}
+      />
+
+      <Screen
+        name="ForgotPassword"
+        component={ForgotPasswordScreen}
+      />
+    </Navigator>
+  );
+}
+
+function RegisterScreen() {
+  return (
+    <Navigator
+      screenOptions={{ 
+        headerShown: false, 
+        cardStyle: { backgroundColor: '#181818' }
+      }}
+    >
+
+      <Screen 
+        name="PersonalData" 
+        component={PersonalData}
+        options={{ headerShown: false }}
+      />
+
+      <Screen 
+        name="Address" 
+        component={Address}
+        options={{ headerShown: false }}
+      />
+
+      <Screen 
+        name="LoginData" 
+        component={LoginData}
+        options={{ headerShown: false }}
+      />
+    </Navigator>
+  );
+}
+
+function ForgotPasswordScreen() {
+  return (
+    <Navigator
+      screenOptions={{ 
+        headerShown: false, 
+        cardStyle: { backgroundColor: '#181818' }
+      }}
+    >
+      <Screen 
+        name="ForgotPassword" 
+        component={ForgotPassword}
+        options={{
+          headerShown: true,
+          header: () => 
+            <Header title="Esqueci Minha Senha" showIcon={false} fontSize={26}/>
+        }}
+      />
+        
+      <Screen 
+        name="RecoverPassword" 
+        component={RecoverPassword}
+        options={{
+          headerShown: true,
+          header: () => 
+            <Header title="Recuperar Senha" showIcon={false} fontSize={26} />
+        }}
+      />
+    </Navigator>
+  );
+}
+
+function ScheduleScreen() {
+  return (
+    <Navigator>
+      <Screen 
+        name="Schedule" 
+        component={Schedule}
+        options={{headerShown: false}}
+      />
+    </Navigator>
+  );
+}
+
 function AppointmentsScreen() {
   return (
     <Navigator
@@ -40,9 +139,7 @@ function AppointmentsScreen() {
       <Screen 
         name="Appointments"
         component={Appointments}
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerShown: false }}
       />
 
       <Screen 
@@ -108,64 +205,11 @@ function ProfileScreen() {
   );
 }
 
-function AppStack() {
-  return (
-      <Navigator 
-        screenOptions={{ 
-          headerShown: false, 
-          cardStyle: { backgroundColor: '#181818' }
-        }}
-      >
-
-        <Screen 
-          name="Login" 
-          component={Login} 
-        />
-
-        <Screen 
-          name="PersonalData" 
-          component={PersonalData}
-          options={{ headerShown: false }}
-        />
-
-        <Screen 
-          name="Address" 
-          component={Address}
-          options={{ headerShown: false }}
-        />
-
-        <Screen 
-          name="LoginData" 
-          component={LoginData}
-          options={{ headerShown: false }}
-        />
-
-        <Screen 
-          name="ForgotMyPassword" 
-          component={ForgotPassword}
-          options={{
-            headerShown: true,
-            header: () => 
-              <Header title="Esqueci Minha Senha" showIcon={false} fontSize={26}/>
-          }}
-        />
-        
-        <Screen 
-          name="RecoverPassword" 
-          component={RecoverPassword}
-          options={{
-            headerShown: true,
-            header: () => 
-              <Header title="Recuperar Senha" showIcon={false} fontSize={26} />
-          }}
-        />
-
-        <Screen 
-          name="Schedule" 
-          component={AppTabs}
-        />
-      </Navigator>
-  );
-}
-
-export {AppStack, AppointmentsScreen, ProfileScreen};
+export {
+  AppStack, 
+  RegisterScreen, 
+  ForgotPasswordScreen, 
+  ScheduleScreen, 
+  AppointmentsScreen, 
+  ProfileScreen
+};
