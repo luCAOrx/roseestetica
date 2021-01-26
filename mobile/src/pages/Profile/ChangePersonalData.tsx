@@ -90,8 +90,8 @@ export default function ChangePersonalData() {
             </Form>
           </View>
         </ScrollView>
-        <SucessScreen title="Cadastro atualizado!" show={sucessMessage}/>
       </KeyboardAvoidingView>
+      <SucessScreen title="Cadastro atualizado!" show={sucessMessage}/>
     </>
   );
 }

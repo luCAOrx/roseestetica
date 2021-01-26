@@ -68,8 +68,8 @@ export default function LoginData() {
             </Form>
           </View>
         </ScrollView>
-        <SucessScreen title="Cadastro concluído!" show={sucessMessage}/>
       </KeyboardAvoidingView>
+      <SucessScreen title="Cadastro concluído!" show={sucessMessage}/>
     </>
   );
 }
