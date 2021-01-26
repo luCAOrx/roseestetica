@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { BackHandler, StyleSheet, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import CustomButton from '../../components/Button';
@@ -10,19 +11,19 @@ import Header from '../../components/Header';
 
 export default function Schedule() {
 
-  // useEffect(() => {
-  //   const backAction = () => {
-  //     BackHandler.exitApp();
-  //     return true;
-  //   };
+  useFocusEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
 
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     backAction
-  //   );
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
 
-  //   return () => backHandler.remove();
-  // }, []);
+    return () => backHandler.remove();
+  });
 
   return (
     <>
