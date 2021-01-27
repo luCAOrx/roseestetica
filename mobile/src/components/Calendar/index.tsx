@@ -1,30 +1,35 @@
-import React from 'react';
-
-import { View } from 'react-native';
+import React, { useState } from 'react';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
-import {LocaleConfig} from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
+import { LocaleConfig } from 'react-native-calendars';
 
-LocaleConfig.locales['pt-BR'] = {
-  monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-  monthNamesShort: ['Jan.','Fev.','Mar','Abr','Mai','Jun','Jul.','Ago','Set.','Out.','Nov.','Dez.'],
-  dayNames: ['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado-feira','Domingo-feira'],
-  dayNamesShort: ['Seg.','Ter.','Qua.','Qui.','Sex.','Sáb.','Dom.'],
+LocaleConfig.locales["br"] = {
+  monthNames: ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],
+  monthNamesShort: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+  dayNames: ["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado","Domingo"],
+  dayNamesShort: ["Se","Te","Qu","Qu","Se","Sá","Do"],
 }
 
-LocaleConfig.defaultLocale = 'pt-BR';
+LocaleConfig.defaultLocale = "br";
 
 export default function CustomCalendar() {
+  const [selected, setSelected] = useState('');
+
+  const onDayPress = (day: any) => {
+    setSelected(day.dateString);
+  };
 
   return (
-    <View>
+    <>
       <Calendar 
-        // disableMonthChange={true}
-        // hideArrows={true}
-
-        onDayPress={(day) => {console.log('selected day', day)}}
+        enableSwipeMonths
+        hideExtraDays
+        onDayPress={onDayPress}
+        markedDates={{
+          [selected]: {selected: true, selectedColor: "#333529"}
+        }}
 
         theme={{
           backgroundColor: "#181818",
@@ -51,6 +56,6 @@ export default function CustomCalendar() {
           textDayHeaderFontSize: 16
         }}
       />
-    </View>
+    </>
   );
 }
