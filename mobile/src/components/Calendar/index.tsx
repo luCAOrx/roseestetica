@@ -9,7 +9,6 @@ LocaleConfig.locales["br"] = {
   monthNamesShort: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
   dayNames: ["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado","Domingo"],
   dayNamesShort: ["Do","Se","Te","Qu","Qu","Se","Sá"],
-  amDesignator: "00:00"
 }
 
 LocaleConfig.defaultLocale = "br";
