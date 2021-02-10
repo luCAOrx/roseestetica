@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 
-import { Calendar } from 'react-native-calendars';
-import { LocaleConfig } from 'react-native-calendars';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 
 LocaleConfig.locales["br"] = {
   monthNames: ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],
   monthNamesShort: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
   dayNames: ["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado","Domingo"],
-  dayNamesShort: ["Se","Te","Qu","Qu","Se","Sá","Do"],
+  dayNamesShort: ["Do","Se","Te","Qu","Qu","Se","Sá"],
+  amDesignator: "00:00"
 }
 
 LocaleConfig.defaultLocale = "br";
@@ -18,6 +18,7 @@ export default function CustomCalendar() {
   const [selected, setSelected] = useState('');
 
   const onDayPress = (day: any) => {
+    console.log('selected day', day);
     setSelected(day.dateString);
   };
 
@@ -25,8 +26,23 @@ export default function CustomCalendar() {
     <>
       <Calendar 
         enableSwipeMonths
-        hideExtraDays
         onDayPress={onDayPress}
+        renderArrow={(direction = "left" ) => (
+          <>
+            {direction === "left" ? 
+              <Icon 
+                name="navigate-before" 
+                color="#D2D2E3"
+                size={25} 
+              /> :
+              <Icon 
+                name="navigate-next" 
+                color="#D2D2E3"
+                size={25} 
+              />
+            }
+          </>
+        )}
         markedDates={{
           [selected]: {selected: true, selectedColor: "#333529"}
         }}
