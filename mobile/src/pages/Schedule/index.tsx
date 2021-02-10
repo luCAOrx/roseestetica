@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+import api from '../../services/api';
 
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,7 +11,13 @@ import CustomCalendar from '../../components/Calendar';
 import CustonCheckbox from '../../components/Checkbox';
 import Header from '../../components/Header';
 
+interface Hour {
+  id: number;
+  horario: string;
+}
+
 export default function Schedule() {
+  const [hours, setHour] = useState<Hour[]>([]);
 
   useFocusEffect(() => {
     const backAction = () => {
@@ -25,6 +33,12 @@ export default function Schedule() {
     return () => backHandler.remove();
   });
 
+  useEffect(() => {
+    api.get('horarios').then(response => {
+      setHour(response.data);
+    });
+  }, []);
+
   return (
     <>
       <ScrollView style={{backgroundColor: "#181818"}} >        
@@ -33,59 +47,16 @@ export default function Schedule() {
 
         <Header title="Selecione o horário" showIcon={false} fontSize={26} />
         <View style={styles.buttonContainer} >
-          <CustomButton 
-            title="08:00" 
-            width={105} 
-            backgroundColor="#248E54" 
-            height={50}
-            fontSize={15}
-          />
-          <CustomButton 
-            title="10:00" 
-            width={105} 
-            backgroundColor="#248E54" 
-            height={50}
-            fontSize={15}
-          />
-          <CustomButton 
-            title="12:00" 
-            width={105} 
-            backgroundColor="#248E54" 
-            height={50}
-            fontSize={15}
-          />
-        </View>
-        <View style={styles.buttonContainer} >
-          <CustomButton 
-            title="14:00" 
-            width={105} 
-            backgroundColor="#248E54" 
-            height={50}
-            fontSize={15}
-          />
-          <CustomButton 
-            title="16:00" 
-            width={105} 
-            backgroundColor="#248E54" 
-            height={50}
-            fontSize={15}
-          />
-          <CustomButton 
-            title="18:00" 
-            width={105} 
-            backgroundColor="#248E54" 
-            height={50}
-            fontSize={15}
-          />
-        </View>
-        <View style={styles.buttonContainer} >
-          <CustomButton 
-            title="20:00" 
-            width={105} 
-            backgroundColor="#248E54" 
-            height={50}
-            fontSize={15}
-          />
+          {hours.map(hour => (
+            <CustomButton 
+              key={String(hour.id)}
+              title={hour.horario} 
+              width={105} 
+              backgroundColor="#248E54" 
+              height={50}
+              fontSize={15}
+            />
+          ))}
         </View>
 
         <Header title="Selecione o procedimento" showIcon={false} fontSize={26} />
