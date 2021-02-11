@@ -14,6 +14,7 @@ const AgendamentoValidation = require('./validation/AgendamentoValidation');
 
 const AdminController = require('./controller/AdminController');
 const AdminValidation = require('./validation/AdminValidation');
+const GenerosController = require('./controller/GenerosController');
 
 // VALIDAÇÕES PARA QUERY PARAMS E PARAMS
 const paramsIdValidation = celebrate({
@@ -59,6 +60,7 @@ const queryPageAgendamentoValidation = celebrate({
 });
 
 routes.get('/horarios', HorariosController.listarHorarios);
+routes.get('/generos', GenerosController.listarGeneros);
 
 // INICIANDO ROTAS PARA CLIENTE
 routes.post('/login',
