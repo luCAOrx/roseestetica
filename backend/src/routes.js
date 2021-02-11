@@ -4,6 +4,8 @@ const { Joi, Segments, celebrate } = require('celebrate');
 
 const authMiddleware = require('./midllewares/auth');
 
+const HorariosController = require('./controller/HorariosController');
+
 const ClienteController = require('./controller/ClienteController');
 const ClienteValidation = require('./validation/ClienteValidation');
 
@@ -55,6 +57,8 @@ const queryPageAgendamentoValidation = celebrate({
     }).required()
   })
 });
+
+routes.get('/horarios', HorariosController.listarHorarios);
 
 // INICIANDO ROTAS PARA CLIENTE
 routes.post('/login',
