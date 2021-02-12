@@ -15,14 +15,14 @@ import CustomButton from '../../components/Button';
 import CustonCheckbox from '../../components/Checkbox';
 import Header from '../../components/Header';
 
-locale
-
 interface Hour {
   id: number;
   horario: string;
 }
 
 export default function Schedule() {
+  locale
+
   const [hours, setHours] = useState<Hour[]>([]);
   const [selectedHour, setSelectedHour] = useState<number[]>([]);
   const [selectedDay, setSelectedDay] = useState<string>('');
