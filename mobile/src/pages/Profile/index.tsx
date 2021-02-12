@@ -38,24 +38,37 @@ export default function Profile() {
         </View>
 
         <View style={styles.buttonContainer} >
-        <View style={styles.button} >
-          <Switch 
-            style={{margin: -10}}
-            thumbColor="#D2D2E3" 
-            trackColor={{ false: '#ccc', true: '#39CC83' }}
-            value={darkMode}
-            onValueChange={setDarkMode}
-          />
-            <Text style={styles.themeMode}>Modo noturno</Text>
-          </View>
+          <RectButton 
+            style={styles.button} 
+            onPress={() => {setDarkMode(!darkMode), console.log(darkMode)}}
+          >
+            <Switch 
+              style={{margin: 10}}
+              thumbColor="#D2D2E3" 
+              trackColor={{ false: '#ccc', true: '#39CC83' }}
+              value={darkMode}
+              onValueChange={setDarkMode}
+            />
+              <Text style={styles.themeMode}>Modo noturno</Text>
+          </RectButton>
 
           <RectButton style={styles.button} >
-            <MaterialIcons name="local-phone" color="#4CAF50" size={22} />
+            <MaterialIcons 
+              name="local-phone" 
+              color="#4CAF50" 
+              size={22} 
+              style={{margin: 20}}
+            />
             <Text style={styles.phone}>Entrar em contato pelo WhatsApp</Text>
           </RectButton>
 
           <RectButton style={styles.button} >
-            <MaterialIcons name="power-settings-new" color="#FD5151" size={22} />
+            <MaterialIcons 
+              name="power-settings-new" 
+              color="#FD5151" 
+              size={22} 
+              style={{margin: 20}}
+            />
             <Text style={styles.exit}>Sair</Text>
           </RectButton>
         </View>
@@ -117,30 +130,29 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    margin: 32,
     marginTop: 80,
   },
 
   button: {
-    height: 50,
+    height: 60,
     marginBottom: 50,
 
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   themeMode: {
-    marginLeft: 20,
-    color: "#D2D2E3"
+    margin: 6,
+    color: "#D2D2E3",
   },
 
   phone: {
-    marginLeft: 20,
-    color: "#4CAF50"
+    marginLeft: 10,
+    color: "#4CAF50",
   },
 
   exit: {
-    marginLeft: 20,
-    color: "#FD5151"
+    marginLeft: 10,
+    color: "#FD5151",
   }
 });
