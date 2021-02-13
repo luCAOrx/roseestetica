@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 
-import { KeyboardAvoidingView, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { BackHandler, KeyboardAvoidingView, View } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { Form } from '@unform/mobile';
@@ -27,6 +27,20 @@ export default function ChangeLoginData() {
     setSucessMessage(true);
     console.log(data);
   }
+
+  useFocusEffect(() => {
+    const backAction = () => {
+      navigation.navigate("ChangeData");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  });
 
   return (
     <>

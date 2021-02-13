@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-import { KeyboardAvoidingView, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -10,7 +10,7 @@ import StepIndicator from 'react-native-step-indicator';
 
 import { Input } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
-import Select from '../../components/CustomPicker';
+import Select from '../../components/Select';
 import Header from '../../components/Header';
 
 export default function Address() {
@@ -36,14 +36,14 @@ export default function Address() {
 
   return (
     <>
-      <Header title="Endereço" showIcon={false} fontSize={26} />
-      <KeyboardAvoidingView>
-        <ScrollView>
-          <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>
-
-          <View style={{marginTop: 40}}>
-            <Form ref={formRef} onSubmit={handleSubmit}>
-              <Select icon="location-city" placeholder="Cidade" options={city}/>
+      <Form ref={formRef} onSubmit={handleSubmit}>
+        <KeyboardAvoidingView>
+          <View style={styles.container}>
+              <Header title="Endereço" showIcon={false} fontSize={26} />
+              <View style={{marginBottom: 40}}>
+                <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>
+              </View>
+                <Select icon="location-city" placeholder="Cidade" modalHeight={220}/>
 
               <Input 
                 placeholder="Bairro"
@@ -95,10 +95,9 @@ export default function Address() {
                   handleNavigateToLoginData();
                 }} 
               />
-            </Form>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            </View>
+        </KeyboardAvoidingView>
+      </Form>
     </>
   );
 }
@@ -118,3 +117,9 @@ const stepStyles = {
   separatorFinishedColor: "#2FB86E",
   separatorUnFinishedColor: "#D2D2E3"
 }
+
+const styles = StyleSheet.create({
+  container: {
+    height: Dimensions.get("screen").height,
+  },
+});
