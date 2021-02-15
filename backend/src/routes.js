@@ -15,6 +15,8 @@ const AgendamentoValidation = require('./validation/AgendamentoValidation');
 const AdminController = require('./controller/AdminController');
 const AdminValidation = require('./validation/AdminValidation');
 const GenerosController = require('./controller/GenerosController');
+const CidadesController = require('./controller/CidadesController');
+const ProcedimentosController = require('./controller/ProcedimentosController');
 
 // VALIDAÇÕES PARA QUERY PARAMS E PARAMS
 const paramsIdValidation = celebrate({
@@ -61,6 +63,8 @@ const queryPageAgendamentoValidation = celebrate({
 
 routes.get('/horarios', HorariosController.listarHorarios);
 routes.get('/generos', GenerosController.listarGeneros);
+routes.get('/cidades', CidadesController.listarCidades);
+routes.get('/procedimentos', ProcedimentosController.listarProcedimentos);
 
 // INICIANDO ROTAS PARA CLIENTE
 routes.post('/login',
