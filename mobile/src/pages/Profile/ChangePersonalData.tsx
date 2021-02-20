@@ -64,7 +64,7 @@ export default function ChangePersonalData() {
               name="cpf"
             />
 
-            <Select icon="face" placeholder="Sexo" modalHeight={290}/>
+            <Select icon="face" placeholder="Sexo" modalHeight={290} isGender/>
 
             <Input 
               placeholder="Número de telefone" 

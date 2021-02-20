@@ -70,7 +70,7 @@ export default function PersonalData() {
               name="cpf"
             />
 
-            <Select icon="face" placeholder="Sexo" modalHeight={220}/>
+            <Select icon="face" placeholder="Sexo" modalHeight={220} isGender/>
 
             <Input 
               placeholder="Número de telefone" 
