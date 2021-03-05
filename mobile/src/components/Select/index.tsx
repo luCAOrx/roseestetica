@@ -18,6 +18,11 @@ interface Gender {
   sexo: string;
 }
 
+interface City {
+  id: number;
+  cidade: string;
+}
+
 export default function Select({
   icon, 
   placeholder, 
@@ -27,7 +32,9 @@ export default function Select({
   const modalizeRef = useRef<Modalize>(null);
 
   const [genders, setGenders] = useState<Gender[]>([]);
-  const [selectedGender, setSelectedGender] = useState<number[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
+  const [selectedCity, setSelectedCity] = useState<string[]>([]);
 
   const onOpen = () => {
     modalizeRef.current?.open();
@@ -37,17 +44,29 @@ export default function Select({
     modalizeRef.current?.close();
   };
 
-  function handleSelectGender(id: number) {
-      selectedGender.pop();
-      selectedGender.push(id);
+  function handleSelectGender(sex: string) {
+    selectedGender.pop();
+    selectedGender.push(sex);
 
-      setSelectedGender(selectedGender);
-      
+    setSelectedGender([sex]);
+  }
+
+  function handleSelectCity(city: string) {
+    selectedCity.pop();
+    selectedCity.push(city);
+
+    setSelectedCity([city]);
   }
 
   useEffect(() => {
     api.get('generos').then(response => {
       setGenders(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    api.get('cidades').then(response => {
+      setCities(response.data);
     });
   }, []);
 
@@ -63,8 +82,25 @@ export default function Select({
           size={20} 
           color={"#D2D2E3"} 
         />
+        
+        {isGender ? (
+          <Text 
+            style={
+              selectedGender.length ? styles.selected : styles.placeholder
+            }
+          >
+            {selectedGender.length ? selectedGender : placeholder}
+          </Text>
 
-          <Text style={styles.placeholder}>{placeholder}</Text>
+        ) : (
+          <Text 
+            style={
+              selectedCity.length ? styles.selected : styles.placeholder
+            }
+          >
+            {selectedCity.length ? selectedCity : placeholder}
+          </Text>
+        )}
 
         <Icon 
           style={{margin: 10}} 
@@ -89,11 +125,29 @@ export default function Select({
               style={styles.item}
               onPress={() => {
                 onClose();
-                handleSelectGender(gender.id);
+                handleSelectGender(gender.sexo);
                 console.log(selectedGender);
               }}
             >
               <Text style={styles.itemTitle}>{gender.sexo}</Text>
+            </RectButton>
+          </View>
+        ))}
+
+        {!isGender && cities.map(city => (
+          <View 
+            style={styles.itemContainer}
+            key={city.id}
+          >
+            <RectButton 
+              style={styles.item}
+              onPress={() => {
+                onClose();
+                handleSelectCity(city.cidade);
+                console.log(selectedCity);
+              }}
+            >
+              <Text style={styles.itemTitle}>{city.cidade}</Text>
             </RectButton>
           </View>
         ))}
@@ -148,12 +202,9 @@ const styles = StyleSheet.create({
     color: "#D2D2E3"
   },
 
-  selectedGender: {
+  selected: {
     flex: 1,
     textAlign: "left",
-
-    fontFamily: "Roboto_400Regular",
-    fontSize: 16,
 
     color: "#D2D2E3"
   }
