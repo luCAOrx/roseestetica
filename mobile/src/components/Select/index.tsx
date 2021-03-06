@@ -10,6 +10,7 @@ interface SelectProps {
   icon: string;
   placeholder: string;
   modalHeight: number;
+  snapPoint: number;
   isGender: boolean;
 }
 
@@ -27,6 +28,7 @@ export default function Select({
   icon, 
   placeholder, 
   modalHeight,
+  snapPoint,
   isGender
 }: SelectProps) {
   const modalizeRef = useRef<Modalize>(null);
@@ -112,7 +114,7 @@ export default function Select({
 
       <Modalize 
         ref={modalizeRef}
-        snapPoint={280}
+        snapPoint={snapPoint}
         modalHeight={modalHeight}
         modalStyle={styles.modal}
       >
@@ -182,8 +184,6 @@ const styles = StyleSheet.create({
   },
 
   itemContainer: {
-    marginTop: 10, 
-
     borderBottomColor: "rgba(0,0,0,0.3)",
     borderBottomWidth: 1
   },

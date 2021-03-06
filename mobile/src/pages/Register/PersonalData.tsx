@@ -47,61 +47,63 @@ export default function PersonalData() {
 
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit}>
-        <KeyboardAvoidingView behavior="height" >
-          <View style={styles.container}>
-            <Header title="Dados Pessoais" showIcon={false} fontSize={26} />
-            <StepIndicator stepCount={3} customStyles={stepStyles}/>
-            <View style={{marginTop: 40}}>
-              <Input 
-                placeholder="Nome completo"
-                icon="person"
-                autoCapitalize="words"
-                returnKeyType="next"
-                name="nome"
-              />
-            </View>
+      <ScrollView>
+        <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
+        <Header title="Dados Pessoais" showIcon={false} fontSize={26} />
+        <StepIndicator stepCount={3} customStyles={stepStyles}/>
+        <View style={{marginTop: 20}} />
+          <Input 
+            placeholder="Nome completo"
+            icon="person"
+            autoCapitalize="words"
+            returnKeyType="next"
+            name="nome"
+          />
 
-            <Input 
-              placeholder="Cpf"
-              icon="fingerprint"
-              keyboardType="numeric"
-              returnKeyType="next"
-              name="cpf"
-            />
+          <Input 
+            placeholder="Cpf"
+            icon="fingerprint"
+            keyboardType="numeric"
+            returnKeyType="next"
+            name="cpf"
+          />
 
-            <Select icon="face" placeholder="Sexo" modalHeight={220} isGender/>
+          <Select 
+            icon="face" 
+            placeholder="Sexo" 
+            modalHeight={140} 
+            snapPoint={140}
+            isGender
+          />
 
-            <Input 
-              placeholder="Número de telefone" 
-              icon="local-phone" 
-              keyboardType="number-pad"
-              returnKeyType="next"
-              name="telefone"
-            />
-            
-            <Input 
-              placeholder="Número de celular" 
-              icon="phone-android" 
-              keyboardType="number-pad"
-              returnKeyType="send"
-              name="celular"
-            />
-
-            <CustomButton 
-              title="PRÓXIMO" 
-              backgroundColor="#3A4498"
-              height={50}
-              fontSize={15}
-              onPress={() => {
-                formRef.current?.submitForm();
-                handleNavigateToAddress();
-              }} 
-            />
-          </View>
+          <Input 
+            placeholder="Número de telefone" 
+            icon="local-phone" 
+            keyboardType="number-pad"
+            returnKeyType="next"
+            name="telefone"
+          />
           
-        </KeyboardAvoidingView>
-      </Form>
+          <Input 
+            placeholder="Número de celular" 
+            icon="phone-android" 
+            keyboardType="number-pad"
+            returnKeyType="send"
+            name="celular"
+          />
+
+          <CustomButton 
+            title="PRÓXIMO" 
+            backgroundColor="#3A4498"
+            height={50}
+            fontSize={15}
+            onPress={() => {
+              formRef.current?.submitForm();
+              handleNavigateToAddress();
+            }} 
+          />
+        </Form>
+      </ScrollView>
     </>
   );
 }
@@ -123,7 +125,7 @@ const stepStyles = {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: Dimensions.get("screen").height,
+  form: {
+    height: Dimensions.get("window").height,
   },
 });

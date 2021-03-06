@@ -36,68 +36,75 @@ export default function Address() {
 
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit}>
-        <KeyboardAvoidingView>
-          <View style={styles.container}>
-              <Header title="Endereço" showIcon={false} fontSize={26} />
-              <View style={{marginBottom: 40}}>
-                <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={1}/>
-              </View>
-                <Select icon="location-city" placeholder="Cidade" modalHeight={220}/>
+      <ScrollView>
+        <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
+          <Header title="Endereço" showIcon={false} fontSize={26} />
+          <StepIndicator 
+            customStyles={stepStyles} 
+            stepCount={3} 
+            currentPosition={1}
+          />
+          <View style={{marginTop: 20}} />
+          <Select 
+            icon="location-city" 
+            placeholder="Cidade" 
+            modalHeight={340} 
+            snapPoint={350}
+            isGender={false}
+          />
 
-              <Input 
-                placeholder="Bairro"
-                icon="map"
-                autoCapitalize="words"
-                returnKeyType="next"
-                name="bairro"
-              />
+          <Input 
+            placeholder="Bairro"
+            icon="map"
+            autoCapitalize="words"
+            returnKeyType="next"
+            name="bairro"
+          />
 
-              <Input 
-                placeholder="Logradouro"
-                icon="home"
-                autoCapitalize="words"
-                returnKeyType="next"
-                name="logradouro"
-              />
+          <Input 
+            placeholder="Logradouro"
+            icon="home"
+            autoCapitalize="words"
+            returnKeyType="next"
+            name="logradouro"
+          />
 
-              <Input 
-                placeholder="Número" 
-                icon="looks-5"
-                keyboardType="numeric" 
-                returnKeyType="next"
-                name="numero"
-              />
+          <Input 
+            placeholder="Número" 
+            icon="looks-5"
+            keyboardType="numeric" 
+            returnKeyType="next"
+            name="numero"
+          />
 
-              <Input 
-                placeholder="Complemento" 
-                icon="domain" 
-                autoCapitalize="words"
-                returnKeyType="next"
-                name="complemento"
-              />
-              
-              <Input 
-                placeholder="Cep" 
-                icon="place" 
-                keyboardType="number-pad"
-                returnKeyType="send"
-                name="complemento"
-              />
+          <Input 
+            placeholder="Complemento" 
+            icon="domain" 
+            autoCapitalize="words"
+            returnKeyType="next"
+            name="complemento"
+          />
+          
+          <Input 
+            placeholder="Cep" 
+            icon="place" 
+            keyboardType="number-pad"
+            returnKeyType="send"
+            name="complemento"
+          />
 
-              <CustomButton 
-                title="PRÓXIMO" 
-                backgroundColor="#3A4498"
-                height={50}
-                fontSize={15}
-                onPress={() => {
-                  formRef.current?.submitForm();
-                  handleNavigateToLoginData();
-                }} 
-              />
-            </View>
-        </KeyboardAvoidingView>
-      </Form>
+          <CustomButton 
+            title="PRÓXIMO" 
+            backgroundColor="#3A4498"
+            height={50}
+            fontSize={15}
+            onPress={() => {
+              formRef.current?.submitForm();
+              handleNavigateToLoginData();
+            }} 
+          />
+        </Form>
+      </ScrollView>
     </>
   );
 }
@@ -119,7 +126,7 @@ const stepStyles = {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: Dimensions.get("screen").height,
+  form: {
+    height: Dimensions.get("window").height,
   },
 });

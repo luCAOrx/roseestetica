@@ -11,6 +11,7 @@ import CustomButton from '../../components/Button';
 import Select from '../../components/Select';
 import Header from '../../components/Header';
 import SucessScreen from '../../components/SucessScreen';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ChangeAddress() {
   const formRef = useRef<FormHandles>(null);
@@ -18,15 +19,6 @@ export default function ChangeAddress() {
   const navigation = useNavigation();
 
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
-
-  const city = [
-    {label: "Natal", value: "natal"},
-    {label: "Alto do Rodrigues", value: "alto do rodrigues"},
-    {label: "Pendências", value: "pendências"},
-    {label: "Assu", value: "assu"},
-    {label: "Angicos", value: "angicos"},
-  ]
-
   useEffect(() => {
     const backAction = () => {
       navigation.navigate("ChangeData");
@@ -52,74 +44,79 @@ export default function ChangeAddress() {
 
   return (
     <>
-      <Form ref={formRef} onSubmit={handleSubmit}>
-        <KeyboardAvoidingView>
-          <View style={styles.container}>
-            <Header title="Alterar Endereço" showIcon={true} fontSize={26} />
-            <Select icon="location-city" placeholder="Cidade" modalHeight={290}/>
+      <ScrollView>
+        <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
+          <Header title="Endereço" showIcon={true} fontSize={26} />
+          <View style={{marginTop: 20}} />
+          <Select 
+            icon="location-city" 
+            placeholder="Cidade" 
+            modalHeight={340} 
+            snapPoint={350}
+            isGender={false}
+          />
 
-            <Input 
-              placeholder="Bairro"
-              icon="map"
-              autoCapitalize="words"
-              returnKeyType="next"
-              name="bairro"
-            />
+          <Input 
+            placeholder="Bairro"
+            icon="map"
+            autoCapitalize="words"
+            returnKeyType="next"
+            name="bairro"
+          />
 
-            <Input 
-              placeholder="Logradouro"
-              icon="home"
-              autoCapitalize="words"
-              returnKeyType="next"
-              name="logradouro"
-            />
+          <Input 
+            placeholder="Logradouro"
+            icon="home"
+            autoCapitalize="words"
+            returnKeyType="next"
+            name="logradouro"
+          />
 
-            <Input 
-              placeholder="Número" 
-              icon="looks-5"
-              keyboardType="numeric" 
-              returnKeyType="next"
-              name="numero"
-            />
+          <Input 
+            placeholder="Número" 
+            icon="looks-5"
+            keyboardType="numeric" 
+            returnKeyType="next"
+            name="numero"
+          />
 
-            <Input 
-              placeholder="Complemento" 
-              icon="domain" 
-              autoCapitalize="words"
-              returnKeyType="next"
-              name="complemento"
-            />
-            
-            <Input 
-              placeholder="Cep" 
-              icon="place" 
-              keyboardType="number-pad"
-              returnKeyType="send"
-              name="complemento"
-            />
+          <Input 
+            placeholder="Complemento" 
+            icon="domain" 
+            autoCapitalize="words"
+            returnKeyType="next"
+            name="complemento"
+          />
+          
+          <Input 
+            placeholder="Cep" 
+            icon="place" 
+            keyboardType="number-pad"
+            returnKeyType="send"
+            name="complemento"
+          />
 
-            <CustomButton 
-              title="PRONTO" 
-              backgroundColor="#3A4498"
-              height={50}
-              fontSize={15}
-              onPress={() => {
-                formRef.current?.submitForm();
-                setTimeout(() => {
-                  handleNavigateToChangeData();
-                }, 3000);
-              }} 
-            />
-          </View>
-        </KeyboardAvoidingView>
-      </Form>
+          <CustomButton 
+            title="PRONTO" 
+            backgroundColor="#3A4498"
+            height={50}
+            fontSize={15}
+            onPress={() => {
+              formRef.current?.submitForm();
+              setTimeout(() => {
+                handleNavigateToChangeData();
+              }, 3000);
+            }} 
+          />
+        </Form>
+      </ScrollView>
       <SucessScreen title="Cadastro atualizado!" show={sucessMessage}/>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  form: {
     height: Dimensions.get("screen").height,
   },
 });

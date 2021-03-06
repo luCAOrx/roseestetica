@@ -23,8 +23,6 @@ export default function Header({title, showIcon, fontSize}: HeaderProps) {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-  
-      backgroundColor: "#181818",
     },
   
     title: {
@@ -48,7 +46,7 @@ export default function Header({title, showIcon, fontSize}: HeaderProps) {
 
       <Text style={styles.title}>{title}</Text>
       
-      <View></View>
+      <View />
     </View>
   );
 }
