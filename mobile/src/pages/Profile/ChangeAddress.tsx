@@ -43,80 +43,76 @@ export default function ChangeAddress() {
   }
 
   return (
-    <>
-      <ScrollView>
-        <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
-          <Header title="Endereço" showIcon={true} fontSize={26} />
-          <View style={{marginTop: 20}} />
-          <Select 
-            icon="location-city" 
-            placeholder="Cidade" 
-            modalHeight={340} 
-            snapPoint={350}
-            isGender={false}
-          />
+    <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
+      <Header title="Endereço" showIcon={true} fontSize={26} />
+      <View style={{marginTop: 20}} />
+      <Select 
+        icon="location-city" 
+        placeholder="Cidade" 
+        modalHeight={375} 
+        snapPoint={375}
+        isGender={false}
+      />
 
-          <Input 
-            placeholder="Bairro"
-            icon="map"
-            autoCapitalize="words"
-            returnKeyType="next"
-            name="bairro"
-          />
+      <Input 
+        placeholder="Bairro"
+        icon="map"
+        autoCapitalize="words"
+        returnKeyType="next"
+        name="bairro"
+      />
 
-          <Input 
-            placeholder="Logradouro"
-            icon="home"
-            autoCapitalize="words"
-            returnKeyType="next"
-            name="logradouro"
-          />
+      <Input 
+        placeholder="Logradouro"
+        icon="home"
+        autoCapitalize="words"
+        returnKeyType="next"
+        name="logradouro"
+      />
 
-          <Input 
-            placeholder="Número" 
-            icon="looks-5"
-            keyboardType="numeric" 
-            returnKeyType="next"
-            name="numero"
-          />
+      <Input 
+        placeholder="Número" 
+        icon="looks-5"
+        keyboardType="numeric" 
+        returnKeyType="next"
+        name="numero"
+      />
 
-          <Input 
-            placeholder="Complemento" 
-            icon="domain" 
-            autoCapitalize="words"
-            returnKeyType="next"
-            name="complemento"
-          />
-          
-          <Input 
-            placeholder="Cep" 
-            icon="place" 
-            keyboardType="number-pad"
-            returnKeyType="send"
-            name="complemento"
-          />
+      <Input 
+        placeholder="Complemento" 
+        icon="domain" 
+        autoCapitalize="words"
+        returnKeyType="next"
+        name="complemento"
+      />
+      
+      <Input 
+        placeholder="Cep" 
+        icon="place" 
+        keyboardType="number-pad"
+        returnKeyType="send"
+        name="complemento"
+      />
 
-          <CustomButton 
-            title="PRONTO" 
-            backgroundColor="#3A4498"
-            height={50}
-            fontSize={15}
-            onPress={() => {
-              formRef.current?.submitForm();
-              setTimeout(() => {
-                handleNavigateToChangeData();
-              }, 3000);
-            }} 
-          />
-        </Form>
-      </ScrollView>
+      <CustomButton 
+        title="PRONTO" 
+        backgroundColor="#3A4498"
+        height={50}
+        fontSize={15}
+        onPress={() => {
+          formRef.current?.submitForm();
+          setTimeout(() => {
+            handleNavigateToChangeData();
+          }, 3000);
+        }} 
+      />
       <SucessScreen title="Cadastro atualizado!" show={sucessMessage}/>
-    </>
+    </Form>
   );
 }
 
 const styles = StyleSheet.create({
   form: {
-    height: Dimensions.get("screen").height,
+    height: Dimensions.get("window").height,
   },
 });

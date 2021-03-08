@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-import { BackHandler, Dimensions, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { BackHandler, Dimensions, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -17,11 +17,6 @@ export default function PersonalData() {
   const formRef = useRef<FormHandles>(null);
 
   const navigation = useNavigation();
-
-  const genders = [
-    {label: "Masculino", value: "masculino"},
-    {label: "Feminino", value: "feminino"},
-  ]
 
   useEffect(() => {
     const backAction = () => {
@@ -46,65 +41,62 @@ export default function PersonalData() {
   }
 
   return (
-    <>
-      <ScrollView>
-        <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
-        <Header title="Dados Pessoais" showIcon={false} fontSize={26} />
-        <StepIndicator stepCount={3} customStyles={stepStyles}/>
-        <View style={{marginTop: 20}} />
-          <Input 
-            placeholder="Nome completo"
-            icon="person"
-            autoCapitalize="words"
-            returnKeyType="next"
-            name="nome"
-          />
+    <Form ref={formRef} onSubmit={handleSubmit}>
+      <Header title="Dados pessoais" showIcon={false} fontSize={26}/>
+      <StepIndicator stepCount={3} customStyles={stepStyles}/>
+      <View style={{marginTop: 20}}/>
+      <Input 
+        placeholder="Nome completo"
+        icon="person"
+        autoCapitalize="words"
+        returnKeyType="next"
+        name="nome"
+      />
 
-          <Input 
-            placeholder="Cpf"
-            icon="fingerprint"
-            keyboardType="numeric"
-            returnKeyType="next"
-            name="cpf"
-          />
+      <Input 
+        placeholder="Cpf"
+        icon="fingerprint"
+        keyboardType="numeric"
+        returnKeyType="next"
+        name="cpf"
+      />
 
-          <Select 
-            icon="face" 
-            placeholder="Sexo" 
-            modalHeight={140} 
-            snapPoint={140}
-            isGender
-          />
+      <Select 
+        icon="face" 
+        placeholder="Sexo" 
+        modalHeight={190} 
+        snapPoint={190}
+        isGender
+      />
 
-          <Input 
-            placeholder="Número de telefone" 
-            icon="local-phone" 
-            keyboardType="number-pad"
-            returnKeyType="next"
-            name="telefone"
-          />
-          
-          <Input 
-            placeholder="Número de celular" 
-            icon="phone-android" 
-            keyboardType="number-pad"
-            returnKeyType="send"
-            name="celular"
-          />
+      <Input 
+        placeholder="Número de telefone" 
+        icon="local-phone" 
+        keyboardType="number-pad"
+        returnKeyType="next"
+        name="telefone"
+      />
+      
+      <Input 
+        placeholder="Número de celular" 
+        icon="phone-android" 
+        keyboardType="number-pad"
+        returnKeyType="send"
+        name="celular"
+      />
 
-          <CustomButton 
-            title="PRÓXIMO" 
-            backgroundColor="#3A4498"
-            height={50}
-            fontSize={15}
-            onPress={() => {
-              formRef.current?.submitForm();
-              handleNavigateToAddress();
-            }} 
-          />
-        </Form>
-      </ScrollView>
-    </>
+      <CustomButton 
+        title="PRÓXIMO" 
+        backgroundColor="#3A4498"
+        height={50}
+        marginBottom={50}
+        fontSize={15}
+        onPress={() => {
+          formRef.current?.submitForm();
+          handleNavigateToAddress();
+        }} 
+      />
+    </Form>
   );
 }
 
@@ -126,6 +118,6 @@ const stepStyles = {
 
 const styles = StyleSheet.create({
   form: {
-    height: Dimensions.get("window").height,
+    height: Dimensions.get("screen").height
   },
 });
