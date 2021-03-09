@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { StyleSheet, Text } from 'react-native';
-import { RectButton, RectButtonProperties } from 'react-native-gesture-handler';
+import { RectButton, RectButtonProperties, TouchableOpacity } from 'react-native-gesture-handler';
 
 interface CustomButtonProps extends RectButtonProperties {
   title: string;
@@ -44,9 +44,9 @@ export default function CustomButton({
   });
   
   return(
-    <RectButton style={styles.container} {...rest}>
+    <TouchableOpacity style={styles.container} {...rest}>
       <Text style={styles.title}>{title}</Text>
-    </RectButton>
+    </TouchableOpacity>
     
   );
 }
