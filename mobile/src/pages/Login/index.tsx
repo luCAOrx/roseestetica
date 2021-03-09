@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Keyboard, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import logoImg from '../../images/rose.png';
+import logoImg from '../../images/logo.png';
 
 import Input from '../../components/Input';
 import InputPassword from '../../components/InputPassword';
@@ -11,6 +11,10 @@ import CustomButton from '../../components/Button';
 
 export default function Login() {
   const { navigate } = useNavigation();
+
+  const [logo] = useState(new Animated.ValueXY({
+    x: 350, y: 55
+  }));
 
   function handleNavigateToRegister() {
     navigate("Register");
@@ -24,52 +28,94 @@ export default function Login() {
     navigate("Home");
   }
 
+  function keyboardDidShow() {
+    Animated.parallel([
+      Animated.timing(logo.x, {
+        useNativeDriver: false,
+        toValue: 240,
+        duration: 100
+      }),
+      Animated.timing(logo.y, {
+        useNativeDriver: false,
+        toValue: 30,
+        duration: 100
+      }),
+    ]).start();
+  }
+
+  function keyboardDidHide() {
+    Animated.parallel([
+      Animated.timing(logo.x, {
+        useNativeDriver: false,
+        toValue: 340,
+        duration: 100
+      }),
+      Animated.timing(logo.y, {
+        useNativeDriver: false,
+        toValue: 55,
+        duration: 100
+      }),
+    ]).start();
+  }
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow', keyboardDidShow
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide', keyboardDidHide
+    );
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
       <View style={styles.logo}>
-        <Image source={logoImg} />
-        <Text style={styles.logoText}>Rose Estética</Text>
-      </View>
-
-      <View style={{marginTop: 50}}>
-        <Input 
-          placeholder="E-mail"
-          icon="email"
-          autoCapitalize="words"
-          keyboardType="email-address"
-          returnKeyType="next"
-        />
-        <InputPassword 
-          placeholder="Senha"
-          icon="lock"
-          returnKeyType="send"
+        <Animated.Image 
+          style={{
+           height: logo.y, 
+           width: logo.x,
+          }} 
+          source={logoImg} 
         />
       </View>
+      
+      <Input 
+        placeholder="E-mail"
+        icon="email"
+        autoCapitalize="words"
+        keyboardType="email-address"
+        returnKeyType="next"
+      />
+      <InputPassword 
+        placeholder="Senha"
+        icon="lock"
+        returnKeyType="send"
+      />
 
-      <View style={{marginTop: 10}}>
-        <CustomButton 
-          title="ENTRAR" 
-          backgroundColor="#3A4498"
-          height={50}
-          fontSize={15}
-          onPress={handleNavigateToSchedule}
-        />
-      </View>
+      <CustomButton 
+        title="ENTRAR" 
+        backgroundColor="#3A4498"
+        height={50}
+        fontSize={15}
+        onPress={handleNavigateToSchedule}
+      />
 
-      <Pressable 
-        style={styles.button}
+      <CustomButton 
+        title="Criar uma conta" 
+        backgroundColor="transparent"
+        height={50}
+        fontSize={15}
         onPress={handleNavigateToRegister}
-      >
-        <Text style={styles.buttonTitle}>Criar uma conta</Text>
-      </Pressable>
+      />
 
-      <Pressable 
-        style={styles.button}
+      <CustomButton 
+        title="Esqueci minha senha" 
+        backgroundColor="transparent"
+        height={50}
+        fontSize={15}
         onPress={handleNavigateToForgotPassword}
-      >
-        <Text style={styles.buttonTitle}>Esqueci minha senha</Text>
-      </Pressable>
-    </View>
+      />
+    </KeyboardAvoidingView>
   );
 }
 
@@ -78,42 +124,12 @@ const styles = StyleSheet.create({
     flex: 1,
 
     justifyContent: "center",
-
-    backgroundColor: "#181818",
   },
 
   logo: {
-    marginTop: 50,
-
-    flexDirection: "row",
+    marginTop: 80,
+    marginVertical: 50,
     justifyContent: "center",
     alignItems: "center"
   },
-
-  logoText: {
-    marginLeft: 20,
-
-    fontFamily: "Calligraffitti_400Regular",
-    fontSize: 35,
-
-    color: "#D2D2E3"
-  },
-
-  buttonTitle: {
-    marginTop: 20,
-
-    fontFamily: "Roboto_700Bold",
-    fontSize: 15,
-    lineHeight: 18,
-
-    color: "#D2D2E3",
-  },
-  
-  button: {
-    height: 50,
-    marginTop: 10,
-    
-    justifyContent: "center",
-    alignItems: "center",
-  }
 });
