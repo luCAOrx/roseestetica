@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import CustomButton from '../../components/Button';
 
-import logoImg from '../../images/rose.png';
+import logoImg from '../../images/logo.png';
 
 export default function ChangePersonalData() {
   const navigation = useNavigation();

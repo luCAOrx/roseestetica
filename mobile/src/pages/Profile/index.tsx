@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Image, StyleSheet, Switch, Text, View } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 
-import logoImg from '../../images/rose.png';
+import logoImg from '../../images/logo.png';
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
