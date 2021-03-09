@@ -41,7 +41,7 @@ export default function PersonalData() {
   }
 
   return (
-    <Form ref={formRef} onSubmit={handleSubmit}>
+    <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
       <Header title="Dados pessoais" showIcon={false} fontSize={26}/>
       <StepIndicator stepCount={3} customStyles={stepStyles}/>
       <View style={{marginTop: 20}}/>
