@@ -1,4 +1,4 @@
 import Input from './input';
-import InputPassword from './inputPassword';
+import Select from './select';
 
-export {Input, InputPassword};
+export {Input, Select};
