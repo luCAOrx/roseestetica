@@ -1,17 +1,24 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
 
 import { MaterialIcons } from '@expo/vector-icons';
 import { useField } from '@unform/core';
+import { BorderlessButton } from 'react-native-gesture-handler';
 
 interface InputProps extends TextInputProps {
   placeholder: string;
-  icon: string | any;
-  name: string | any;
+  icon: string;
+  name: string;
+  isPassword?: boolean;
 }
 
-export default function Input({ placeholder, icon, name, ...rest}: InputProps) {
+export default function Input({ 
+  placeholder, icon, name, isPassword, ...rest
+}: InputProps) {
+  const [show, setShow] = useState<boolean>(false);
+  const [visiblePassword, setVisiblePassword] = useState<boolean>(true);
+
   const { fieldName, registerField, defaultValue, error } = useField(name);
   
   const inputRef = useRef<any>(null);
@@ -33,6 +40,7 @@ export default function Input({ placeholder, icon, name, ...rest}: InputProps) {
         style={{flex: 1, color: "#D2D2E3"}}
         placeholder={placeholder}
         placeholderTextColor="#7A7A7A"
+        secureTextEntry={isPassword ? visiblePassword : !visiblePassword}
         onChangeText={value => {
           if (inputRef.current) {
             inputRef.current.value = value;
@@ -40,6 +48,22 @@ export default function Input({ placeholder, icon, name, ...rest}: InputProps) {
         }}
         {...rest}
       />
+
+      {isPassword ? 
+        <BorderlessButton 
+          style={{marginRight: 10,}} 
+          onPress={() => {
+            setShow(!show) 
+            setVisiblePassword(!visiblePassword)
+          }}
+        >
+          <MaterialIcons 
+            name={show === false ? "visibility-off" : "visibility"} 
+            size={20} 
+            color={show === false ? "#7A7A7A" : "#D2D2E3"} 
+          />
+        </BorderlessButton> : []
+      }
     </View>
   )
 }
