@@ -7,9 +7,8 @@ import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import StepIndicator from 'react-native-step-indicator';
 
-import { Input } from '../../components/Form/index';
+import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
-import Select from '../../components/Select';
 import Header from '../../components/Header';
 
 export default function Address() {
@@ -37,6 +36,7 @@ export default function Address() {
       <Select 
         icon="location-city" 
         placeholder="Cidade" 
+        name="cidade"
         modalHeight={390} 
         snapPoint={390}
         isGender={false}

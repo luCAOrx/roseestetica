@@ -1,14 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
-import { BackHandler, Dimensions, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 
-import { Input } from '../../components/Form/index';
+import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
-import Select from '../../components/Select';
 import Header from '../../components/Header';
 import SucessScreen from '../../components/SucessScreen';
 
@@ -27,20 +26,6 @@ export default function ChangePersonalData() {
     setSucessMessage(true);
     console.log(data);
   }
-
-  useEffect(() => {
-    const backAction = () => {
-      navigation.navigate("ChangeData");
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-    
-    return () => backHandler.remove();
-  }, []);
 
   return (
     <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
@@ -65,8 +50,9 @@ export default function ChangePersonalData() {
       <Select 
         icon="face" 
         placeholder="Sexo" 
-        modalHeight={175} 
-        snapPoint={175}
+        name="sexo"
+        modalHeight={255} 
+        snapPoint={255}
         isGender
       />
 
@@ -105,6 +91,6 @@ export default function ChangePersonalData() {
 
 const styles = StyleSheet.create({
   form: {
-    height: Dimensions.get("window").height,
+    height: Dimensions.get("screen").height,
   },
 });

@@ -1,16 +1,14 @@
 import React, { useEffect, useRef } from 'react'
 
-import { BackHandler, Dimensions, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import StepIndicator from 'react-native-step-indicator';
 
-import { Input } from '../../components/Form/index';
+import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
-import Select from '../../components/Select';
 import Header from '../../components/Header';
 
 export default function PersonalData() {
@@ -63,6 +61,7 @@ export default function PersonalData() {
 
       <Select 
         icon="face" 
+        name="sexo"
         placeholder="Sexo" 
         modalHeight={190} 
         snapPoint={190}

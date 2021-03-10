@@ -1,17 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { BackHandler, Dimensions, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 
-import { Input } from '../../components/Form/index';
+import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
-import Select from '../../components/Select';
 import Header from '../../components/Header';
 import SucessScreen from '../../components/SucessScreen';
-import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ChangeAddress() {
   const formRef = useRef<FormHandles>(null);
@@ -49,8 +47,9 @@ export default function ChangeAddress() {
       <Select 
         icon="location-city" 
         placeholder="Cidade" 
-        modalHeight={375} 
-        snapPoint={375}
+        name="cidade"
+        modalHeight={455} 
+        snapPoint={455}
         isGender={false}
       />
 
@@ -113,6 +112,6 @@ export default function ChangeAddress() {
 
 const styles = StyleSheet.create({
   form: {
-    height: Dimensions.get("window").height,
+    height: Dimensions.get("screen").height,
   },
 });
