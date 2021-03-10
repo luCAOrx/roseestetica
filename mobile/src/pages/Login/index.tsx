@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 import logoImg from '../../images/logo.png';
 
 import Input from '../../components/Input';
-import InputPassword from '../../components/InputPassword';
 import CustomButton from '../../components/Button';
 
 export default function Login() {
@@ -86,9 +85,10 @@ export default function Login() {
         keyboardType="email-address"
         returnKeyType="next"
       />
-      <InputPassword 
+      <Input 
         placeholder="Senha"
         icon="lock"
+        isPassword
         returnKeyType="send"
       />
 
