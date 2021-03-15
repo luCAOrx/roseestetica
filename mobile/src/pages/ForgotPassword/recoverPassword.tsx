@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import Input from '../../components/Input';
-import InputPassword from '../../components/InputPassword';
 import CustomButton from '../../components/Button';
 
 export default function RecoverPassword() {
@@ -43,7 +42,13 @@ export default function RecoverPassword() {
         autoCapitalize="words"
         returnKeyType="done"
       />
-      <InputPassword placeholder="Senha" icon="lock" />
+      
+      <Input 
+        placeholder="Senha"
+        icon="lock"
+        isPassword
+        returnKeyType="send"
+      />
       
       <CustomButton 
         title="RECUPERAR SENHA"
