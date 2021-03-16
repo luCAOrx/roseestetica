@@ -17,12 +17,16 @@ export default function Header({title, showIcon, fontSize}: HeaderProps) {
 
   const styles = StyleSheet.create({
     container: {
-      padding: 24,
-      paddingTop: 50,
+      marginTop: 35,
+      marginBottom: 15,
       
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
+    },
+
+    button: {
+      marginLeft: 10,
     },
   
     title: {
@@ -38,7 +42,7 @@ export default function Header({title, showIcon, fontSize}: HeaderProps) {
     <View style={styles.container}>
       {
         showIcon === true ?
-        <BorderlessButton onPress={navigation.goBack}>
+        <BorderlessButton style={styles.button} onPress={navigation.goBack}>
           <MaterialIcons name="arrow-back" size={30} color="#D2D2E3"/>
         </BorderlessButton> : 
         <View />
