@@ -1,11 +1,21 @@
 import React, { useRef } from 'react'
 
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { 
+  Dimensions, 
+  Keyboard, 
+  KeyboardAvoidingView, 
+  Platform, 
+  StyleSheet, 
+  View 
+} from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+
 import StepIndicator from 'react-native-step-indicator';
+import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
@@ -25,74 +35,83 @@ export default function Address() {
   }
 
   return (
-    <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
-      <Header title="Endereço" showIcon={false} fontSize={26} />
-      <StepIndicator 
-        customStyles={stepStyles} 
-        stepCount={3} 
-        currentPosition={1}
-      />
-      <View style={{marginTop: 20}} />
-      <Select 
-        icon="location-city" 
-        placeholder="Cidade" 
-        name="cidade"
-        modalHeight={390} 
-        snapPoint={390}
-        isGender={false}
-      />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{flex: 1}}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView>
+          <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
+            <Header title="Endereço" showIcon={false} fontSize={26} />
+            <StepIndicator 
+              customStyles={stepStyles} 
+              stepCount={3} 
+              currentPosition={1}
+            />
+            <View style={{marginTop: 20}} />
+            <Select 
+              icon="location-city" 
+              placeholder="Cidade" 
+              name="cidade"
+              modalHeight={390} 
+              snapPoint={390}
+              isGender={false}
+            />
 
-      <Input 
-        placeholder="Bairro"
-        icon="map"
-        autoCapitalize="words"
-        returnKeyType="next"
-        name="bairro"
-      />
+            <Input 
+              placeholder="Bairro"
+              icon="map"
+              autoCapitalize="words"
+              returnKeyType="next"
+              name="bairro"
+            />
 
-      <Input 
-        placeholder="Logradouro"
-        icon="home"
-        autoCapitalize="words"
-        returnKeyType="next"
-        name="logradouro"
-      />
+            <Input 
+              placeholder="Logradouro"
+              icon="home"
+              autoCapitalize="words"
+              returnKeyType="next"
+              name="logradouro"
+            />
 
-      <Input 
-        placeholder="Número" 
-        icon="looks-5"
-        keyboardType="numeric" 
-        returnKeyType="next"
-        name="numero"
-      />
+            <Input 
+              placeholder="Número" 
+              icon="looks-5"
+              keyboardType="numeric" 
+              returnKeyType="next"
+              name="numero"
+            />
 
-      <Input 
-        placeholder="Complemento" 
-        icon="domain" 
-        autoCapitalize="words"
-        returnKeyType="next"
-        name="complemento"
-      />
-      
-      <Input 
-        placeholder="Cep" 
-        icon="place" 
-        keyboardType="number-pad"
-        returnKeyType="send"
-        name="complemento"
-      />
+            <Input 
+              placeholder="Complemento (opcional)" 
+              icon="domain" 
+              autoCapitalize="words"
+              returnKeyType="next"
+              name="complemento"
+            />
+            
+            <Input 
+              placeholder="Cep" 
+              icon="place" 
+              keyboardType="number-pad"
+              returnKeyType="send"
+              name="complemento"
+            />
 
-      <CustomButton 
-        title="PRÓXIMO" 
-        backgroundColor="#3A4498"
-        height={50}
-        fontSize={15}
-        onPress={() => {
-          formRef.current?.submitForm();
-          handleNavigateToLoginData();
-        }} 
-      />
-    </Form>
+            <CustomButton 
+              title="PRÓXIMO" 
+              backgroundColor="#3A4498"
+              height={50}
+              fontSize={15}
+              onPress={() => {
+                formRef.current?.submitForm();
+                handleNavigateToLoginData();
+              }} 
+            />
+          </Form>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

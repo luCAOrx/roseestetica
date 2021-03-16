@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 
-import { View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { Form } from '@unform/mobile';
@@ -11,6 +11,7 @@ import { Input } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
 import SucessScreen from '../../components/SucessScreen';
 import Header from '../../components/Header';
+import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 export default function LoginData() {
   const formRef = useRef<FormHandles>(null);
@@ -29,44 +30,50 @@ export default function LoginData() {
   }
 
   return (
-    <>
-      <Form ref={formRef} onSubmit={handleSubmit}>
-        <Header title="Dados de Login" showIcon={false} fontSize={26} />
-        <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={2}/>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{flex: 1}}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView>
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <Header title="Dados de Login" showIcon={false} fontSize={26} />
+            <StepIndicator stepCount={3} customStyles={stepStyles} currentPosition={2}/>
+            <View style={{marginTop: 20}} />
+            <Input 
+              placeholder="Email"
+              icon="email"
+              keyboardType="email-address"
+              autoCapitalize="words"
+              returnKeyType="next"
+              name="email"
+            />
 
-        <View style={{marginTop: 20}} />
-          <Input 
-            placeholder="Email"
-            icon="email"
-            keyboardType="email-address"
-            autoCapitalize="words"
-            returnKeyType="next"
-            name="email"
-          />
+            <Input 
+              placeholder="Senha"
+              icon="lock"
+              name="senha"
+              isPassword
+              returnKeyType="send"
+            />
 
-          <Input 
-            placeholder="Senha"
-            icon="lock"
-            name="senha"
-            isPassword
-            returnKeyType="send"
-          />
-
-          <CustomButton 
-            title="FINALIZAR" 
-            backgroundColor="#3A4498"
-            height={50}
-            fontSize={15}
-            onPress={() => {
-              formRef.current?.submitForm();
-              setTimeout(() => {
-                handleNavigateToLogin();
-              }, 3000);
-            }} 
-          />
-        </Form>
+            <CustomButton 
+              title="FINALIZAR" 
+              backgroundColor="#3A4498"
+              height={50}
+              fontSize={15}
+              onPress={() => {
+                formRef.current?.submitForm();
+                setTimeout(() => {
+                  handleNavigateToLogin();
+                }, 3000);
+              }} 
+            />
+          </Form>
+        </ScrollView>
+      </TouchableWithoutFeedback>
       <SucessScreen title="Cadastro concluído!" show={sucessMessage}/>
-    </>
+    </KeyboardAvoidingView>
   );
 }
 

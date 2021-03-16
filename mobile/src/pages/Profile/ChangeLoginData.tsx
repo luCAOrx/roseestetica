@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react'
 
-import { BackHandler, KeyboardAvoidingView, View } from 'react-native';
+import { BackHandler, Keyboard, KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -43,12 +43,15 @@ export default function ChangeLoginData() {
   });
 
   return (
-    <>
-      <KeyboardAvoidingView behavior="position">
-        <Header title="Dados de Login" showIcon={true} fontSize={26} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{flex: 1}}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView>
-          <View style={{marginTop: 50}} />
           <Form ref={formRef} onSubmit={handleSubmit}>
+            <Header title="Dados de Login" showIcon={true} fontSize={26} />
+            <View style={{marginTop: 20}}/>
             <Input 
               placeholder="Email"
               icon="email"
@@ -80,8 +83,8 @@ export default function ChangeLoginData() {
             />
           </Form>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
       <SucessScreen title="Cadastro atualizado!" show={sucessMessage}/>
-    </>
+    </KeyboardAvoidingView>
   );
 }

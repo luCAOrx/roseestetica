@@ -1,14 +1,25 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react';
 
-import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { 
+  View, 
+  KeyboardAvoidingView, 
+  StyleSheet, 
+  Platform, 
+  TouchableWithoutFeedback, 
+  Keyboard, 
+  BackHandler, 
+  Dimensions  
+} from 'react-native';
 
-import { Form } from '@unform/mobile';
+import { useNavigation } from '@react-navigation/core';
 import { FormHandles } from '@unform/core';
-import StepIndicator from 'react-native-step-indicator';
+import { Form } from '@unform/mobile';
 
-import { Input, Select } from '../../components/Form/index';
+import StepIndicator from 'react-native-step-indicator';
+import { ScrollView } from 'react-native-gesture-handler';
+
 import CustomButton from '../../components/Button';
+import { Input, Select } from '../../components/Form';
 import Header from '../../components/Header';
 
 export default function PersonalData() {
@@ -39,65 +50,74 @@ export default function PersonalData() {
   }
 
   return (
-    <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
-      <Header title="Dados pessoais" showIcon={false} fontSize={26}/>
-      <StepIndicator stepCount={3} customStyles={stepStyles}/>
-      <View style={{marginTop: 20}}/>
-      <Input 
-        placeholder="Nome completo"
-        icon="person"
-        autoCapitalize="words"
-        returnKeyType="next"
-        name="nome"
-      />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{flex: 1}}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView>
+          <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
+            <Header title="Dados pessoais" showIcon={false} fontSize={26}/>
+            <StepIndicator stepCount={3} customStyles={stepStyles}/>
+            <View style={{marginTop: 20}}/>
+            <Input 
+              placeholder="Nome completo"
+              icon="person"
+              autoCapitalize="words"
+              returnKeyType="next"
+              name="nome"
+            />
 
-      <Input 
-        placeholder="Cpf"
-        icon="fingerprint"
-        keyboardType="numeric"
-        returnKeyType="next"
-        name="cpf"
-      />
+            <Input 
+              placeholder="Cpf"
+              icon="fingerprint"
+              keyboardType="numeric"
+              returnKeyType="next"
+              name="cpf"
+            />
 
-      <Select 
-        icon="face" 
-        name="sexo"
-        placeholder="Sexo" 
-        modalHeight={190} 
-        snapPoint={190}
-        isGender
-      />
+            <Select 
+              icon="face" 
+              name="sexo"
+              placeholder="Sexo" 
+              modalHeight={190} 
+              snapPoint={190}
+              isGender
+            />
 
-      <Input 
-        placeholder="Número de telefone" 
-        icon="local-phone" 
-        keyboardType="number-pad"
-        returnKeyType="next"
-        name="telefone"
-      />
-      
-      <Input 
-        placeholder="Número de celular" 
-        icon="phone-android" 
-        keyboardType="number-pad"
-        returnKeyType="send"
-        name="celular"
-      />
+            <Input 
+              placeholder="Número de telefone (opcional)" 
+              icon="local-phone" 
+              keyboardType="number-pad"
+              returnKeyType="next"
+              name="telefone"
+            />
+            
+            <Input 
+              placeholder="Número de celular" 
+              icon="phone-android" 
+              keyboardType="number-pad"
+              returnKeyType="send"
+              name="celular"
+            />
 
-      <CustomButton 
-        title="PRÓXIMO" 
-        backgroundColor="#3A4498"
-        height={50}
-        marginBottom={50}
-        fontSize={15}
-        onPress={() => {
-          formRef.current?.submitForm();
-          handleNavigateToAddress();
-        }} 
-      />
-    </Form>
+            <CustomButton 
+              title="PRÓXIMO" 
+              backgroundColor="#3A4498"
+              height={50}
+              marginBottom={50}
+              fontSize={15}
+              onPress={() => {
+                formRef.current?.submitForm();
+                handleNavigateToAddress();
+              }} 
+            />
+          </Form>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
-}
+};
 
 const stepStyles = {
   currentStepLabelColor: "#333333",
