@@ -37,7 +37,7 @@ export default function Input({
       
       <TextInput 
         ref={inputRef}
-        style={{flex: 1, color: "#D2D2E3"}}
+        style={{flex: 1, color: "#D2D2E3", height: 50}}
         placeholder={placeholder}
         placeholderTextColor="#7A7A7A"
         secureTextEntry={isPassword ? visiblePassword : !visiblePassword}
