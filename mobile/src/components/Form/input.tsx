@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
 
@@ -7,21 +7,34 @@ import { useField } from '@unform/core';
 import { BorderlessButton } from 'react-native-gesture-handler';
 
 interface InputProps extends TextInputProps {
-  placeholder: string;
   icon: string;
   name: string;
   isPassword?: boolean;
 }
 
-export default function Input({ 
-  placeholder, icon, name, isPassword, ...rest
-}: InputProps) {
+interface InputReference extends TextInput {
+  value: string
+}
+
+interface InputHandles {
+  focus(): void;
+}
+
+const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({ 
+  icon, name, isPassword, ...rest
+}, ref) => {
   const [show, setShow] = useState<boolean>(false);
   const [visiblePassword, setVisiblePassword] = useState<boolean>(true);
 
-  const { fieldName, registerField, defaultValue, error } = useField(name);
+  const { fieldName, registerField } = useField(name);
   
-  const inputRef = useRef<any>(null);
+  const inputRef = useRef<InputReference>(null);
+
+  useImperativeHandle(ref, () => ({
+    focus() {
+      inputRef.current?.focus();
+    }
+  }))
 
   useEffect(() => {
     registerField({
@@ -38,7 +51,6 @@ export default function Input({
       <TextInput 
         ref={inputRef}
         style={{flex: 1, color: "#D2D2E3", height: 50}}
-        placeholder={placeholder}
         placeholderTextColor="#7A7A7A"
         secureTextEntry={isPassword ? visiblePassword : !visiblePassword}
         onChangeText={value => {
@@ -83,3 +95,5 @@ const styles = StyleSheet.create({
     
   },
 });
+
+export default forwardRef(Input);
