@@ -36,15 +36,14 @@ export default function Select({
   name
 }: SelectProps) {
   const modalizeRef = useRef<Modalize>(null);
+  const selectRef = useRef(null);
 
   const [genders, setGenders] = useState<Gender[]>([]);
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const [selectedCity, setSelectedCity] = useState<string[]>([]);
 
-  const pickerRef = useRef(null);
-  const { fieldName, registerField, defaultValue = '' } = useField(name);
-
+  const { fieldName, registerField } = useField(name);
 
   const onOpen = () => {
     modalizeRef.current?.open();
@@ -83,12 +82,9 @@ export default function Select({
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: pickerRef.current,
+      ref: selectRef.current,
       getValue: () => {
         return isGender ? selectedGender : selectedCity
-      },
-      clearValue: ref => {
-        ref.props.onValueChange(ref.props.placeholder.value);
       },
       setValue: (_, value: string[]) => {
         isGender ? setSelectedGender(value) : setSelectedCity(value)
@@ -99,7 +95,7 @@ export default function Select({
   return (
     <>
       <RectButton 
-        ref={pickerRef}
+        ref={selectRef}
         style={styles.container} 
         onPress={onOpen}
       >
@@ -153,7 +149,6 @@ export default function Select({
               onPress={() => {
                 onClose();
                 handleSelectGender(gender.sexo);
-                console.log(selectedGender);
               }}
             >
               <Text style={styles.itemTitle}>{gender.sexo}</Text>
@@ -171,7 +166,6 @@ export default function Select({
               onPress={() => {
                 onClose();
                 handleSelectCity(city.cidade);
-                console.log(selectedCity);
               }}
             >
               <Text style={styles.itemTitle}>{city.cidade}</Text>
