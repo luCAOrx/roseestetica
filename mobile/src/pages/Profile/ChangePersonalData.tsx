@@ -1,7 +1,18 @@
 import React, { useRef, useState } from 'react'
 
-import { Dimensions, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { 
+  Dimensions, 
+  Keyboard, 
+  KeyboardAvoidingView, 
+  Platform, 
+  StyleSheet, 
+  View,
+  TouchableWithoutFeedback,
+  TextInput
+} from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -10,10 +21,12 @@ import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
 import Header from '../../components/Header';
 import SucessScreen from '../../components/SucessScreen';
-import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 export default function ChangePersonalData() {
   const formRef = useRef<FormHandles>(null);
+  const cpfInputRef = useRef<TextInput>(null);
+  const phoneNumberInputRef = useRef<TextInput>(null);
+  const cellPhoneNumberInputRef = useRef<TextInput>(null);
 
   const navigation = useNavigation();
 
@@ -41,19 +54,43 @@ export default function ChangePersonalData() {
             <Input 
               placeholder="Nome completo"
               icon="person"
+              name="nome"
               autoCapitalize="words"
               returnKeyType="next"
-              name="nome"
+              onSubmitEditing={() => cpfInputRef.current?.focus()}
+              blurOnSubmit={false}
             />
 
             <Input 
+              ref={cpfInputRef}
               placeholder="Cpf"
               icon="fingerprint"
+              name="cpf"
               keyboardType="numeric"
               returnKeyType="next"
-              name="cpf"
+              onSubmitEditing={() => phoneNumberInputRef.current?.focus()}
+              blurOnSubmit={false}
+            />
+
+            <Input 
+              ref={phoneNumberInputRef}
+              placeholder="Número de telefone (opcional)" 
+              icon="local-phone" 
+              name="telefone"
+              keyboardType="number-pad"
+              returnKeyType="next"
+              onSubmitEditing={() => cellPhoneNumberInputRef.current?.focus()}
+              blurOnSubmit={false}
             />
             
+            <Input 
+              ref={cellPhoneNumberInputRef}
+              placeholder="Número de celular" 
+              icon="phone-android" 
+              name="celular"
+              keyboardType="number-pad"
+            />
+
             <Select 
               icon="face" 
               placeholder="Sexo" 
@@ -61,22 +98,6 @@ export default function ChangePersonalData() {
               modalHeight={255} 
               snapPoint={255}
               isGender
-            />
-
-            <Input 
-              placeholder="Número de telefone (opcional)" 
-              icon="local-phone" 
-              keyboardType="number-pad"
-              returnKeyType="next"
-              name="telefone"
-            />
-            
-            <Input 
-              placeholder="Número de celular" 
-              icon="phone-android" 
-              keyboardType="number-pad"
-              returnKeyType="send"
-              name="celular"
             />
 
             <CustomButton 

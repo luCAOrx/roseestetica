@@ -1,20 +1,30 @@
 import React, { useRef, useState } from 'react'
 
-import { Keyboard, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { 
+  Keyboard, 
+  KeyboardAvoidingView, 
+  Platform, 
+  View, 
+  TouchableWithoutFeedback,
+  TextInput 
+} from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+
 import StepIndicator from 'react-native-step-indicator';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import { Input } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
 import SucessScreen from '../../components/SucessScreen';
 import Header from '../../components/Header';
-import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 export default function LoginData() {
   const formRef = useRef<FormHandles>(null);
+  const passwordRef = useRef<TextInput>(null);
 
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
 
@@ -43,18 +53,27 @@ export default function LoginData() {
             <Input 
               placeholder="Email"
               icon="email"
+              name="email"
               keyboardType="email-address"
               autoCapitalize="words"
               returnKeyType="next"
-              name="email"
+              onSubmitEditing={() => passwordRef.current?.focus()}
+              blurOnSubmit={false}
             />
 
             <Input 
+              ref={passwordRef}
               placeholder="Senha"
               icon="lock"
               name="senha"
               isPassword
               returnKeyType="send"
+              onSubmitEditing={() => {
+                formRef.current?.submitForm();
+                setTimeout(() => {
+                  handleNavigateToLogin();
+                }, 3000);
+              }}
             />
 
             <CustomButton 

@@ -1,7 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
-import { BackHandler, Dimensions, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { 
+  Dimensions, 
+  Keyboard, 
+  KeyboardAvoidingView, 
+  Platform, 
+  StyleSheet, 
+  View,
+  TouchableWithoutFeedback,
+  TextInput
+} from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -10,27 +21,17 @@ import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
 import Header from '../../components/Header';
 import SucessScreen from '../../components/SucessScreen';
-import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 export default function ChangeAddress() {
   const formRef = useRef<FormHandles>(null);
+  const streetRef = useRef<TextInput>(null);
+  const numberRef = useRef<TextInput>(null);
+  const complementRef = useRef<TextInput>(null);
+  const cepRef = useRef<TextInput>(null);
 
   const navigation = useNavigation();
 
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
-  useEffect(() => {
-    const backAction = () => {
-      navigation.navigate("ChangeData");
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, []);
 
   function handleNavigateToChangeData() {
     navigation.navigate("ChangeData");
@@ -63,41 +64,59 @@ export default function ChangeAddress() {
             <Input 
               placeholder="Bairro"
               icon="map"
+              name="bairro"
               autoCapitalize="words"
               returnKeyType="next"
-              name="bairro"
+              onSubmitEditing={() => streetRef.current?.focus()}
+              blurOnSubmit={false}
             />
 
             <Input 
+              ref={streetRef}
               placeholder="Logradouro"
               icon="home"
+              name="logradouro"
               autoCapitalize="words"
               returnKeyType="next"
-              name="logradouro"
+              onSubmitEditing={() => numberRef.current?.focus()}
+              blurOnSubmit={false}
             />
 
             <Input 
+              ref={numberRef}
               placeholder="Número" 
               icon="looks-5"
+              name="numero"
               keyboardType="numeric" 
               returnKeyType="next"
-              name="numero"
+              onSubmitEditing={() => complementRef.current?.focus()}
+              blurOnSubmit={false}
             />
 
             <Input 
+              ref={complementRef}
               placeholder="Complemento (opcional)" 
               icon="domain" 
+              name="complemento"
               autoCapitalize="words"
               returnKeyType="next"
-              name="complemento"
+              onSubmitEditing={() => cepRef.current?.focus()}
+              blurOnSubmit={false}
             />
             
             <Input 
+              ref={cepRef}
               placeholder="Cep" 
               icon="place" 
+              name="cep"
               keyboardType="number-pad"
               returnKeyType="send"
-              name="complemento"
+              onSubmitEditing={() => {
+                formRef.current?.submitForm();
+                setTimeout(() => {
+                  handleNavigateToChangeData();
+                }, 3000);
+              }}
             />
 
             <CustomButton 

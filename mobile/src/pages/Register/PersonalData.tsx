@@ -8,7 +8,8 @@ import {
   TouchableWithoutFeedback, 
   Keyboard, 
   BackHandler, 
-  Dimensions  
+  Dimensions,  
+  TextInput
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/core';
@@ -24,6 +25,9 @@ import Header from '../../components/Header';
 
 export default function PersonalData() {
   const formRef = useRef<FormHandles>(null);
+  const cpfInputRef = useRef<TextInput>(null);
+  const phoneNumberInputRef = useRef<TextInput>(null);
+  const cellPhoneNumberInputRef = useRef<TextInput>(null);
 
   const navigation = useNavigation();
 
@@ -63,17 +67,40 @@ export default function PersonalData() {
             <Input 
               placeholder="Nome completo"
               icon="person"
-              autoCapitalize="words"
-              returnKeyType="next"
               name="nome"
+              returnKeyType="next"
+              onSubmitEditing={() => cpfInputRef.current?.focus()}
+              blurOnSubmit={false}
             />
 
             <Input 
+              ref={cpfInputRef}
               placeholder="Cpf"
               icon="fingerprint"
+              name="cpf"
               keyboardType="numeric"
               returnKeyType="next"
-              name="cpf"
+              onSubmitEditing={() => phoneNumberInputRef.current?.focus()}
+              blurOnSubmit={false}
+            />
+
+            <Input 
+              ref={phoneNumberInputRef}
+              placeholder="Número de telefone (opcional)" 
+              icon="local-phone" 
+              name="telefone"
+              keyboardType="number-pad"
+              returnKeyType="next"
+              onSubmitEditing={() => cellPhoneNumberInputRef.current?.focus()}
+              blurOnSubmit={false}
+            />
+            
+            <Input 
+              ref={cellPhoneNumberInputRef}
+              placeholder="Número de celular" 
+              icon="phone-android" 
+              name="celular"
+              keyboardType="number-pad"
             />
 
             <Select 
@@ -83,22 +110,6 @@ export default function PersonalData() {
               modalHeight={190} 
               snapPoint={190}
               isGender
-            />
-
-            <Input 
-              placeholder="Número de telefone (opcional)" 
-              icon="local-phone" 
-              keyboardType="number-pad"
-              returnKeyType="next"
-              name="telefone"
-            />
-            
-            <Input 
-              placeholder="Número de celular" 
-              icon="phone-android" 
-              keyboardType="number-pad"
-              returnKeyType="send"
-              name="celular"
             />
 
             <CustomButton 

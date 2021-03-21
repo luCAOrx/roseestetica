@@ -1,8 +1,16 @@
 import React, { useRef, useState } from 'react'
 
-import { BackHandler, Keyboard, KeyboardAvoidingView, Platform, View } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { 
+  Keyboard, 
+  KeyboardAvoidingView, 
+  Platform, 
+  View,
+  TouchableWithoutFeedback,
+  TextInput
+} from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -14,6 +22,7 @@ import Header from '../../components/Header';
 
 export default function ChangeLoginData() {
   const formRef = useRef<FormHandles>(null);
+  const passwordRef = useRef<TextInput>(null);
 
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
 
@@ -28,20 +37,6 @@ export default function ChangeLoginData() {
     console.log(data);
   }
 
-  useFocusEffect(() => {
-    const backAction = () => {
-      navigation.navigate("ChangeData");
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  });
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -55,18 +50,27 @@ export default function ChangeLoginData() {
             <Input 
               placeholder="Email"
               icon="email"
+              name="email"
               keyboardType="email-address"
               autoCapitalize="words"
               returnKeyType="next"
-              name="email"
+              onSubmitEditing={() => passwordRef.current?.focus()}
+              blurOnSubmit={false}
             />
 
             <Input 
+              ref={passwordRef}
               placeholder="Senha"
               icon="lock"
               name="senha"
               isPassword
               returnKeyType="send"
+              onSubmitEditing={() => {
+                formRef.current?.submitForm();
+                setTimeout(() => {
+                  handleNavigateToChangeData();
+                }, 3000);
+              }}
             />
 
             <CustomButton 
