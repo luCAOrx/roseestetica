@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
-import { RectButton } from 'react-native-gesture-handler';
+import { RectButton, TouchableOpacity } from 'react-native-gesture-handler';
 import { Modalize } from 'react-native-modalize';
 import { useField } from '@unform/core';
 
@@ -43,7 +43,7 @@ export default function Select({
   const [cities, setCities] = useState<City[]>([]);
   const [selectedCity, setSelectedCity] = useState<string[]>([]);
 
-  const { fieldName, registerField } = useField(name);
+  const { fieldName, registerField, error } = useField(name);
 
   const onOpen = () => {
     modalizeRef.current?.open();
@@ -94,9 +94,10 @@ export default function Select({
 
   return (
     <>
-      <RectButton 
+      { error && <Text style={styles.errorMessage}>{error}</Text>}
+      <TouchableOpacity 
         ref={selectRef}
-        style={styles.container} 
+        style={error ? styles.error : styles.container} 
         onPress={onOpen}
       >
         <Icon 
@@ -131,7 +132,7 @@ export default function Select({
           size={20} 
           color={"#D2D2E3"} 
         />
-      </RectButton>
+      </TouchableOpacity>
 
       <Modalize 
         ref={modalizeRef}
@@ -144,7 +145,7 @@ export default function Select({
             style={styles.itemContainer}
             key={gender.id}
           >
-            <RectButton 
+            <TouchableOpacity 
               style={styles.item}
               onPress={() => {
                 onClose();
@@ -152,7 +153,7 @@ export default function Select({
               }}
             >
               <Text style={styles.itemTitle}>{gender.sexo}</Text>
-            </RectButton>
+            </TouchableOpacity>
           </View>
         ))}
 
@@ -161,7 +162,7 @@ export default function Select({
             style={styles.itemContainer}
             key={city.id}
           >
-            <RectButton 
+            <TouchableOpacity 
               style={styles.item}
               onPress={() => {
                 onClose();
@@ -169,7 +170,7 @@ export default function Select({
               }}
             >
               <Text style={styles.itemTitle}>{city.cidade}</Text>
-            </RectButton>
+            </TouchableOpacity>
           </View>
         ))}
       </Modalize>
@@ -196,6 +197,27 @@ const styles = StyleSheet.create({
     textAlign: "left",
 
     color: "#7A7A7A"
+  },
+
+  error: {
+    margin: 15,
+    height: 50,
+
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+
+    backgroundColor: "#222325",
+
+    borderRadius: 8,
+    borderColor: "#c52626",
+    borderWidth: 1
+  },
+
+  errorMessage: {
+    marginLeft: 15,
+    fontSize: 16,
+    color: "#c52626",
   },
 
   modal: {
