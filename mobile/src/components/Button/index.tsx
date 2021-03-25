@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { StyleSheet, Text } from 'react-native';
-import { RectButton, RectButtonProperties, TouchableOpacity } from 'react-native-gesture-handler';
+import { RectButtonProperties, TouchableOpacity } from 'react-native-gesture-handler';
 
 interface CustomButtonProps extends RectButtonProperties {
   title: string;
