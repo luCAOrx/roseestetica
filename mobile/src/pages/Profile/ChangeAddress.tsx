@@ -11,16 +11,33 @@ import {
   TextInput
 } from 'react-native';
 
+import * as Yup from 'yup';
+
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
+
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 
+import { ScrollView } from 'react-native-gesture-handler';
+
+import Header from '../../components/Header';
 import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
-import Header from '../../components/Header';
 import SucessScreen from '../../components/SucessScreen';
+
+interface ValidationErrors {
+  [key: string]: string;
+}
+
+interface AdressDataProps {
+  cidade: string[];
+  bairro: string;
+  logradouro: string;
+  numero: string;
+  complemento: string;
+  cep: string;
+}
 
 export default function ChangeAddress() {
   const formRef = useRef<FormHandles>(null);
@@ -37,9 +54,51 @@ export default function ChangeAddress() {
     navigation.navigate("ChangeData");
   }
 
-  function handleSubmit(data: any) {
-    setSucessMessage(true);
-    console.log(data);
+  async function handleSubmit(adressData: AdressDataProps) {
+    try {
+      const schema = Yup.object().shape({
+        cidade: Yup.array().optional(),
+        bairro: Yup.string().optional()
+          .min(5, "No mínimo 5 caracteres!")
+          .max(90, "No máximo 90 caracteres!"),
+        logradouro: Yup.string().optional()
+          .min(5, "No mínimo 5 caracteres!")
+          .max(90, "No máximo 90 caracteres!"),
+        numero: Yup.string().optional()
+          .min(1, "No mínimo 1 caractere!")
+          .max(6, "No máximo 6 caracteres!"),
+        complemento: Yup.string().optional()
+          .min(3, "No mínimo 3 caracteres!")
+          .max(80, "No máximo 80 caracteres!"),
+        cep: Yup.string().optional()
+        .min(8, "No mínimo 8 caracteres!")
+        .max(8, "No máximo 8 caracteres!"),
+      });
+
+      await schema.validate(adressData, {
+        abortEarly: false
+      });
+
+      formRef.current?.setErrors({});
+
+      setSucessMessage(true);
+
+      setTimeout(() => {
+        handleNavigateToChangeData();
+      }, 3000);
+
+      console.log(adressData);
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const validationErrors: ValidationErrors = {};
+
+        err.inner.forEach((error) => {
+          validationErrors[`${error.path}`] = error.message;
+        });
+        
+        formRef.current?.setErrors(validationErrors);
+      }
+    }
   }
 
   return (
@@ -113,9 +172,6 @@ export default function ChangeAddress() {
               returnKeyType="send"
               onSubmitEditing={() => {
                 formRef.current?.submitForm();
-                setTimeout(() => {
-                  handleNavigateToChangeData();
-                }, 3000);
               }}
             />
 
@@ -126,9 +182,6 @@ export default function ChangeAddress() {
               fontSize={15}
               onPress={() => {
                 formRef.current?.submitForm();
-                setTimeout(() => {
-                  handleNavigateToChangeData();
-                }, 3000);
               }} 
             />
           </Form>

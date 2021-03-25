@@ -11,6 +11,8 @@ import {
   TextInput
 } from 'react-native';
 
+import * as Yup from 'yup';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { Form } from '@unform/mobile';
@@ -19,9 +21,22 @@ import { FormHandles } from '@unform/core';
 import StepIndicator from 'react-native-step-indicator';
 import { ScrollView } from 'react-native-gesture-handler';
 
+import Header from '../../components/Header';
 import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
-import Header from '../../components/Header';
+
+interface ValidationErrors {
+  [key: string]: string;
+}
+
+interface AdressDataProps {
+  cidade: string[];
+  bairro: string;
+  logradouro: string;
+  numero: string;
+  complemento: string;
+  cep: string;
+}
 
 export default function Address() {
   const formRef = useRef<FormHandles>(null);
@@ -36,8 +51,47 @@ export default function Address() {
     navigation.navigate("LoginData");
   }
 
-  function handleSubmit(data: any) {
-    console.log(data);
+  async function handleSubmit(adressData: AdressDataProps) {
+    try {
+      const schema = Yup.object().shape({
+        cidade: Yup.array().min(1, "O campo cidade é obrigatório!"),
+        bairro: Yup.string().required("O campo bairro é obrigatório!")
+          .min(5, "No mínimo 5 caracteres!")
+          .max(90, "No máximo 90 caracteres!"),
+        logradouro: Yup.string().required("O campo logradouro é obrigatório!")
+          .min(5, "No mínimo 5 caracteres!")
+          .max(90, "No máximo 90 caracteres!"),
+        numero: Yup.string().required("O campo número é obrigatório!")
+          .min(1, "No mínimo 1 caractere!")
+          .max(6, "No máximo 6 caracteres!"),
+        complemento: Yup.string().optional()
+          .min(3, "No mínimo 3 caracteres!")
+          .max(80, "No máximo 80 caracteres!"),
+        cep: Yup.string().required("O campo CEP é obrigatório!")
+        .min(8, "No mínimo 8 caracteres!")
+        .max(8, "No máximo 8 caracteres!"),
+      });
+
+      await schema.validate(adressData, {
+        abortEarly: false
+      });
+
+      formRef.current?.setErrors({});
+
+      handleNavigateToLoginData();
+
+      console.log(adressData);
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const validationErrors: ValidationErrors = {};
+
+        err.inner.forEach((error) => {
+          validationErrors[`${error.path}`] = error.message;
+        });
+        
+        formRef.current?.setErrors(validationErrors);
+      }
+    }
   }
 
   return (
@@ -109,14 +163,13 @@ export default function Address() {
             
             <Input 
               ref={cepRef}
-              placeholder="Cep" 
+              placeholder="CEP" 
               icon="place" 
               name="cep"
               keyboardType="number-pad"
               returnKeyType="send"
               onSubmitEditing={() => {
                 formRef.current?.submitForm();
-                handleNavigateToLoginData();
               }}
             />
 
@@ -127,7 +180,6 @@ export default function Address() {
               fontSize={15}
               onPress={() => {
                 formRef.current?.submitForm();
-                handleNavigateToLoginData();
               }} 
             />
           </Form>

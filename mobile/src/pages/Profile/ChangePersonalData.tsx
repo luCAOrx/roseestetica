@@ -11,20 +11,34 @@ import {
   TextInput
 } from 'react-native';
 
+import * as Yup from 'yup';
+
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 
+import { ScrollView } from 'react-native-gesture-handler';
+
+import Header from '../../components/Header';
 import { Input, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
-import Header from '../../components/Header';
 import SucessScreen from '../../components/SucessScreen';
+
+interface ValidationErrors {
+  [key: string]: string;
+}
+
+interface PersonalDataProps {
+  nome: string;
+  cpf: string;
+  telefone: string;
+  celular: string;
+  sexo: string[];
+}
 
 export default function ChangePersonalData() {
   const formRef = useRef<FormHandles>(null);
-  const cpfInputRef = useRef<TextInput>(null);
   const phoneNumberInputRef = useRef<TextInput>(null);
   const cellPhoneNumberInputRef = useRef<TextInput>(null);
 
@@ -36,9 +50,45 @@ export default function ChangePersonalData() {
     navigation.navigate("ChangeData");
   }
 
-  function handleSubmit(data: any) {
-    setSucessMessage(true);
-    console.log(data);
+  async function handleSubmit(personalData: PersonalDataProps) {
+    try {
+      const schema = Yup.object().shape({
+        nome: Yup.string().optional()
+          .min(5, "No mínimo 5 caracteres!")
+          .max(90, "No máximo 90 caracteres!"),
+        telefone: Yup.string().optional()
+          .min(10, "No mínimo 10 caracteres!")
+          .max(10, "No máximo 10 caracteres!"),
+        celular: Yup.string().optional()
+          .min(11, "No mínimo 11 caracteres!")
+          .max(11, "No máximo 11 caracteres!"),
+        sexo: Yup.array().optional()
+      });
+
+      await schema.validate(personalData, {
+        abortEarly: false
+      });
+
+      formRef.current?.setErrors({});
+
+      setSucessMessage(true);
+
+      setTimeout(() => {
+        handleNavigateToChangeData();
+      }, 3000);
+      
+      console.log(personalData);
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const validationErrors: ValidationErrors = {};
+
+        err.inner.forEach((error) => {
+          validationErrors[`${error.path}`] = error.message;
+        });
+        
+        formRef.current?.setErrors(validationErrors);
+      }
+    }
   }
 
   return (
@@ -57,19 +107,17 @@ export default function ChangePersonalData() {
               name="nome"
               autoCapitalize="words"
               returnKeyType="next"
-              onSubmitEditing={() => cpfInputRef.current?.focus()}
+              onSubmitEditing={() => phoneNumberInputRef.current?.focus()}
               blurOnSubmit={false}
             />
 
             <Input 
-              ref={cpfInputRef}
-              placeholder="Cpf"
+              placeholder="CPF"
               icon="fingerprint"
               name="cpf"
+              editable={false}
               keyboardType="numeric"
               returnKeyType="next"
-              onSubmitEditing={() => phoneNumberInputRef.current?.focus()}
-              blurOnSubmit={false}
             />
 
             <Input 
@@ -107,9 +155,6 @@ export default function ChangePersonalData() {
               fontSize={15}
               onPress={() => {
                 formRef.current?.submitForm();
-                setTimeout(() => {
-                  handleNavigateToChangeData();
-                }, 3000);
               }} 
             />
           </Form>

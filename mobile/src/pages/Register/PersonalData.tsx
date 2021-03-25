@@ -12,16 +12,31 @@ import {
   TextInput
 } from 'react-native';
 
+import * as Yup from 'yup';
+
 import { useNavigation } from '@react-navigation/core';
+
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 
 import StepIndicator from 'react-native-step-indicator';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import CustomButton from '../../components/Button';
-import { Input, Select } from '../../components/Form';
 import Header from '../../components/Header';
+import { Input, Select } from '../../components/Form';
+import CustomButton from '../../components/Button';
+
+interface ValidationErrors {
+  [key: string]: string;
+}
+
+interface PersonalDataProps {
+  nome: string;
+  cpf: string;
+  telefone: string;
+  celular: string;
+  sexo: string[];
+}
 
 export default function PersonalData() {
   const formRef = useRef<FormHandles>(null);
@@ -31,26 +46,48 @@ export default function PersonalData() {
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const backAction = () => {
-      navigation.navigate("Login");
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, []);
-
   function handleNavigateToAddress() {
     navigation.navigate("Address");
   }
 
-  function handleSubmit(data: any) {
-    console.log(data);
+  async function handleSubmit(personalData: PersonalDataProps) {
+    try {
+      const schema = Yup.object().shape({
+        nome: Yup.string().required("O campo nome é obrigatório!")
+          .min(5, "No mínimo 5 caracteres!")
+          .max(90, "No máximo 90 caracteres!"),
+        cpf: Yup.string().required("O campo CPF é obrigatório!")
+          .min(11, "No mínimo 11 caracteres!")
+          .max(11, "No máximo 11 caracteres!"),
+        telefone: Yup.string().optional()
+          .min(10, "No mínimo 10 caracteres!")
+          .max(10, "No máximo 10 caracteres!"),
+        celular: Yup.string().required("O campo número de celular é obrigatório!")
+          .min(11, "No mínimo 11 caracteres!")
+          .max(11, "No máximo 11 caracteres!"),
+        sexo: Yup.array().min(1, "O campo sexo é obrigatório!")
+      });
+
+      await schema.validate(personalData, {
+        abortEarly: false
+      });
+
+      formRef.current?.setErrors({});
+
+      handleNavigateToAddress();
+
+      console.log(personalData)
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const validationErrors: ValidationErrors = {};
+
+        err.inner.forEach((error) => {
+          validationErrors[`${error.path}`] = error.message;
+        });
+        
+        formRef.current?.setErrors(validationErrors);
+      }
+    }
   }
 
   return (
@@ -75,7 +112,7 @@ export default function PersonalData() {
 
             <Input 
               ref={cpfInputRef}
-              placeholder="Cpf"
+              placeholder="CPF"
               icon="fingerprint"
               name="cpf"
               keyboardType="numeric"
@@ -120,7 +157,6 @@ export default function PersonalData() {
               fontSize={15}
               onPress={() => {
                 formRef.current?.submitForm();
-                handleNavigateToAddress();
               }} 
             />
           </Form>
