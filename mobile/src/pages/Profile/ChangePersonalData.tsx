@@ -1,11 +1,9 @@
 import React, { useRef, useState } from 'react'
 
 import { 
-  Dimensions, 
   Keyboard, 
   KeyboardAvoidingView, 
   Platform, 
-  StyleSheet, 
   View,
   TouchableWithoutFeedback,
   TextInput
@@ -21,7 +19,7 @@ import { FormHandles } from '@unform/core';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import Header from '../../components/Header';
-import { Input, Select } from '../../components/Form/index';
+import { Input, InputMask, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
 import SucessScreen from '../../components/SucessScreen';
 
@@ -53,16 +51,19 @@ export default function ChangePersonalData() {
   async function handleSubmit(personalData: PersonalDataProps) {
     try {
       const schema = Yup.object().shape({
-        nome: Yup.string().optional()
-          .min(5, "No mínimo 5 caracteres!")
-          .max(90, "No máximo 90 caracteres!"),
+        nome: Yup.string().strict(true)
+        .trim("Não são permitidos espaços no começo ou no fim!")
+        .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo nome completo só aceita letras!")
+        .min(5, "No mínimo 5 caracteres!")
+        .max(90, "No máximo 90 caracteres!")
+        .required("O campo nome é obrigatório!"),
         telefone: Yup.string().optional()
           .min(10, "No mínimo 10 caracteres!")
           .max(10, "No máximo 10 caracteres!"),
-        celular: Yup.string().optional()
+        celular: Yup.string().required("O campo número de celular é obrigatório!")
           .min(11, "No mínimo 11 caracteres!")
           .max(11, "No máximo 11 caracteres!"),
-        sexo: Yup.array().optional()
+        sexo: Yup.array().min(1, "O campo sexo é obrigatório!")
       });
 
       await schema.validate(personalData, {
@@ -95,16 +96,18 @@ export default function ChangePersonalData() {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{flex: 1}}
+      keyboardVerticalOffset={8}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView>
-          <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          <Form style={{flexGrow: 1}} ref={formRef} onSubmit={handleSubmit}>
             <Header title="Dados pessoais" showIcon={true} fontSize={26}/>
             <View style={{marginTop: 20}}/>
             <Input 
               placeholder="Nome completo"
               icon="person"
               name="nome"
+              maxLength={90}
               autoCapitalize="words"
               returnKeyType="next"
               onSubmitEditing={() => phoneNumberInputRef.current?.focus()}
@@ -120,8 +123,9 @@ export default function ChangePersonalData() {
               returnKeyType="next"
             />
 
-            <Input 
+            <InputMask 
               ref={phoneNumberInputRef}
+              type="cel-phone"
               placeholder="Número de telefone (opcional)" 
               icon="local-phone" 
               name="telefone"
@@ -131,8 +135,9 @@ export default function ChangePersonalData() {
               blurOnSubmit={false}
             />
             
-            <Input 
+            <InputMask 
               ref={cellPhoneNumberInputRef}
+              type="cel-phone"
               placeholder="Número de celular" 
               icon="phone-android" 
               name="celular"
@@ -143,8 +148,8 @@ export default function ChangePersonalData() {
               icon="face" 
               placeholder="Sexo" 
               name="sexo"
-              modalHeight={255} 
-              snapPoint={255}
+              modalHeight={130} 
+              snapPoint={190}
               isGender
             />
 
@@ -164,9 +169,3 @@ export default function ChangePersonalData() {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  form: {
-    height: Dimensions.get("screen").height,
-  },
-});

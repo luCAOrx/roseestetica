@@ -48,12 +48,14 @@ export default function ChangeLoginData() {
   async function handleSubmit(loginData: LoginDataProps) {
     try {
       const schema = Yup.object().shape({
-        email: Yup.string().email("O campo e-mail precisa ser um e-mail válido!")
-          .optional()
-          .max(80, "No máximo 80 caracteres!"),
-        senha: Yup.string().optional()
-          .min(5, "No mínimo 5 caracteres!")
-          .max(50, "No máximo 50 caracteres!"),
+        email: Yup.string()
+        .email("O campo e-mail precisa ser um e-mail válido!")
+        .max(80, "No máximo 80 caracteres!")
+        .required("O campo email é obrigatório!"),
+      senha: Yup.string()
+        .min(8, "No mínimo 8 caracteres!")
+        .max(50, "No máximo 50 caracteres!")
+        .required("O campo senha é obrigatório!"),
       });
 
       await schema.validate(loginData, {
@@ -96,6 +98,7 @@ export default function ChangeLoginData() {
               placeholder="Email"
               icon="email"
               name="email"
+              maxLength={80}
               keyboardType="email-address"
               autoCapitalize="words"
               returnKeyType="next"
@@ -108,6 +111,7 @@ export default function ChangeLoginData() {
               placeholder="Senha"
               icon="lock"
               name="senha"
+              maxLength={50}
               isPassword
               returnKeyType="send"
               onSubmitEditing={() => {
