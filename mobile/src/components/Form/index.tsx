@@ -1,4 +1,5 @@
 import Input from './input';
+import InputMask from './inputMask';
 import Select from './select';
 
-export {Input, Select};
+export {Input, InputMask, Select};
