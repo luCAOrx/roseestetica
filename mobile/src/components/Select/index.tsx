@@ -34,9 +34,9 @@ export default function Select({
   const modalizeRef = useRef<Modalize>(null);
 
   const [genders, setGenders] = useState<Gender[]>([]);
-  const [selectedGender, setSelectedGender] = useState<string[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string>("");
   const [cities, setCities] = useState<City[]>([]);
-  const [selectedCity, setSelectedCity] = useState<string[]>([]);
+  const [selectedCity, setSelectedCity] = useState<string>("");
 
   const onOpen = () => {
     modalizeRef.current?.open();
@@ -47,17 +47,15 @@ export default function Select({
   };
 
   function handleSelectGender(sex: string) {
-    selectedGender.pop();
-    selectedGender.push(sex);
+    setSelectedGender("");
 
-    setSelectedGender([sex]);
+    setSelectedGender(sex);
   }
 
   function handleSelectCity(city: string) {
-    selectedCity.pop();
-    selectedCity.push(city);
+    setSelectedCity("");
 
-    setSelectedCity([city]);
+    setSelectedCity(city);
   }
 
   useEffect(() => {
