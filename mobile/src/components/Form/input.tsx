@@ -10,6 +10,8 @@ interface InputProps extends TextInputProps {
   icon: string;
   name: string;
   isPassword?: boolean;
+  rawText?: string;
+  onInitialData?: (defaultValue: any) => void;
 }
 
 interface InputReference extends TextInput {
@@ -21,12 +23,17 @@ interface InputHandles {
 }
 
 const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({ 
-  icon, name, isPassword, ...rest
+  icon,
+  name,
+  isPassword,
+  rawText, 
+  onInitialData,
+  ...rest
 }, ref) => {
   const [show, setShow] = useState<boolean>(false);
   const [visiblePassword, setVisiblePassword] = useState<boolean>(true);
 
-  const { fieldName, registerField, error } = useField(name);
+  const { fieldName, registerField, defaultValue, error } = useField(name);
   
   const inputRef = useRef<InputReference>(null);
 
@@ -34,15 +41,23 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
     focus() {
       inputRef.current?.focus();
     }
-  }))
+  }));
+
+  useEffect(() => {
+    if (onInitialData) onInitialData(defaultValue);
+  }, [defaultValue, onInitialData]);
 
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: inputRef.current,
-      path: "value",
+      getValue() {
+        if (rawText) return rawText;
+        if (inputRef.current) return inputRef.current.value;
+        return '';
+      },
     });
-  }, [fieldName, registerField]);
+  }, [fieldName, rawText, registerField]);
 
   return (
     <>
@@ -63,7 +78,7 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
           {...rest}
         />
 
-        {isPassword ? 
+        {isPassword && 
           <BorderlessButton 
             style={{marginRight: 10,}} 
             onPress={() => {
@@ -76,7 +91,7 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
               size={20} 
               color={show === false ? "#7A7A7A" : "#D2D2E3"} 
             />
-          </BorderlessButton> : []
+          </BorderlessButton>
         }
       </View>
     </>
