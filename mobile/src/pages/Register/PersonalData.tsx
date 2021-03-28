@@ -1,14 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 import { 
   View, 
   KeyboardAvoidingView, 
-  StyleSheet, 
   Platform, 
   TouchableWithoutFeedback, 
   Keyboard, 
-  BackHandler, 
-  Dimensions,  
   TextInput
 } from 'react-native';
 
@@ -35,7 +32,7 @@ interface PersonalDataProps {
   cpf: string;
   telefone: string;
   celular: string;
-  sexo: string[];
+  sexo: string;
 }
 
 export default function PersonalData() {

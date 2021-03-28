@@ -32,11 +32,11 @@ interface PersonalDataProps {
   cpf: string;
   telefone: string;
   celular: string;
-  sexo: string[];
+  sexo: string;
 }
 
 interface AdressDataProps {
-  cidade: string[];
+  cidade: string;
   bairro: string;
   logradouro: string;
   numero: string;
