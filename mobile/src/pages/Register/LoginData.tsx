@@ -11,7 +11,7 @@ import {
 
 import * as Yup from 'yup';
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -28,7 +28,18 @@ interface ValidationErrors {
   [key: string]: string;
 }
 
-interface LoginDataProps {
+interface DataProps {
+  nome: string;
+  cpf: string;
+  telefone: string;
+  celular: string;
+  sexo: string[];
+  cidade: string[];
+  bairro: string;
+  logradouro: string;
+  numero: string;
+  complemento: string;
+  cep: string;
   email: string;
   senha: string;
 }
@@ -40,20 +51,24 @@ export default function LoginData() {
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
 
   const navigation = useNavigation();
+  const route = useRoute();
+  const params = route.params as DataProps;
 
   function handleNavigateToLogin() {
     navigation.navigate("Login");
   }
   
-  async function handleSubmit(loginData: LoginDataProps) {
+  async function handleSubmit(loginData: DataProps) {
     try {
       const schema = Yup.object().shape({
-        email: Yup.string().email("O campo e-mail precisa ser um e-mail válido!")
-          .required("O campo email é obrigatório!")
-          .max(80, "No máximo 80 caracteres!"),
-        senha: Yup.string().required("O campo senha é obrigatório!")
-          .min(5, "No mínimo 5 caracteres!")
-          .max(50, "No máximo 50 caracteres!"),
+        email: Yup.string()
+          .email("O campo e-mail precisa ser um e-mail válido!")
+          .max(80, "No máximo 80 caracteres!")
+          .required("O campo email é obrigatório!"),
+        senha: Yup.string()
+          .min(8, "No mínimo 8 caracteres!")
+          .max(50, "No máximo 50 caracteres!")
+          .required("O campo senha é obrigatório!"),
       });
 
       await schema.validate(loginData, {
@@ -68,7 +83,7 @@ export default function LoginData() {
         handleNavigateToLogin();
       }, 3000);
 
-      console.log(loginData);
+      console.log(loginData, params);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const validationErrors: ValidationErrors = {};
@@ -97,6 +112,7 @@ export default function LoginData() {
               placeholder="E-mail"
               icon="email"
               name="email"
+              maxLength={80}
               keyboardType="email-address"
               autoCapitalize="words"
               returnKeyType="next"
@@ -109,6 +125,7 @@ export default function LoginData() {
               placeholder="Senha"
               icon="lock"
               name="senha"
+              maxLength={50}
               isPassword
               returnKeyType="send"
               onSubmitEditing={() => {

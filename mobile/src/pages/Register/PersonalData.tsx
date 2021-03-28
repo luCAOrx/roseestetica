@@ -23,7 +23,7 @@ import StepIndicator from 'react-native-step-indicator';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import Header from '../../components/Header';
-import { Input, Select } from '../../components/Form';
+import { Input, InputMask, Select } from '../../components/Form';
 import CustomButton from '../../components/Button';
 
 interface ValidationErrors {
@@ -46,16 +46,19 @@ export default function PersonalData() {
 
   const navigation = useNavigation();
 
-  function handleNavigateToAddress() {
-    navigation.navigate("Address");
+  function handleNavigateToAddress(personalData: {}) {
+    navigation.navigate("Address", { personalData });
   }
 
   async function handleSubmit(personalData: PersonalDataProps) {
     try {
       const schema = Yup.object().shape({
-        nome: Yup.string().required("O campo nome é obrigatório!")
-          .min(5, "No mínimo 5 caracteres!")
-          .max(90, "No máximo 90 caracteres!"),
+        nome: Yup.string().strict(true)
+        .trim("Não são permitidos espaços no começo ou no fim!")
+        .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo nome completo só aceita letras!")
+        .min(5, "No mínimo 5 caracteres!")
+        .max(90, "No máximo 90 caracteres!")
+        .required("O campo nome é obrigatório!"),
         cpf: Yup.string().required("O campo CPF é obrigatório!")
           .min(11, "No mínimo 11 caracteres!")
           .max(11, "No máximo 11 caracteres!"),
@@ -74,9 +77,7 @@ export default function PersonalData() {
 
       formRef.current?.setErrors({});
 
-      handleNavigateToAddress();
-
-      console.log(personalData)
+      handleNavigateToAddress(personalData);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const validationErrors: ValidationErrors = {};
@@ -94,10 +95,11 @@ export default function PersonalData() {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{flex: 1}}
+      keyboardVerticalOffset={8}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView>
-          <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          <Form style={{flexGrow: 1}} ref={formRef} onSubmit={handleSubmit}>
             <Header title="Dados pessoais" showIcon={false} fontSize={26}/>
             <StepIndicator stepCount={3} customStyles={stepStyles}/>
             <View style={{marginTop: 20}}/>
@@ -105,13 +107,15 @@ export default function PersonalData() {
               placeholder="Nome completo"
               icon="person"
               name="nome"
+              maxLength={90}
               returnKeyType="next"
               onSubmitEditing={() => cpfInputRef.current?.focus()}
               blurOnSubmit={false}
             />
 
-            <Input 
+            <InputMask 
               ref={cpfInputRef}
+              type="cpf"
               placeholder="CPF"
               icon="fingerprint"
               name="cpf"
@@ -121,8 +125,9 @@ export default function PersonalData() {
               blurOnSubmit={false}
             />
 
-            <Input 
+            <InputMask 
               ref={phoneNumberInputRef}
+              type="cel-phone"
               placeholder="Número de telefone (opcional)" 
               icon="local-phone" 
               name="telefone"
@@ -132,8 +137,9 @@ export default function PersonalData() {
               blurOnSubmit={false}
             />
             
-            <Input 
+            <InputMask 
               ref={cellPhoneNumberInputRef}
+              type="cel-phone"
               placeholder="Número de celular" 
               icon="phone-android" 
               name="celular"
@@ -144,7 +150,7 @@ export default function PersonalData() {
               icon="face" 
               name="sexo"
               placeholder="Sexo" 
-              modalHeight={190} 
+              modalHeight={130} 
               snapPoint={190}
               isGender
             />
@@ -181,9 +187,3 @@ const stepStyles = {
   separatorFinishedColor: "#2FB86E",
   separatorUnFinishedColor: "#D2D2E3"
 }
-
-const styles = StyleSheet.create({
-  form: {
-    height: Dimensions.get("screen").height
-  },
-});

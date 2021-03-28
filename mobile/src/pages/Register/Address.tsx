@@ -1,11 +1,9 @@
 import React, { useRef } from 'react'
 
 import { 
-  Dimensions, 
   Keyboard, 
   KeyboardAvoidingView, 
   Platform, 
-  StyleSheet, 
   View,
   TouchableWithoutFeedback,
   TextInput
@@ -13,7 +11,7 @@ import {
 
 import * as Yup from 'yup';
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -22,11 +20,19 @@ import StepIndicator from 'react-native-step-indicator';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import Header from '../../components/Header';
-import { Input, Select } from '../../components/Form/index';
+import { Input, InputMask, Select } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
 
 interface ValidationErrors {
   [key: string]: string;
+}
+
+interface PersonalDataProps {
+  nome: string;
+  cpf: string;
+  telefone: string;
+  celular: string;
+  sexo: string[];
 }
 
 interface AdressDataProps {
@@ -46,30 +52,42 @@ export default function Address() {
   const cepRef = useRef<TextInput>(null);
 
   const navigation = useNavigation();
+  const route = useRoute();
+  const params = route.params as PersonalDataProps;
 
-  function handleNavigateToLoginData() {
-    navigation.navigate("LoginData");
+  function handleNavigateToLoginData(adressData: {}, params: {}) {
+    navigation.navigate("LoginData", { adressData, params });
   }
 
   async function handleSubmit(adressData: AdressDataProps) {
     try {
       const schema = Yup.object().shape({
         cidade: Yup.array().min(1, "O campo cidade é obrigatório!"),
-        bairro: Yup.string().required("O campo bairro é obrigatório!")
-          .min(5, "No mínimo 5 caracteres!")
-          .max(90, "No máximo 90 caracteres!"),
-        logradouro: Yup.string().required("O campo logradouro é obrigatório!")
-          .min(5, "No mínimo 5 caracteres!")
-          .max(90, "No máximo 90 caracteres!"),
-        numero: Yup.string().required("O campo número é obrigatório!")
-          .min(1, "No mínimo 1 caractere!")
-          .max(6, "No máximo 6 caracteres!"),
-        complemento: Yup.string().optional()
+        bairro: Yup.string().strict(true)
+          .trim("Não são permitidos espaços no começo ou no fim!")
+          .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo bairro só aceita letras!")
           .min(3, "No mínimo 3 caracteres!")
-          .max(80, "No máximo 80 caracteres!"),
-        cep: Yup.string().required("O campo CEP é obrigatório!")
+          .max(90, "No máximo 90 caracteres!")
+          .required("O campo bairro é obrigatório!"),
+        logradouro: Yup.string().strict(true)
+          .trim("Não são permitidos espaços no começo ou no fim!")
+          .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo logradouro só aceita letras!")
+          .min(5, "No mínimo 5 caracteres!")
+          .max(90, "No máximo 90 caracteres!")
+          .required("O campo logradouro é obrigatório!"),
+        numero: Yup.string().strict(true)
+          .trim("Não são permitidos espaços no começo ou no fim!")
+          .min(1, "No mínimo 1 caractere!")
+          .max(6, "No máximo 6 caracteres!")
+          .required("O campo número é obrigatório!"),
+        complemento: Yup.string().optional().strict(true)
+          .trim("Não são permitidos espaços no começo ou no fim!")
+          .min(3, "No mínimo 3 caracteres!")
+          .max(90, "No máximo 90 caracteres!"),
+        cep: Yup.string()
         .min(8, "No mínimo 8 caracteres!")
-        .max(8, "No máximo 8 caracteres!"),
+        .max(8, "No máximo 8 caracteres!")
+        .required("O campo CEP é obrigatório!"),
       });
 
       await schema.validate(adressData, {
@@ -78,9 +96,7 @@ export default function Address() {
 
       formRef.current?.setErrors({});
 
-      handleNavigateToLoginData();
-
-      console.log(adressData);
+      handleNavigateToLoginData(adressData, params);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const validationErrors: ValidationErrors = {};
@@ -98,10 +114,11 @@ export default function Address() {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{flex: 1}}
+      keyboardVerticalOffset={8}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView>
-          <Form style={styles.form} ref={formRef} onSubmit={handleSubmit}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          <Form style={{flexGrow: 1}} ref={formRef} onSubmit={handleSubmit}>
             <Header title="Endereço" showIcon={false} fontSize={26} />
             <StepIndicator 
               customStyles={stepStyles} 
@@ -113,7 +130,7 @@ export default function Address() {
               icon="location-city" 
               placeholder="Cidade" 
               name="cidade"
-              modalHeight={390} 
+              modalHeight={330} 
               snapPoint={390}
               isGender={false}
             />
@@ -122,6 +139,7 @@ export default function Address() {
               placeholder="Bairro"
               icon="map"
               name="bairro"
+              maxLength={90}
               autoCapitalize="words"
               returnKeyType="next"
               onSubmitEditing={() => streetRef.current?.focus()}
@@ -133,17 +151,20 @@ export default function Address() {
               placeholder="Logradouro"
               icon="home"
               name="logradouro"
+              maxLength={90}
               autoCapitalize="words"
               returnKeyType="next"
               onSubmitEditing={() => numberRef.current?.focus()}
               blurOnSubmit={false}
             />
 
-            <Input 
+            <InputMask 
               ref={numberRef}
+              type="only-numbers"
               placeholder="Número" 
               icon="looks-5"
               name="numero"
+              maxLength={6}
               keyboardType="numeric" 
               returnKeyType="next"
               onSubmitEditing={() => complementRef.current?.focus()}
@@ -155,14 +176,16 @@ export default function Address() {
               placeholder="Complemento (opcional)" 
               icon="domain" 
               name="complemento"
+              maxLength={90}
               autoCapitalize="words"
               returnKeyType="next"
               onSubmitEditing={() => cepRef.current?.focus()}
               blurOnSubmit={false}
             />
             
-            <Input 
+            <InputMask 
               ref={cepRef}
+              type="zip-code"
               placeholder="CEP" 
               icon="place" 
               name="cep"
@@ -204,9 +227,3 @@ const stepStyles = {
   separatorFinishedColor: "#2FB86E",
   separatorUnFinishedColor: "#D2D2E3"
 }
-
-const styles = StyleSheet.create({
-  form: {
-    height: Dimensions.get("screen").height,
-  },
-});
