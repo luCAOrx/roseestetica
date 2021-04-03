@@ -23,6 +23,7 @@ import Header from '../../components/Header';
 import { Input } from '../../components/Form/index';
 import CustomButton from '../../components/Button';
 import SucessScreen from '../../components/SucessScreen';
+import api from '../../services/api';
 
 interface ValidationErrors {
   [key: string]: string;
@@ -33,13 +34,16 @@ interface DataProps {
   cpf: string;
   telefone: string;
   celular: string;
-  sexo: string[];
-  cidade: string[];
+  sexo_id: number;
+  cidade_id: number;
   bairro: string;
   logradouro: string;
   numero: string;
   complemento: string;
   cep: string;
+}
+
+interface LoginDataProps {
   email: string;
   senha: string;
 }
@@ -58,7 +62,23 @@ export default function LoginData() {
     navigation.navigate("Login");
   }
   
-  async function handleSubmit(loginData: DataProps) {
+  async function handleSubmit(loginData: LoginDataProps) {
+    const { 
+      nome, 
+      cpf, 
+      telefone, 
+      celular, 
+      sexo_id, 
+      cidade_id, 
+      bairro, 
+      logradouro, 
+      numero, 
+      complemento, 
+      cep 
+    } = params;
+
+    const { email, senha } = loginData;
+
     try {
       const schema = Yup.object().shape({
         email: Yup.string()
@@ -76,14 +96,34 @@ export default function LoginData() {
       });
 
       formRef.current?.setErrors({});
+
+      const data = {
+        nome, 
+        cpf, 
+        telefone, 
+        celular, 
+        sexo_id, 
+        cidade_id, 
+        bairro, 
+        logradouro, 
+        numero, 
+        complemento, 
+        cep,
+        email,
+        senha
+      };
+
+      await api.post('cadastro', data).catch(err => {
+        if (err) {
+          console.log(err);
+        }
+      });
       
       setSucessMessage(true);
 
       setTimeout(() => {
         handleNavigateToLogin();
       }, 3000);
-
-      console.log(loginData, params);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const validationErrors: ValidationErrors = {};

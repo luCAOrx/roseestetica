@@ -32,7 +32,7 @@ interface PersonalDataProps {
   cpf: string;
   telefone: string;
   celular: string;
-  sexo: string;
+  sexo_id: number[];
 }
 
 export default function PersonalData() {
@@ -41,13 +41,24 @@ export default function PersonalData() {
   const phoneNumberInputRef = useRef<TextInput>(null);
   const cellPhoneNumberInputRef = useRef<TextInput>(null);
 
+  const pickerOptions = [
+    { value: 1, label: 'Masculino' },
+    { value: 2, label: 'Feminino' },
+  ];
+
   const navigation = useNavigation();
 
-  function handleNavigateToAddress(personalData: {}) {
-    navigation.navigate("Address", { personalData });
+  function handleNavigateToAddress(personalData: PersonalDataProps) {
+    const { nome, cpf, telefone, celular, sexo_id } = personalData;
+
+    navigation.navigate("Address", { 
+      nome, cpf, telefone, celular, sexo_id
+    });
   }
 
   async function handleSubmit(personalData: PersonalDataProps) {
+    const { nome, cpf, telefone, celular, sexo_id } = personalData;
+
     try {
       const schema = Yup.object().shape({
         nome: Yup.string().strict(true)
@@ -65,16 +76,16 @@ export default function PersonalData() {
         celular: Yup.string().required("O campo número de celular é obrigatório!")
           .min(11, "No mínimo 11 caracteres!")
           .max(11, "No máximo 11 caracteres!"),
-        sexo: Yup.array().min(1, "O campo sexo é obrigatório!")
+        sexo_id: Yup.array().min(1, "O campo sexo é obrigatório!")
       });
 
-      await schema.validate(personalData, {
+      await schema.validate({nome, cpf, telefone, celular, sexo_id}, {
         abortEarly: false
       });
 
       formRef.current?.setErrors({});
 
-      handleNavigateToAddress(personalData);
+      handleNavigateToAddress({nome, cpf, telefone, celular, sexo_id});
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const validationErrors: ValidationErrors = {};
@@ -96,7 +107,12 @@ export default function PersonalData() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <Form style={{flexGrow: 1}} ref={formRef} onSubmit={handleSubmit}>
+          <Form 
+            ref={formRef} 
+            style={{flexGrow: 1}} 
+            onSubmit={handleSubmit}
+            // initialData={{ sexo: pickerOptions[0].value }}
+          >
             <Header title="Dados pessoais" showIcon={false} fontSize={26}/>
             <StepIndicator stepCount={3} customStyles={stepStyles}/>
             <View style={{marginTop: 20}}/>
@@ -116,6 +132,7 @@ export default function PersonalData() {
               placeholder="CPF"
               icon="fingerprint"
               name="cpf"
+              maxLength={14}
               keyboardType="numeric"
               returnKeyType="next"
               onSubmitEditing={() => phoneNumberInputRef.current?.focus()}
@@ -128,6 +145,7 @@ export default function PersonalData() {
               placeholder="Número de telefone (opcional)" 
               icon="local-phone" 
               name="telefone"
+              maxLength={14}
               keyboardType="number-pad"
               returnKeyType="next"
               onSubmitEditing={() => cellPhoneNumberInputRef.current?.focus()}
@@ -140,13 +158,15 @@ export default function PersonalData() {
               placeholder="Número de celular" 
               icon="phone-android" 
               name="celular"
+              maxLength={15}
               keyboardType="number-pad"
             />
 
             <Select 
               icon="face" 
-              name="sexo"
-              placeholder="Sexo" 
+              name="sexo_id"
+              placeholder={"Sexo"} 
+              // items={pickerOptions}
               modalHeight={130} 
               snapPoint={190}
               isGender

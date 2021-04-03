@@ -32,11 +32,11 @@ interface PersonalDataProps {
   cpf: string;
   telefone: string;
   celular: string;
-  sexo: string;
+  sexo_id: number;
 }
 
 interface AdressDataProps {
-  cidade: string;
+  cidade_id: number;
   bairro: string;
   logradouro: string;
   numero: string;
@@ -55,14 +55,27 @@ export default function Address() {
   const route = useRoute();
   const params = route.params as PersonalDataProps;
 
-  function handleNavigateToLoginData(adressData: {}, params: {}) {
-    navigation.navigate("LoginData", { adressData, params });
+  function handleNavigateToLoginData(
+    params: PersonalDataProps,
+    adressData: AdressDataProps,
+  ) {
+    const { nome, cpf, telefone, celular, sexo_id } = params;
+    const { cidade_id, bairro, logradouro, numero, complemento, cep } = adressData;
+
+    navigation.navigate("LoginData", { 
+      nome, cpf, telefone, celular, sexo_id,
+      cidade_id, bairro, logradouro, numero, complemento, cep
+    });
   }
 
   async function handleSubmit(adressData: AdressDataProps) {
+    const { nome, cpf, telefone, celular, sexo_id } = params;
+    
+    const { cidade_id, bairro, logradouro, numero, complemento, cep } = adressData;
+
     try {
       const schema = Yup.object().shape({
-        cidade: Yup.array().min(1, "O campo cidade é obrigatório!"),
+        cidade_id: Yup.array().min(1, "O campo cidade é obrigatório!"),
         bairro: Yup.string().strict(true)
           .trim("Não são permitidos espaços no começo ou no fim!")
           .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo bairro só aceita letras!")
@@ -96,7 +109,11 @@ export default function Address() {
 
       formRef.current?.setErrors({});
 
-      handleNavigateToLoginData(adressData, params);
+      handleNavigateToLoginData({
+        nome, cpf, telefone, celular, sexo_id
+      }, {
+        cidade_id, bairro, logradouro, numero, complemento, cep
+      });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const validationErrors: ValidationErrors = {};
@@ -129,7 +146,7 @@ export default function Address() {
             <Select 
               icon="location-city" 
               placeholder="Cidade" 
-              name="cidade"
+              name="cidade_id"
               modalHeight={330} 
               snapPoint={390}
               isGender={false}
@@ -189,6 +206,7 @@ export default function Address() {
               placeholder="CEP" 
               icon="place" 
               name="cep"
+              maxLength={9}
               keyboardType="number-pad"
               returnKeyType="send"
               onSubmitEditing={() => {
