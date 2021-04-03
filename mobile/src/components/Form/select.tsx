@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 import { MaterialIcons as Icon } from '@expo/vector-icons';
-import { RectButton, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Modalize } from 'react-native-modalize';
 import { useField } from '@unform/core';
 
@@ -37,7 +37,8 @@ export default function Select({
 }: SelectProps) {
   const modalizeRef = useRef<Modalize>(null);
   const selectRef = useRef(null);
-
+  
+  
   const [genders, setGenders] = useState<Gender[]>([]);
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
   const [cities, setCities] = useState<City[]>([]);
@@ -53,16 +54,16 @@ export default function Select({
     modalizeRef.current?.close();
   };
 
-  function handleSelectGender(sex: string) {
+  function handleSelectGender(sex: string, id: any) {
     selectedGender.pop();
-    selectedGender.push(sex);
+    selectedGender.push(id);
 
     setSelectedGender([sex]);
   }
 
-  function handleSelectCity(city: string) {
+  function handleSelectCity(city: string, id: any) {
     selectedCity.pop();
-    selectedCity.push(city);
+    selectedCity.push(id);
 
     setSelectedCity([city]);
   }
@@ -83,11 +84,11 @@ export default function Select({
     registerField({
       name: fieldName,
       ref: selectRef.current,
-      getValue: () => {
-        return isGender ? selectedGender : selectedCity
+      getValue() {
+        return isGender ? selectedGender : selectedCity;
       },
-      setValue: (_, value: string[]) => {
-        isGender ? setSelectedGender(value) : setSelectedCity(value)
+      setValue(_, value: string[]) {
+        isGender ? setSelectedGender(value) : setSelectedCity(value);
       },
     });
   }, [fieldName, registerField]);
@@ -149,7 +150,7 @@ export default function Select({
               style={styles.item}
               onPress={() => {
                 onClose();
-                handleSelectGender(gender.sexo);
+                handleSelectGender(gender.sexo, gender.id);
               }}
             >
               <Text style={styles.itemTitle}>{gender.sexo}</Text>
@@ -166,7 +167,7 @@ export default function Select({
               style={styles.item}
               onPress={() => {
                 onClose();
-                handleSelectCity(city.cidade);
+                handleSelectCity(city.cidade, city.id);
               }}
             >
               <Text style={styles.itemTitle}>{city.cidade}</Text>
