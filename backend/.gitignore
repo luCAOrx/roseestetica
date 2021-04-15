@@ -1,5 +1,5 @@
 node_modules
 test.sqlite
-auth.json
-mail.json
+src/config/*
+!src/config/.gitkeep
 .env
