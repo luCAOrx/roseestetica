@@ -1,12 +1,12 @@
-const request = require('supertest');
-const app = require('../../../../src/app');
-const connection = require('../../../../src/database/connection');
-const jwt = require('jsonwebtoken');
-const authConfig = require('../../../../src/config/auth.json');
+import request from 'supertest';
+import app from '../../../../src/app';
+import connection from '../../../../src/database/connection';
+import jwt from 'jsonwebtoken';
+import authConfig from '../../../../src/config/auth';
 
 function gerarToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
-    expiresIn: 86400
+    expiresIn: process.env.JWT_EXPIRES_IN
   });
 }
 
@@ -17,11 +17,11 @@ describe('O cliente', () => {
 
   it('deve ser capaz de se agendar', async () => {
     const response = await request(app)
-      .post('/agendar/2')
+      .post('/agendar/5')
       .send({
-        data: 20200723,
-        procedimento_id: 2,
-        horario_id: 3
+        data: 20210413,
+        procedimento_id: [2],
+        horario_id: 1
       })
       .set('Authorization' ,`Bearer ${gerarToken()}`);
 

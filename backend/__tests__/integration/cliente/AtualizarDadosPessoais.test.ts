@@ -1,12 +1,12 @@
-const request = require('supertest');
-const app = require('../../../src/app');
-const connection = require('../../../src/database/connection');
-const jwt = require('jsonwebtoken');
-const authConfig = require('../../../src/config/auth.json');
+import request from 'supertest';
+import app from '../../../src/app';
+import connection from '../../../src/database/connection';
+import jwt from 'jsonwebtoken';
+import authConfig from '../../../src/config/auth';
 
 function gerarToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
-    expiresIn: 86400
+    expiresIn: process.env.JWT_EXPIRES_IN
   });
 }
 
@@ -23,9 +23,9 @@ describe('O cliente', () => {
         nome: "Rafaela Santos",
         telefone: "8434345050",
         celular: "84955443323",
-        cidade_id: 1,
+        cidade_id: 2,
         bairro: "Candelária",
-        logradouro: "Av.das bandeiras",
+        logradouro: "Av das bandeiras",
         numero: "145",
         complemento: "Bloco Moinhos de Vento, Apt 120",
         cep: "48123769"

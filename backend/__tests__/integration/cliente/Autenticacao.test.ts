@@ -1,6 +1,6 @@
-const request = require('supertest');
-const app = require('../../../src/app');
-const connection = require('../../../src/database/connection');
+import request from 'supertest';
+import app from '../../../src/app';
+import connection from '../../../src/database/connection';
 
 describe('O cliente', () => {
   afterAll(async () => {
@@ -9,8 +9,8 @@ describe('O cliente', () => {
 
   it('deve ser capaz de se autenticar se as credencias forem validas', async () => {
     const response = await request(app).post('/login').send({
-      email: "rafaela1@gmail.com",
-      senha: "rafaela1"
+      email: "rafaela2@gmail.com",
+      senha: "12345678"
     });
 
     console.log(response.body);

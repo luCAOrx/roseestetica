@@ -1,6 +1,6 @@
-const request = require('supertest');
-const app = require('../../../src/app');
-const connection = require('../../../src/database/connection');
+import request from 'supertest';
+import app from '../../../src/app';
+import connection from '../../../src/database/connection';
 
 describe('O cliente', () => {
   afterAll(async () => {
@@ -11,9 +11,9 @@ describe('O cliente', () => {
     const response = await request(app)
       .put('/atualizar_senha')
       .send({ 
-        email: "rafaela1@gmail.com",
-        token: "49d93390697ee13d3429907285a1784c08fb7c9d",
-        senha: "rafaela1"
+        email: "rafaela@gmail.com",
+        token: "00ee8deaff4caf497813267910efbb68c86ab12c",
+        senha: "123456789"
       });
 
       console.log(response.body);

@@ -1,12 +1,12 @@
-const request = require('supertest');
-const app = require('../../../../src/app');
-const connection = require('../../../../src/database/connection');
-const jwt = require('jsonwebtoken');
-const authConfig = require('../../../../src/config/auth.json');
+import request from 'supertest';
+import app from '../../../../src/app';
+import connection from '../../../../src/database/connection';
+import jwt from 'jsonwebtoken';
+import authConfig from '../../../../src/config/auth';
 
 function gerarToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
-    expiresIn: 86400
+    expiresIn: process.env.JWT_EXPIRES_IN
   });
 }
 

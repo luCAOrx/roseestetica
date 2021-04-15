@@ -1,6 +1,6 @@
-const request = require('supertest');
-const app = require('../../../src/app');
-const connection = require('../../../src/database/connection');
+import request from 'supertest';
+import app from '../../../src/app';
+import connection from '../../../src/database/connection';
 
 describe('O cliente', () => {
   // beforeAll(async () => {
@@ -18,7 +18,7 @@ describe('O cliente', () => {
       .post('/cadastro')
       .send({
         nome: "Rafaela Santos",
-        cpf: "30070060001",
+        cpf: "30070060006",
         sexo_id: 2,
         telefone: "8434345050",
         celular: "84955443323",
@@ -27,9 +27,9 @@ describe('O cliente', () => {
         logradouro: "Rua amarelinha",
         numero: "66",
         complemento: "Bloco A, Apt 40",
-        cep: "24456345",
-        email: "rafaela@gmail.com",
-        senha: "rafaela"
+        cep: "20030040",
+        email: "rafaela5@gmail.com",
+        senha: "12345678"
       });
 
       console.log(response.body);
@@ -39,12 +39,14 @@ describe('O cliente', () => {
 
   it('deve ser capaz de se autenticar depois de se cadastrar', async () => {
     const response = await request(app).post('/login').send({
-      email: "rafaela@gmail.com",
-      senha: "rafaela"
+      email: "rafaela4@gmail.com",
+      senha: "12345678"
     });
 
     console.log(response.body);
 
     expect(response.status).toBe(200);
+
+    return;
   });
 });

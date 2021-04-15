@@ -1,6 +1,6 @@
-const request = require('supertest');
-const app = require('../../../src/app');
-const connection = require('../../../src/database/connection');
+import request from 'supertest';
+import app from '../../../src/app';
+import connection from '../../../src/database/connection';
 
 describe('O cliente', () => {
   afterAll(async () => {
@@ -10,7 +10,7 @@ describe('O cliente', () => {
   it('deve enviar um e-mail para receber um token e recuperar sua senha', async () => {
     const response = await request(app)
       .post('/esqueci_minha_senha')
-      .send({ email: "rafaela1@gmail.com" });
+      .send({ email: "rafaela@gmail.com" });
 
       console.log(response.body);
 

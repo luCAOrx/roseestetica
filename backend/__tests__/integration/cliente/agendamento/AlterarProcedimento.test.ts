@@ -1,12 +1,12 @@
-const request = require('supertest');
-const app = require('../../../../src/app');
-const connection = require('../../../../src/database/connection');
-const jwt = require('jsonwebtoken');
-const authConfig = require('../../../../src/config/auth.json');
+import request from 'supertest';
+import app from '../../../../src/app';
+import connection from '../../../../src/database/connection';
+import jwt from 'jsonwebtoken';
+import authConfig from '../../../../src/config/auth';
 
 function gerarToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
-    expiresIn: 86400
+    expiresIn: process.env.JWT_EXPIRES_IN
   });
 }
 
@@ -17,7 +17,7 @@ describe('O cliente', () => {
 
   it('deve ser capaz de alterar o procedimento do seu agendamento', async () => {
     const response = await request(app)
-      .put('/alterar_procedimento/2/2').send({ procedimento_id: 3 })
+      .put('/alterar_procedimento/2/1').send({ procedimento_id: [2] })
       .set('Authorization' ,`Bearer ${gerarToken()}`);
 
       console.log(response.body);
