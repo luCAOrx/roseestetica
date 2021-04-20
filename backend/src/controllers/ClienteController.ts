@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 
+import fileSystem from 'fs';
+
+import path from 'path';
+
 import connection from '../database/connection';
 
-import { compare, hashSync } from 'bcryptjs';
+import bcrypt, { compare, hashSync } from 'bcryptjs';
 
 import { sign } from 'jsonwebtoken';
 
@@ -80,9 +84,22 @@ export default {
     }
   },
 
+  async listarFoto(request: Request, response: Response) {
+    try {
+      const { cliente_id } = request.params;
+
+      const imagem = await connection('imagens')
+      .where({ cliente_id }).select('*').first();
+
+      return response.status(200).json({ chave_da_imagem: imagem.chave_da_imagem});
+    } catch (error) {
+      return response.status(400).json({ erro: 'Erro ao lista foto' });
+    }
+  },
+
   async cadastrar(request: Request, response: Response, next: NextFunction) {
     try {
-      const senha = hashSync(request.body.senha, 8);
+      const senha = await bcrypt.hash(request.body.senha, 8);
   
       const {
         nome,
@@ -99,21 +116,39 @@ export default {
         cidade_id,
       } = request.body;
 
+      const {
+        originalname: imagem,
+        size: tamanho,
+        filename: chave_da_imagem
+      } = request.file;
+
       const dataEhoraDeAgora = new Date();
 
-      const cpfExistente = await connection('clientes')
+      const cpfExiste = await connection('clientes')
       .where({ cpf }).select('cpf').first();
 
-      const emailExistente = await connection('clientes')
+      const emailExiste = await connection('clientes')
       .where({ email }).select('email').first();
   
-      if (cpfExistente)
+      if (cpfExiste) {
+        fileSystem.unlinkSync(path.resolve(
+          __dirname, '..', '..', `uploads/${chave_da_imagem}`
+        ));
+
         return response.status(400).json({ erro: 'Esse cpf ja existe.' });
+      }
   
-      if (emailExistente)
+      if (emailExiste) {
+        fileSystem.unlinkSync(path.resolve(
+          __dirname, '..', '..', `uploads/${chave_da_imagem}`
+        ));
+        
         return response.status(400).json({ erro: 'Esse e-mail ja existe.' });
+      }
+
+      const transaction = await connection.transaction();
   
-      await connection('clientes').insert({
+      const idInserido = await transaction('clientes').insert({
         nome,
         cpf,
         telefone,
@@ -129,21 +164,42 @@ export default {
         cidade_id,
         criado_em: dataEhoraDeAgora
       });
-  
-      const cliente = await connection('clientes')
-      .where({ cpf }).select('*').first();
-  
-      cliente.senha = undefined;
-      cliente.token_reset_senha = undefined;
-      cliente.expiracao_reset_senha = undefined;
-      cliente.criado_em = undefined;
-      cliente.atualizado_em = undefined;
+
+      const id = idInserido[0];
+
+      const dados = {
+        id,
+        nome,
+        cpf,
+        telefone,
+        celular,
+        bairro,
+        logradouro,
+        numero,
+        complemento,
+        cep,
+        email,
+        sexo_id,
+        cidade_id,
+        chave_da_imagem
+      }
+
+      await transaction('imagens').insert({
+        imagem,
+        tamanho,
+        chave_da_imagem,
+        cliente_id: id,
+        criado_em: dataEhoraDeAgora
+      });
+
+      await transaction.commit();
   
       return response.status(201).json({
-        cliente,
-        token: gerarToken({ id: cliente.id }),
+        dados,
+        token: gerarToken({ id }),
       });
     } catch (erro) {
+      console.log(erro);
       return response.status(400).json({ erro: 'Falha ao se cadastrar.' })
     }
   },
@@ -210,6 +266,50 @@ export default {
   
     } catch (erro) {
       return response.status(400).json({ erro: 'Erro ao atualizar login.' });
+    }
+  },
+
+  async atualizarFoto(request: Request, response: Response) {
+    try {
+      const { cliente_id } = request.params;
+
+      const {
+        originalname: imagem,
+        size: tamanho,
+        filename: chave_da_imagem
+      } = request.file;
+  
+      const dataEhoraDeAgora = new Date();
+
+      const dados = {
+        imagem,
+        tamanho,
+        chave_da_imagem,
+        atualizado_em: dataEhoraDeAgora
+      };
+
+      const chaveDaImagemNaPastaUploads = await connection('imagens')
+      .where({ cliente_id }).select('chave_da_imagem').first();
+
+      if (chaveDaImagemNaPastaUploads) {
+        fileSystem.unlinkSync(path.resolve(
+          __dirname, '..', '..', `uploads/${chaveDaImagemNaPastaUploads.chave_da_imagem}`
+        ));
+      };
+
+      console.log(chaveDaImagemNaPastaUploads.cliente_id)
+      
+      await connection('imagens').update({ 
+        imagem, 
+        tamanho, 
+        chave_da_imagem,
+        atualizado_em: dataEhoraDeAgora
+      }).where({ cliente_id });
+
+      return response.status(200).json({ dados });
+    } catch (error) {
+      console.log(error)
+      return response.status(400).json({ erro: 'Erro ao atualizar a foto.' });
     }
   },
 
@@ -294,7 +394,16 @@ export default {
   async deletar(request: Request, response: Response, next: NextFunction) {
     try {
       const { id } = request.params;
-  
+
+      const chaveDaImagemNaPastaUploads = await connection('imagens')
+      .where({ cliente_id: id }).select('chave_da_imagem').first();
+
+      if (chaveDaImagemNaPastaUploads) {
+        fileSystem.unlinkSync(path.resolve(
+          __dirname, '..', '..', `uploads/${chaveDaImagemNaPastaUploads.chave_da_imagem}`
+        ));
+      };
+
       await connection('clientes').where({ id }).del();
   
       return response.status(204).json();
