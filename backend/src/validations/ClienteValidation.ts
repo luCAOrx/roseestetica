@@ -18,7 +18,7 @@ export default {
       cep,
       email,
       senha
-      } = request.body;
+    } = request.body;
 
     const data = { 
       nome, 
