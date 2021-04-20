@@ -1,5 +1,9 @@
 import { Router } from 'express';
 
+import multer from 'multer';
+
+import multerConfig from './config/multer';
+
 import authMiddleware from './middlewares/authMidleware';
 
 import HorariosController from './controllers/HorariosController';
@@ -18,6 +22,8 @@ import AdminValidation from './validations/AdminValidation';
 
 const routes = Router();
 
+const upload = multer(multerConfig);
+
 routes.get('/horarios', HorariosController.listarHorarios);
 routes.get('/generos', GenerosController.listarGeneros);
 routes.get('/cidades', CidadesController.listarCidades);
@@ -29,13 +35,19 @@ routes.post('/login',
 );
 
 routes.post('/cadastro', 
+  upload.single('foto'),
   ClienteValidation.cadastrar,
-  ClienteController.cadastrar
+  ClienteController.cadastrar,
 );
 
 routes.get('/perfil/:id',
   authMiddleware,
   ClienteController.listarDadosPessoais
+);
+
+routes.get('/perfil/foto/:cliente_id',
+  authMiddleware,
+  ClienteController.listarFoto
 );
 
 routes.put('/atualizar_dados_pessoais/:id',
@@ -45,9 +57,15 @@ routes.put('/atualizar_dados_pessoais/:id',
 );
 
 routes.put('/atualizar_login/:id',
-authMiddleware,
+  authMiddleware,
   ClienteValidation.atualizarDadosDeLogin,
   ClienteController.atualizarDadosDeLogin
+);
+
+routes.put('/perfil/atualizar_foto/:cliente_id',
+  authMiddleware,
+  upload.single('foto'),
+  ClienteController.atualizarFoto
 );
 
 routes.post('/esqueci_minha_senha/',
