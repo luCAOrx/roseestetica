@@ -1,14 +1,15 @@
 import { ErrorRequestHandler } from "express";
+
+import fileSystem from 'fs';
+
+import path from 'path';
+
+import multer from "multer";
+
 import { ValidationError } from "yup";
 
 interface ValidationErrors {
   [key: string]: string[];
-}
-
-export class CustomError extends Error {
-  message: any;
-  path?: string;
-  inner?: CustomError[];
 }
 
 const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
@@ -19,11 +20,25 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
       errors[`${err.path}`] = err.errors;
     });
 
+    const { filename: chave_da_imagem } = request.file;
+
+    fileSystem.unlinkSync(path.resolve(
+      __dirname, '..', '..', `uploads/${chave_da_imagem}`
+    ));
+
+    console.log(errors);
+
     return response.status(400).json({ message: 'Validation fails', errors })
   }
 
-  console.log(error);
+  if (error instanceof multer.MulterError) {
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      const message = error.message = 'O arquivo não pode ter mais que 2mb.'
+      return response.status(400).json({ message: message });
+    }
+  }
 
+  console.log(error);
   return response.status(500).json({ message: 'Internal server error' });
 }
 
