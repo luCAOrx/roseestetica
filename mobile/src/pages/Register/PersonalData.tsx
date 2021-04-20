@@ -41,11 +41,6 @@ export default function PersonalData() {
   const phoneNumberInputRef = useRef<TextInput>(null);
   const cellPhoneNumberInputRef = useRef<TextInput>(null);
 
-  const pickerOptions = [
-    { value: 1, label: 'Masculino' },
-    { value: 2, label: 'Feminino' },
-  ];
-
   const navigation = useNavigation();
 
   function handleNavigateToAddress(personalData: PersonalDataProps) {
@@ -166,7 +161,6 @@ export default function PersonalData() {
               icon="face" 
               name="sexo_id"
               placeholder={"Sexo"} 
-              // items={pickerOptions}
               modalHeight={130} 
               snapPoint={190}
               isGender
