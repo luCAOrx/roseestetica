@@ -116,11 +116,7 @@ export default {
         cidade_id,
       } = request.body;
 
-      const {
-        originalname: imagem,
-        size: tamanho,
-        filename: chave_da_imagem
-      } = request.file;
+      const { filename: chave_da_imagem } = request.file
 
       const dataEhoraDeAgora = new Date();
 
@@ -185,8 +181,6 @@ export default {
       }
 
       await transaction('imagens').insert({
-        imagem,
-        tamanho,
         chave_da_imagem,
         cliente_id: id,
         criado_em: dataEhoraDeAgora
@@ -272,19 +266,11 @@ export default {
   async atualizarFoto(request: Request, response: Response) {
     try {
       const { cliente_id } = request.params;
-
-      const {
-        originalname: imagem,
-        size: tamanho,
-        filename: chave_da_imagem
-      } = request.file;
   
       const dataEhoraDeAgora = new Date();
 
       const dados = {
-        imagem,
-        tamanho,
-        chave_da_imagem,
+        chave_da_imagem: request.file.filename,
         atualizado_em: dataEhoraDeAgora
       };
 
@@ -300,9 +286,7 @@ export default {
       console.log(chaveDaImagemNaPastaUploads.cliente_id)
       
       await connection('imagens').update({ 
-        imagem, 
-        tamanho, 
-        chave_da_imagem,
+        chave_da_imagem: request.file.filename,
         atualizado_em: dataEhoraDeAgora
       }).where({ cliente_id });
 

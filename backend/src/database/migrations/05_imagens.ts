@@ -4,8 +4,6 @@ export async function up(knex: Knex) {
   return knex.schema.createTable('imagens', table => {
     table.increments('id').primary();
 
-    table.string('imagem').notNullable();
-    table.decimal('tamanho').notNullable();
     table.string('chave_da_imagem').notNullable();
     table.integer('cliente_id').unsigned().notNullable();
     table.timestamp('criado_em').nullable().defaultTo(null);
