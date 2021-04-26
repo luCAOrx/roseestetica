@@ -35,16 +35,17 @@ export default function Select({
   isGender,
   name
 }: SelectProps) {
-  const modalizeRef = useRef<Modalize>(null);
-  const selectRef = useRef(null);
-  
-  
   const [genders, setGenders] = useState<Gender[]>([]);
-  const [selectedGender, setSelectedGender] = useState<string[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string>();
+  const [selectedGenderId, setSelectedGenderId] = useState<number>();
   const [cities, setCities] = useState<City[]>([]);
-  const [selectedCity, setSelectedCity] = useState<string[]>([]);
+  const [selectedCity, setSelectedCity] = useState<string>();
+  const [selectedCityId, setSelectedCityId] = useState<number>();
 
   const { fieldName, registerField, error } = useField(name);
+
+  const modalizeRef = useRef<Modalize>(null);
+  const selectRef = useRef(null);
 
   const onOpen = () => {
     modalizeRef.current?.open();
@@ -54,18 +55,14 @@ export default function Select({
     modalizeRef.current?.close();
   };
 
-  function handleSelectGender(sex: string, id: any) {
-    selectedGender.pop();
-    selectedGender.push(id);
-
-    setSelectedGender([sex]);
+  function handleSelectGender(sex: string, id: number) {
+    setSelectedGender(sex);
+    setSelectedGenderId(id);
   }
 
-  function handleSelectCity(city: string, id: any) {
-    selectedCity.pop();
-    selectedCity.push(id);
-
-    setSelectedCity([city]);
+  function handleSelectCity(city: string, id: number) {
+    setSelectedCity(city);
+    setSelectedCityId(id);
   }
 
   useEffect(() => {
@@ -85,13 +82,10 @@ export default function Select({
       name: fieldName,
       ref: selectRef.current,
       getValue() {
-        return isGender ? selectedGender : selectedCity;
-      },
-      setValue(_, value: string[]) {
-        isGender ? setSelectedGender(value) : setSelectedCity(value);
-      },
+        return isGender ? selectedGenderId : selectedCityId;
+      }
     });
-  }, [fieldName, registerField]);
+  }, [fieldName, selectedGenderId, selectedCityId, registerField]);
 
   return (
     <>
@@ -111,19 +105,19 @@ export default function Select({
         {isGender ? (
           <Text 
             style={
-              selectedGender.length ? styles.selected : styles.placeholder
+              selectedGender?.length ? styles.selected : styles.placeholder
             }
           >
-            {selectedGender.length ? selectedGender : placeholder}
+            {selectedGender?.length ? selectedGender : placeholder}
           </Text>
 
         ) : (
           <Text 
             style={
-              selectedCity.length ? styles.selected : styles.placeholder
+              selectedCity?.length ? styles.selected : styles.placeholder
             }
           >
-            {selectedCity.length ? selectedCity : placeholder}
+            {selectedCity?.length ? selectedCity : placeholder}
           </Text>
         )}
 
