@@ -28,6 +28,7 @@ interface ValidationErrors {
 }
 
 interface PersonalDataProps {
+  foto: string;
   nome: string;
   cpf: string;
   telefone: string;
@@ -59,23 +60,23 @@ export default function Address() {
     params: PersonalDataProps,
     adressData: AdressDataProps,
   ) {
-    const { nome, cpf, telefone, celular, sexo_id } = params;
+    const { foto, nome, cpf, telefone, celular, sexo_id } = params;
     const { cidade_id, bairro, logradouro, numero, complemento, cep } = adressData;
 
     navigation.navigate("LoginData", { 
-      nome, cpf, telefone, celular, sexo_id,
+      foto, nome, cpf, telefone, celular, sexo_id,
       cidade_id, bairro, logradouro, numero, complemento, cep
     });
   }
 
   async function handleSubmit(adressData: AdressDataProps) {
-    const { nome, cpf, telefone, celular, sexo_id } = params;
+    const { foto, nome, cpf, telefone, celular, sexo_id } = params;
     
     const { cidade_id, bairro, logradouro, numero, complemento, cep } = adressData;
 
     try {
       const schema = Yup.object().shape({
-        cidade_id: Yup.array().min(1, "O campo cidade é obrigatório!"),
+        cidade_id: Yup.string().required("O campo cidade é obrigatório!"),
         bairro: Yup.string().strict(true)
           .trim("Não são permitidos espaços no começo ou no fim!")
           .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo bairro só aceita letras!")
@@ -110,7 +111,7 @@ export default function Address() {
       formRef.current?.setErrors({});
 
       handleNavigateToLoginData({
-        nome, cpf, telefone, celular, sexo_id
+        foto, nome, cpf, telefone, celular, sexo_id
       }, {
         cidade_id, bairro, logradouro, numero, complemento, cep
       });
@@ -132,6 +133,7 @@ export default function Address() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{flex: 1}}
       keyboardVerticalOffset={8}
+      hitSlop={{top: 20}}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
