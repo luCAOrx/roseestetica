@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { 
   View, 
@@ -21,6 +21,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 import Header from '../../components/Header';
 import { Input, InputMask, Select } from '../../components/Form';
+import ImagePickerInput from '../../components/Form/imagePicker';
 import CustomButton from '../../components/Button';
 
 interface ValidationErrors {
@@ -28,6 +29,7 @@ interface ValidationErrors {
 }
 
 interface PersonalDataProps {
+  foto: string,
   nome: string;
   cpf: string;
   telefone: string;
@@ -36,6 +38,7 @@ interface PersonalDataProps {
 }
 
 export default function PersonalData() {
+
   const formRef = useRef<FormHandles>(null);
   const cpfInputRef = useRef<TextInput>(null);
   const phoneNumberInputRef = useRef<TextInput>(null);
@@ -44,24 +47,25 @@ export default function PersonalData() {
   const navigation = useNavigation();
 
   function handleNavigateToAddress(personalData: PersonalDataProps) {
-    const { nome, cpf, telefone, celular, sexo_id } = personalData;
+    const { foto, nome, cpf, telefone, celular, sexo_id } = personalData;
 
     navigation.navigate("Address", { 
-      nome, cpf, telefone, celular, sexo_id
+      foto, nome, cpf, telefone, celular, sexo_id
     });
   }
 
   async function handleSubmit(personalData: PersonalDataProps) {
-    const { nome, cpf, telefone, celular, sexo_id } = personalData;
+    const { foto, nome, cpf, telefone, celular, sexo_id } = personalData;
 
     try {
       const schema = Yup.object().shape({
+        foto: Yup.string().required('O campo foto é obrigatório.'),
         nome: Yup.string().strict(true)
-        .trim("Não são permitidos espaços no começo ou no fim!")
-        .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo nome completo só aceita letras!")
-        .min(5, "No mínimo 5 caracteres!")
-        .max(90, "No máximo 90 caracteres!")
-        .required("O campo nome é obrigatório!"),
+          .trim("Não são permitidos espaços no começo ou no fim!")
+          .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo nome completo só aceita letras!")
+          .min(5, "No mínimo 5 caracteres!")
+          .max(90, "No máximo 90 caracteres!")
+          .required("O campo nome é obrigatório!"),
         cpf: Yup.string().required("O campo CPF é obrigatório!")
           .min(11, "No mínimo 11 caracteres!")
           .max(11, "No máximo 11 caracteres!"),
@@ -71,16 +75,16 @@ export default function PersonalData() {
         celular: Yup.string().required("O campo número de celular é obrigatório!")
           .min(11, "No mínimo 11 caracteres!")
           .max(11, "No máximo 11 caracteres!"),
-        sexo_id: Yup.array().min(1, "O campo sexo é obrigatório!")
+        sexo_id: Yup.string().required("O campo sexo é obrigatório!")
       });
 
-      await schema.validate({nome, cpf, telefone, celular, sexo_id}, {
+      await schema.validate({foto, nome, cpf, telefone, celular, sexo_id}, {
         abortEarly: false
       });
 
       formRef.current?.setErrors({});
 
-      handleNavigateToAddress({nome, cpf, telefone, celular, sexo_id});
+      handleNavigateToAddress({foto, nome, cpf, telefone, celular, sexo_id});
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const validationErrors: ValidationErrors = {};
@@ -88,7 +92,7 @@ export default function PersonalData() {
         err.inner.forEach((error) => {
           validationErrors[`${error.path}`] = error.message;
         });
-        
+
         formRef.current?.setErrors(validationErrors);
       }
     }
@@ -106,11 +110,13 @@ export default function PersonalData() {
             ref={formRef} 
             style={{flexGrow: 1}} 
             onSubmit={handleSubmit}
-            // initialData={{ sexo: pickerOptions[0].value }}
           >
             <Header title="Dados pessoais" showIcon={false} fontSize={26}/>
             <StepIndicator stepCount={3} customStyles={stepStyles}/>
             <View style={{marginTop: 20}}/>
+
+            <ImagePickerInput name="foto" />
+
             <Input 
               placeholder="Nome completo"
               icon="person"
