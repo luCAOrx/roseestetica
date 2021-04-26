@@ -30,6 +30,7 @@ interface ValidationErrors {
 }
 
 interface DataProps {
+  foto: string;
   nome: string;
   cpf: string;
   telefone: string;
@@ -63,7 +64,8 @@ export default function LoginData() {
   }
   
   async function handleSubmit(loginData: LoginDataProps) {
-    const { 
+    const {
+      foto,
       nome, 
       cpf, 
       telefone, 
@@ -97,27 +99,28 @@ export default function LoginData() {
 
       formRef.current?.setErrors({});
 
-      const data = {
-        nome, 
-        cpf, 
-        telefone, 
-        celular, 
-        sexo_id, 
-        cidade_id, 
-        bairro, 
-        logradouro, 
-        numero, 
-        complemento, 
-        cep,
-        email,
-        senha
-      };
+      const data = new FormData();
 
-      await api.post('cadastro', data).catch(err => {
-        if (err) {
-          console.log(err);
-        }
-      });
+      data.append('foto', {
+        name: 'image_mobile.jpg',
+        type: 'image/jpg',
+        uri: foto
+      } as any);
+      data.append('nome', nome); 
+      data.append('cpf', cpf); 
+      data.append('telefone', telefone); 
+      data.append('celular', celular); 
+      data.append('sexo_id', String(sexo_id)); 
+      data.append('cidade_id', String(cidade_id)); 
+      data.append('bairro', bairro); 
+      data.append('logradouro', logradouro); 
+      data.append('numero', numero); 
+      data.append('complemento', complemento); 
+      data.append('cep', cep);
+      data.append('email', email);
+      data.append('senha', senha);
+
+      await api.post('cadastro', data)
       
       setSucessMessage(true);
 
