@@ -6,10 +6,13 @@ import {
   Platform, 
   View, 
   TouchableWithoutFeedback,
-  TextInput 
+  TextInput, 
+  Alert
 } from 'react-native';
 
 import * as Yup from 'yup';
+
+import { AxiosError } from 'axios';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -81,6 +84,10 @@ export default function LoginData() {
 
     const { email, senha } = loginData;
 
+    const threeSeconds = 3000;
+
+    const data = new FormData();
+
     try {
       const schema = Yup.object().shape({
         email: Yup.string()
@@ -98,8 +105,6 @@ export default function LoginData() {
       });
 
       formRef.current?.setErrors({});
-
-      const data = new FormData();
 
       data.append('foto', {
         name: 'image_mobile.jpg',
@@ -120,13 +125,17 @@ export default function LoginData() {
       data.append('email', email);
       data.append('senha', senha);
 
-      await api.post('cadastro', data)
-      
-      setSucessMessage(true);
+      await api.post('cadastro', data).then(() => {
+        setSucessMessage(true);
+        
+        setTimeout(() => {
+          handleNavigateToLogin();
+        }, threeSeconds);
+      }).catch((error: AxiosError) => {
+        const apiErrorMessage = error.response?.data.erro;
 
-      setTimeout(() => {
-        handleNavigateToLogin();
-      }, 3000);
+        Alert.alert('Erro ao se cadastrar', apiErrorMessage);
+      });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const validationErrors: ValidationErrors = {};
