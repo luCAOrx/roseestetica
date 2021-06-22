@@ -1,56 +1,73 @@
 import React from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
-import { BorderlessButton } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import { Text, View } from 'react-native';
+
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import { useNavigation, useTheme } from '@react-navigation/native';
 
 import { MaterialIcons } from '@expo/vector-icons';
+
+import StepIndicator from 'react-native-step-indicator';
+
+import styles from './styles';
 
 interface HeaderProps {
   title: string;
   showIcon: boolean;
   fontSize: number;
+  showStep?: boolean;
+  position?: number;
 }
 
-export default function Header({title, showIcon, fontSize}: HeaderProps) {
+export default function Header({title, showIcon, fontSize, showStep, position}: HeaderProps) {
   const navigation = useNavigation();
 
-  const styles = StyleSheet.create({
-    container: {
-      marginTop: 35,
-      marginBottom: 15,
-      
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-
-    button: {
-      marginLeft: 10,
-    },
-  
-    title: {
-      fontFamily: "Roboto_700Bold",
-      fontSize: fontSize,
-      lineHeight: 42,
-  
-      color: "#D2D2E3",
-    }
-  });
+  const {colors} = useTheme();
 
   return (
-    <View style={styles.container}>
-      {
-        showIcon === true ?
-        <BorderlessButton style={styles.button} onPress={navigation.goBack}>
-          <MaterialIcons name="arrow-back" size={30} color="#D2D2E3"/>
-        </BorderlessButton> : 
-        <View />
-      }
+    <>
+      <View style={styles.container}>
+        {
+          showIcon ?
+          <TouchableOpacity style={styles.button} onPress={navigation.goBack}>
+            <MaterialIcons name="arrow-back" size={30} color={colors.text}/>
+          </TouchableOpacity> : 
+          <View />
+        }
 
-      <Text style={styles.title}>{title}</Text>
-      
-      <View />
-    </View>
+        <Text 
+          style={[
+            styles.title,
+            {
+              fontSize: fontSize,
+              color: colors.text
+            }
+          ]}
+        >
+          {title}
+        </Text>
+        <View />
+      </View>
+      {
+        showStep && 
+        <StepIndicator 
+          stepCount={3} 
+          currentPosition={position}
+          customStyles={{
+            currentStepLabelColor: colors.currentStepLabelColor,
+            stepStrokeCurrentColor: colors.stepStrokeCurrentColor,
+            stepIndicatorLabelCurrentColor: colors.stepIndicatorLabelCurrentColor,
+            stepIndicatorCurrentColor: colors.stepIndicatorCurrentColor,
+            stepIndicatorFinishedColor: colors.stepIndicatorFinishedColor,
+            stepIndicatorUnFinishedColor: colors.stepIndicatorUnFinishedColor,
+            stepIndicatorLabelFinishedColor: colors.stepIndicatorLabelFinishedColor,
+            stepIndicatorLabelUnFinishedColor: colors.stepIndicatorLabelUnFinishedColor,
+            separatorFinishedColor: colors.separatorFinishedColor,
+            separatorUnFinishedColor: colors.separatorUnFinishedColor
+          }}
+        />
+      }
+    </>
   );
 }
