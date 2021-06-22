@@ -130,28 +130,14 @@ export default {
   async atualizarDadosPessoais(request: Request, response: Response, next: NextFunction) {
     const { 
       nome, 
-      cpf, 
       telefone, 
-      celular, 
-      cidade_id, 
-      bairro, 
-      logradouro, 
-      numero, 
-      complemento, 
-      cep 
+      celular
     } = request.body;
 
     const data = { 
       nome, 
-      cpf, 
       telefone, 
-      celular, 
-      cidade_id, 
-      bairro, 
-      logradouro, 
-      numero, 
-      complemento, 
-      cep 
+      celular,
     };
 
     const regexLetras = /^([a-zA-Zà-úÀ-Ú]|\s+)+$/;
@@ -168,8 +154,6 @@ export default {
 
       telefone: yup.string().optional().strict(true)
         .trim("Não são permitidos espaços no começo ou no fim!")
-        .matches(regexNumeros, "O campo telefone não aceita letras!")
-        .min(10, "No mínimo 10 caracteres!")
         .max(10, "No máximo 10 caracteres!"),
 
       celular: yup.string().strict(true)
@@ -177,21 +161,53 @@ export default {
         .matches(regexNumeros, "O campo celular só aceita letras!")
         .min(11, "No mínimo 11 caracteres!")
         .max(11, "No máximo 11 caracteres!")
-        .required("O campo número de celular é obrigatório!"),
+        .required("O campo número de celular é obrigatório!")
+    });
+  
+    await schema.validate(data, {
+      abortEarly: false
+    });
 
+    next();
+  },
+
+  async atualizarEndereço(request: Request, response: Response, next: NextFunction) {
+    const { 
+      cidade_id, 
+      bairro, 
+      logradouro, 
+      numero, 
+      complemento, 
+      cep 
+    } = request.body;
+
+    const data = { 
+      cidade_id, 
+      bairro, 
+      logradouro, 
+      numero, 
+      complemento, 
+      cep 
+    };
+
+    const regexLetras = /^([a-zA-Zà-úÀ-Ú]|\s+)+$/;
+
+    const regexNumeros = /^([0-9]|\s+)+$/;
+
+    const schema = yup.object().shape({
       cidade_id: yup.number().required("O campo cidade_id é obrigatório!")
         .min(1, "No minímo 1"),
 
       bairro: yup.string().strict(true)
         .trim("Não são permitidos espaços no começo ou no fim!")
-        .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo bairro só aceita letras!")
+        .matches(regexLetras, "O campo bairro só aceita letras!")
         .min(3, "No mínimo 3 caracteres!")
         .max(90, "No máximo 90 caracteres!")
         .required("O campo bairro é obrigatório!"),
 
       logradouro: yup.string().strict(true)
         .trim("Não são permitidos espaços no começo ou no fim!")
-        .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, "O campo logradouro só aceita letras!")
+        .matches(regexLetras, "O campo logradouro só aceita letras!")
         .min(5, "No mínimo 5 caracteres!")
         .max(90, "No máximo 90 caracteres!")
         .required("O campo logradouro é obrigatório!"),
@@ -205,7 +221,6 @@ export default {
 
       complemento: yup.string().optional().strict(true)
         .trim("Não são permitidos espaços no começo ou no fim!")
-        .min(3, "No mínimo 3 caracteres!")
         .max(90, "No máximo 90 caracteres!"),
 
       cep: yup.string().strict(true)
@@ -223,7 +238,7 @@ export default {
     next();
   },
 
-  async atualizarDadosDeLogin(request: Request, response: Response, next: NextFunction) {
+  async atualizarLogin(request: Request, response: Response, next: NextFunction) {
     const { email } = request.body;
 
     const data = { email };
