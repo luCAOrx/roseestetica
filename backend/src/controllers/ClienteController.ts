@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import fileSystem from 'fs';
 
@@ -23,19 +23,50 @@ function gerarToken(params: {}) {
 }
 
 export default {
-  async autenticar(request: Request, response: Response, next: NextFunction) {
+  async autenticar(request: Request, response: Response) {
     try {
       const { email, senha } = request.body;
   
       const cliente = await connection('clientes').where({ email }).select('*').first();
   
-      if (!cliente)
+      if (!cliente) {
         return response.status(400).json({ erro: 'E-mail ou senha inválido.' });
+      };
 
       const senhaSalvaNoBancoDeDados = await compare(senha, cliente.senha);
   
-      if (!senhaSalvaNoBancoDeDados)
+      if (!senhaSalvaNoBancoDeDados) {
         return response.status(400).json({ erro: 'E-mail ou senha inválido.' });
+      };
+
+      const dados = await connection('clientes')
+        .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
+        .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
+        .where({ email })
+        .select([
+          'clientes.id',
+          'clientes.imagem',
+          'clientes.nome',
+          'clientes.cpf',
+          'clientes.sexo_id',
+          'sexos.sexo',
+          'clientes.telefone',
+          'clientes.celular',
+          'clientes.cidade_id',
+          'cidades.cidade',
+          'clientes.bairro',
+          'clientes.logradouro',
+          'clientes.numero',
+          'clientes.complemento',
+          'clientes.cep',
+          'clientes.email',
+        ])
+        .first();
+
+      const clienteSerializado = {
+        ...dados,
+        imagem_url: `http://10.0.0.190:3333/uploads/${cliente.imagem}`,
+      };
   
       cliente.senha = undefined;
       cliente.token_reset_senha = undefined;
@@ -43,8 +74,8 @@ export default {
       cliente.criado_em = undefined;
       cliente.atualizado_em = undefined;
   
-      response.json({
-        cliente,
+      return response.json({
+        cliente: clienteSerializado,
         token: gerarToken({ id: cliente.id }),
       });
   
@@ -53,7 +84,7 @@ export default {
     }
   },
 
-  async listarDadosPessoais(request: Request, response: Response, next: NextFunction) {
+  async listarDadosPessoais(request: Request, response: Response) {
     try {
       const { id } = request.params;
   
@@ -62,6 +93,7 @@ export default {
         .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
         .where('clientes.id', id)
         .select([
+          'clientes.id',
           'clientes.nome',
           'clientes.cpf',
           'sexos.sexo',
@@ -97,7 +129,7 @@ export default {
     }
   },
 
-  async cadastrar(request: Request, response: Response, next: NextFunction) {
+  async cadastrar(request: Request, response: Response) {
     try {
       const senha = await bcrypt.hash(request.body.senha, 8);
   
@@ -116,7 +148,7 @@ export default {
         cidade_id,
       } = request.body;
 
-      const { filename: chave_da_imagem } = request.file
+      const { filename: imagem } = request.file;
 
       const dataEhoraDeAgora = new Date();
 
@@ -128,23 +160,22 @@ export default {
   
       if (cpfExiste) {
         fileSystem.unlinkSync(path.resolve(
-          __dirname, '..', '..', `uploads/${chave_da_imagem}`
+          __dirname, '..', '..', `uploads/${imagem}`
         ));
 
-        return response.status(400).json({ erro: 'Esse cpf ja existe.' });
-      }
+        return response.status(400).json({ erro: 'Esse cpf já existe.' });
+      };
   
       if (emailExiste) {
         fileSystem.unlinkSync(path.resolve(
-          __dirname, '..', '..', `uploads/${chave_da_imagem}`
+          __dirname, '..', '..', `uploads/${imagem}`
         ));
         
-        return response.status(400).json({ erro: 'Esse e-mail ja existe.' });
-      }
-
-      const transaction = await connection.transaction();
+        return response.status(400).json({ erro: 'Esse e-mail já existe.' });
+      };
   
-      const idInserido = await transaction('clientes').insert({
+      await connection('clientes').insert({
+        imagem,
         nome,
         cpf,
         telefone,
@@ -161,10 +192,8 @@ export default {
         criado_em: dataEhoraDeAgora
       });
 
-      const id = idInserido[0];
-
       const dados = {
-        id,
+        imagem,
         nome,
         cpf,
         telefone,
@@ -176,29 +205,16 @@ export default {
         cep,
         email,
         sexo_id,
-        cidade_id,
-        chave_da_imagem
-      }
-
-      await transaction('imagens').insert({
-        chave_da_imagem,
-        cliente_id: id,
-        criado_em: dataEhoraDeAgora
-      });
-
-      await transaction.commit();
+        cidade_id
+      };
   
-      return response.status(201).json({
-        dados,
-        token: gerarToken({ id }),
-      });
-    } catch (erro) {
-      console.log(erro);
+      return response.status(201).json({cliente: dados});
+    } catch (erro) {      
       return response.status(400).json({ erro: 'Falha ao se cadastrar.' })
     }
   },
 
-  async atualizarDadosPessoais(request: Request, response: Response, next: NextFunction) {
+  async atualizarDadosPessoais(request: Request, response: Response) {
     try {
       const { id } = request.params;
   
@@ -207,8 +223,61 @@ export default {
       const {
         nome,
         telefone,
+        celular
+      } = request.body;
+  
+      await connection('clientes')
+      .update({
+        nome,
+        telefone,
         celular,
-        sexo_id,
+        atualizado_em: dataEhoraDeAgora
+      })
+      .where({ id });
+
+      const clientes = await connection('clientes')
+      .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
+      .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
+      .where('clientes.id', id)
+      .select([
+        'clientes.id',
+        'clientes.imagem',
+        'clientes.nome',
+        'clientes.cpf',
+        'clientes.sexo_id',
+        'sexos.sexo',
+        'clientes.telefone',
+        'clientes.celular',
+        'clientes.cidade_id',
+        'cidades.cidade',
+        'clientes.bairro',
+        'clientes.logradouro',
+        'clientes.numero',
+        'clientes.complemento',
+        'clientes.cep',
+        'clientes.email',
+      ])
+      .first();
+
+      const clienteSerializado = {
+        ...clientes,
+        imagem_url: `http://10.0.0.190:3333/uploads/${clientes.imagem}`,
+      };
+  
+      return response.status(201).json({ cliente: clienteSerializado });
+  
+    } catch (erro) {
+      return response.status(400).json({ erro: 'Erro ao atualizar dados pessoais.' });
+    }
+  },
+
+  async atualizarEndereço(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+  
+      const dataEhoraDeAgora = new Date();
+  
+      const {
         cidade_id,
         bairro,
         logradouro,
@@ -218,45 +287,106 @@ export default {
       } = request.body;
   
       await connection('clientes')
-        .update({
-          nome,
-          telefone,
-          celular,
-          sexo_id,
-          cidade_id,
-          bairro,
-          logradouro,
-          numero,
-          complemento,
-          cep,
-          atualizado_em: dataEhoraDeAgora
-        })
-        .where({ id });
+      .update({
+        cidade_id,
+        bairro,
+        logradouro,
+        numero,
+        complemento,
+        cep,
+        atualizado_em: dataEhoraDeAgora
+      })
+      .where({ id });
+
+      const clientes = await connection('clientes')
+      .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
+      .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
+      .where('clientes.id', id)
+      .select([
+        'clientes.id',
+        'clientes.imagem',
+        'clientes.nome',
+        'clientes.cpf',
+        'clientes.sexo_id',
+        'sexos.sexo',
+        'clientes.telefone',
+        'clientes.celular',
+        'clientes.cidade_id',
+        'cidades.cidade',
+        'clientes.bairro',
+        'clientes.logradouro',
+        'clientes.numero',
+        'clientes.complemento',
+        'clientes.cep',
+        'clientes.email',
+      ])
+      .first();
+
+      const clienteSerializado = {
+        ...clientes,
+        imagem_url: `http://10.0.0.190:3333/uploads/${clientes.imagem}`,
+      };
   
-      return response.status(201).json({ mensagem: 'Dados pessoais atualizados com sucesso.' });
+      return response.status(201).json({ cliente: clienteSerializado });
   
     } catch (erro) {
       return response.status(400).json({ erro: 'Erro ao atualizar dados pessoais.' });
     }
   },
 
-  async atualizarDadosDeLogin(request: Request, response: Response, next: NextFunction) {
+  async atualizarLogin(request: Request, response: Response) {
     try {
       const { id } = request.params;
       const { email } = request.body;
   
       const dataEhoraDeAgora = new Date();
 
-      const emailExistente = await connection('clientes')
-      .where({ email }).select('email').first();
+      const emailExiste = await connection('clientes')
+      .where({ email })
+      .select('email', 'imagem')
+      .first();
   
-      if (emailExistente)
+      if (emailExiste) {
         return response.status(400).json({ erro: 'Esse e-mail já existe.' });
+      };
   
       await connection('clientes')
-      .update({ email, atualizado_em: dataEhoraDeAgora }).where({ id });
+      .update({ 
+        email, 
+        atualizado_em: dataEhoraDeAgora 
+      })
+      .where({ id });
   
-      return response.status(201).json({ mensagem: 'Seu login foi atualizado com sucesso.' });
+      const clientes = await connection('clientes')
+      .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
+      .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
+      .where('clientes.id', id)
+      .select([
+        'clientes.id',
+        'clientes.imagem',
+        'clientes.nome',
+        'clientes.cpf',
+        'clientes.sexo_id',
+        'sexos.sexo',
+        'clientes.telefone',
+        'clientes.celular',
+        'clientes.cidade_id',
+        'cidades.cidade',
+        'clientes.bairro',
+        'clientes.logradouro',
+        'clientes.numero',
+        'clientes.complemento',
+        'clientes.cep',
+        'clientes.email',
+      ])
+      .first();
+
+      const clienteSerializado = {
+        ...clientes,
+        imagem_url: `http://10.0.0.190:3333/uploads/${clientes.imagem}`,
+      };
+  
+      return response.status(201).json({ cliente: clienteSerializado });
   
     } catch (erro) {
       return response.status(400).json({ erro: 'Erro ao atualizar login.' });
@@ -265,47 +395,73 @@ export default {
 
   async atualizarFoto(request: Request, response: Response) {
     try {
-      const { cliente_id } = request.params;
+      const { id } = request.params;
+
+      const { filename: imagem } = request.file;
   
       const dataEhoraDeAgora = new Date();
 
-      const dados = {
-        chave_da_imagem: request.file.filename,
-        atualizado_em: dataEhoraDeAgora
-      };
+      const cliente = await connection('clientes')
+      .where({ id }).select('imagem').first();
 
-      const chaveDaImagemNaPastaUploads = await connection('imagens')
-      .where({ cliente_id }).select('chave_da_imagem').first();
-
-      if (chaveDaImagemNaPastaUploads) {
+      if (cliente) {
         fileSystem.unlinkSync(path.resolve(
-          __dirname, '..', '..', `uploads/${chaveDaImagemNaPastaUploads.chave_da_imagem}`
+          __dirname, '..', '..', `uploads/${cliente.imagem}`
         ));
       };
-
-      console.log(chaveDaImagemNaPastaUploads.cliente_id)
       
-      await connection('imagens').update({ 
-        chave_da_imagem: request.file.filename,
-        atualizado_em: dataEhoraDeAgora
-      }).where({ cliente_id });
+      await connection('clientes')
+      .update({ 
+        imagem, 
+        atualizado_em: dataEhoraDeAgora 
+      })
+      .where({ id });
+  
+      const dados = await connection('clientes')
+      .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
+      .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
+      .where('clientes.id', id)
+      .select([
+        'clientes.id',
+        'clientes.imagem',
+        'clientes.nome',
+        'clientes.cpf',
+        'clientes.sexo_id',
+        'sexos.sexo',
+        'clientes.telefone',
+        'clientes.celular',
+        'clientes.cidade_id',
+        'cidades.cidade',
+        'clientes.bairro',
+        'clientes.logradouro',
+        'clientes.numero',
+        'clientes.complemento',
+        'clientes.cep',
+        'clientes.email',
+      ])
+      .first();
 
-      return response.status(200).json({ dados });
+      const clienteSerializado = {
+        ...dados,
+        imagem_url: `http://10.0.0.190:3333/uploads/${dados.imagem}`,
+      };
+  
+      return response.status(201).json({ cliente: clienteSerializado });
     } catch (error) {
-      console.log(error)
       return response.status(400).json({ erro: 'Erro ao atualizar a foto.' });
     }
   },
 
-  async esqueciMinhaSenha(request: Request, response: Response, next: NextFunction) {
+  async esqueciMinhaSenha(request: Request, response: Response) {
     try {
       const { email } = request.body;
       
       const cliente = await connection('clientes')
       .where({ email }).select('email').first();
   
-      if (!cliente)
+      if (!cliente) {
         return response.status(400).json({ erro: 'E-mail inválido.' });
+      }
   
       const token = randomBytes(20).toString('hex');
   
@@ -329,7 +485,7 @@ export default {
       mailer.sendMail(mail, async (erro) => {
         if(erro)
           return response.status(400).json({ 
-            erro: 'Não foi possível enviar o email para recuperação de senha.' 
+            mailerError: 'Não foi possível enviar o email para recuperação de senha.' 
           });
 
         return response.status(200).json({
@@ -344,7 +500,7 @@ export default {
     }
   },
 
-  async atualizarSenha(request: Request, response: Response, next: NextFunction) {
+  async atualizarSenha(request: Request, response: Response) {
     
       const { email, token } = request.body;
     
@@ -375,16 +531,17 @@ export default {
   
   },
 
-  async deletar(request: Request, response: Response, next: NextFunction) {
+  async deletar(request: Request, response: Response) {
     try {
       const { id } = request.params;
 
-      const chaveDaImagemNaPastaUploads = await connection('imagens')
-      .where({ cliente_id: id }).select('chave_da_imagem').first();
+      const cliente = await connection('clientes')
+      .where({ id })
+      .first();
 
-      if (chaveDaImagemNaPastaUploads) {
+      if (cliente) {
         fileSystem.unlinkSync(path.resolve(
-          __dirname, '..', '..', `uploads/${chaveDaImagemNaPastaUploads.chave_da_imagem}`
+          __dirname, '..', '..', `uploads/${cliente.imagem}`
         ));
       };
 
@@ -393,7 +550,7 @@ export default {
       return response.status(204).json();
   
     } catch (error) {
-      next(response.status(400).json({ erro: 'Erro em deletar usuário.' }));
+      return response.status(400).json({ erro: 'Erro ao deletar usuário.' });
     }
   }
 };
