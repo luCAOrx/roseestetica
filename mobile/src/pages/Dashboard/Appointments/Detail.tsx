@@ -12,6 +12,8 @@ import { useAuth } from '../../../contexts/auth';
 
 import api from '../../../services/api';
 
+import { AxiosError } from 'axios';
+
 import { format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
@@ -21,11 +23,12 @@ import { useTheme } from '@react-navigation/native';
 
 interface Data {
   agendamento: {
+    id: number;
     data: string;
     horario: string;
     agendado_em: string;
     remarcado_em: string;
-  };
+  }[];
 
   procedimentos: {
     id: number;
@@ -50,10 +53,18 @@ export default function Detail() {
   const [detail, setDetail] = useState<Data>({} as Data);
   
   useEffect(() => {
-    api.get(`detalhes_do_agendamento/${cliente?.id}/${params.agendamento_id}`)
-    .then(response => {
-      setDetail(response.data);
-    }).catch(err => Alert.alert(err.response.data.erro));
+    async function loadDetail() {
+      await api.get(`detalhes_do_agendamento/${cliente?.id}/${params.agendamento_id}`)
+      .then(response => {
+        setDetail(response.data);
+      }).catch((err: AxiosError) => {
+        const apiErrorMessage = err.response?.data.erro;
+  
+        Alert.alert('Erro', apiErrorMessage);
+      });
+    };
+
+    loadDetail();
   }, []);
 
   if (!detail.agendamento) {
@@ -78,20 +89,22 @@ export default function Detail() {
             Data e hora
           </Text>
         </View>  
-        <View style={styles.detail}>
-          <Text 
-            style={[
-              styles.text,
-              {color: colors.text}
-            ]}
-          >
-            {`${format(parseISO(detail.agendamento.data), 
-                "eeeeee dd 'de' MMM 'de' yyyy" , {
-                locale: ptBR
-              })} às ${detail.agendamento.horario}h`
-            }
-          </Text>
-        </View>
+        {detail.agendamento.map(schedule => (
+          <View key={schedule.id} style={styles.detail}>
+            <Text 
+              style={[
+                styles.text,
+                {color: colors.text}
+              ]}
+            >
+              {`${format(parseISO(schedule.data), 
+                  "eeeeee dd 'de' MMM 'de' yyyy" , {
+                  locale: ptBR
+                })} às ${schedule.horario}h`
+              }
+            </Text>
+          </View>
+        ))}
 
         <View 
           style={[
@@ -144,20 +157,22 @@ export default function Detail() {
             Data do agendamento
           </Text>
         </View>  
-        <View style={styles.detail}>
-          <Text 
-            style={[
-              styles.text,
-              {color: colors.text}
-            ]}
-          >
-            {`${format(parseISO(detail.agendamento.agendado_em), 
-                "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm" , {
-                locale: ptBR
-              })}`
-            }
-          </Text>
-        </View>
+        {detail.agendamento.map(schedule => (
+          <View key={schedule.id} style={styles.detail}>
+            <Text 
+              style={[
+                styles.text,
+                {color: colors.text}
+              ]}
+            >
+              {`${format(parseISO(schedule.agendado_em), 
+                  "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm" , {
+                  locale: ptBR
+                })}`
+              }
+            </Text>
+          </View>
+        ))}
 
         <View 
           style={[
@@ -174,22 +189,25 @@ export default function Detail() {
             Data do remarque
           </Text>
         </View>  
-        <View style={styles.detail}>
-          <Text 
-            style={[
-              !detail.agendamento.remarcado_em ? 
-              [styles.text, {color: colors.primary}] : styles.text
-            ]}
-          >
-            {detail.agendamento.remarcado_em === null ? 'Ainda não houve um remarque' : 
-              `${format(parseISO(detail.agendamento.remarcado_em), 
-                  "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm" , {
-                  locale: ptBR
-                })
-              }`
-            }
-          </Text>
-        </View>
+        {detail.agendamento.map(detail => (
+          <View key={detail.id} style={styles.detail}>
+            <Text 
+              style={[
+                !detail.remarcado_em ? 
+                [styles.text, {color: colors.primary}] : styles.text
+              ]}
+            >
+              {detail.remarcado_em === null ?
+                'Ainda não houve um remarque' : 
+                `${format(parseISO(detail.remarcado_em), 
+                    "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm" , {
+                    locale: ptBR
+                  })
+                }`
+              }
+            </Text>
+          </View>
+        ))}
 
         <View 
           style={[
