@@ -56,13 +56,19 @@ routes.put('/atualizar_dados_pessoais/:id',
   ClienteController.atualizarDadosPessoais
 );
 
-routes.put('/atualizar_login/:id',
+routes.put('/atualizar_endereco/:id',
   authMiddleware,
-  ClienteValidation.atualizarDadosDeLogin,
-  ClienteController.atualizarDadosDeLogin
+  ClienteValidation.atualizarEndereço,
+  ClienteController.atualizarEndereço
 );
 
-routes.put('/perfil/atualizar_foto/:cliente_id',
+routes.put('/atualizar_login/:id',
+  authMiddleware,
+  ClienteValidation.atualizarLogin,
+  ClienteController.atualizarLogin
+);
+
+routes.patch('/atualizar_foto/:id',
   authMiddleware,
   upload.single('foto'),
   ClienteController.atualizarFoto
@@ -92,6 +98,11 @@ routes.get('/agendamentos_disponiveis',
 routes.get('/meus_agendamentos/:cliente_id',
   authMiddleware,
   AgendamentoController.listarAgendamentosDoCliente
+);
+
+routes.get('/detalhes_do_agendamento/:id/:agendamento_id',
+  authMiddleware,
+  AgendamentoController.detalhesDoAgendamento
 );
 
 routes.post('/agendar/:id',
