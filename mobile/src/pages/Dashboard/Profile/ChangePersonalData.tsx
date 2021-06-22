@@ -56,9 +56,6 @@ export default function ChangePersonalData() {
       celular: cliente?.celular,
       sexo: cliente?.sexo
     });
-    
-    cliente.telefone === "undefined" || cliente.telefone === "(" &&
-    formRef.current?.setFieldValue("telefone", "");
   }, []);
   
   const onOpen = () => {
@@ -89,8 +86,6 @@ export default function ChangePersonalData() {
           .max(90, "No máximo 90 caracteres!")
           .required("O campo nome é obrigatório!"),
         telefone: Yup.string().optional().nullable()
-          // .matches(regexNumeros, "O campo telefone não aceita letras!")
-          // .min(10, "No mínimo 10 caracteres!")
           .max(10, "No máximo 10 caracteres!"),
         celular: Yup.string()
           .matches(regexNumeros, "O campo celular não aceita letras!")
@@ -269,7 +264,6 @@ export default function ChangePersonalData() {
             placeholder="Número de Telefone (opcional)"
             icon="local-phone" 
             name="telefone"
-            includeRawValueInChangeText
             keyboardType="number-pad"
             returnKeyType="next"
             maxLength={14}
