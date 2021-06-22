@@ -20,10 +20,10 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
       errors[`${err.path}`] = err.errors;
     });
 
-    const { filename: chave_da_imagem } = request.file;
+    const { filename: imagem } = request.file;
 
     fileSystem.unlinkSync(path.resolve(
-      __dirname, '..', '..', `uploads/${chave_da_imagem}`
+      __dirname, '..', '..', `uploads/${imagem}`
     ));
 
     console.log(errors);
@@ -34,9 +34,22 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
       const message = error.message = 'O arquivo não pode ter mais que 2mb.'
+
+      const { filename: imagem } = request.file;
+
+      fileSystem.unlinkSync(path.resolve(
+        __dirname, '..', '..', `uploads/${imagem}`
+      ));
+
       return response.status(400).json({ message: message });
     }
   }
+
+  const { filename: imagem } = request.file;
+
+  fileSystem.unlinkSync(path.resolve(
+    __dirname, '..', '..', `uploads/${imagem}`
+  ));
 
   console.log(error);
   return response.status(500).json({ message: 'Internal server error' });
