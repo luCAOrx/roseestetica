@@ -79,14 +79,6 @@ export default function Profile() {
             >
               {cliente?.nome.split(' ').slice(0, 2).join(' ')}
             </Text>
-            <Text 
-              style={[
-                styles.description,
-                {color: colors.primary}
-              ]}
-            >
-              Dados pessoais, endereço e login
-            </Text>
           </View>
         </View>
       </View>
