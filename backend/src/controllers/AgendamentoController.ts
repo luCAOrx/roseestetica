@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import connection from '../database/connection';
 
 export default {
-  async listarHorariosDisponiveis(request: Request, response: Response, next: NextFunction) {
+  async listarHorariosDisponiveis(request: Request, response: Response) {
     try {
       const { data } = request.query;
 
@@ -24,57 +24,89 @@ export default {
     }
   },
 
-  async listarAgendamentosDoCliente(request: Request, response: Response, next: NextFunction) {
+  async listarAgendamentosDoCliente(request: Request, response: Response) {
     try {
       const { page = 1 } = request.query;
 
       const { cliente_id } = request.params
       
-      const agendamento = connection('agendamentos')
-      .limit(5)
-      .offset((Number(page) - 1) * 5);
-      
-      const countObjeto = connection('agendamentos').count();
-      
-      if (cliente_id) {
-        agendamento.where({ cliente_id })
+      const agendamento = await connection('agendamentos')
+      .where({ cliente_id })
         .join('horarios', 'horarios.id', '=', 'agendamentos.horario_id')
-        .join(
-          'agendamentos_procedimentos', 
-          'agendamentos.id', 
-          '=', 
-          'agendamentos_procedimentos.agendamento_id'
-        ).join(
-          'procedimentos', 
-          'procedimentos.id', 
-          '=', 
-          'agendamentos_procedimentos.procedimento_id'
-        )
         .select(
           'agendamentos.id',
           'agendamentos.data',
-          'procedimentos.procedimento',
-          'procedimentos.preco',
-          'horarios.horario',
-          'agendamentos.agendado_em',
-          'agendamentos.remarcado_em'
-        );
-      };
+          'horarios.horario'
+        )
+        .orderBy('id', 'desc')
+        .limit(5)
+        .offset((Number(page) - 1) * 5);
+      
+      const countObjeto = connection('agendamentos').count();
       
       const [count] = await countObjeto;
       
       response.header('X-Total-Count', String(count['count(*)']));
 
-      const agendadamentosDoCliente = await agendamento;
-
-      return response.json(agendadamentosDoCliente);
+      return response.json(agendamento);
 
     } catch (erro) {
       return response.status(400).json({ erro: 'Falha ao listar agendamento!' });
     }
   },
 
-  async agendar(request: Request, response: Response, next: NextFunction) {
+  async detalhesDoAgendamento(request: Request, response: Response) {
+    try {
+      const {id, agendamento_id} = request.params;
+
+      const agendamento = await connection('agendamentos')
+      .where('agendamentos.id', agendamento_id)
+      .andWhere('agendamentos.cliente_id', id)
+      .join(
+        'horarios', 
+        'horarios.id', 
+        '=', 
+        'agendamentos.horario_id'
+      )
+      .select(
+        'agendamentos.id',
+        'agendamentos.data',
+        'horarios.horario',
+        'agendamentos.agendado_em',
+        'agendamentos.remarcado_em'
+      );
+
+      const procedimentos = await connection('agendamentos_procedimentos')
+      .where({agendamento_id})
+      .andWhere('agendamentos.cliente_id', id)
+      .join(
+        'agendamentos',
+        'agendamentos.id',
+        '=',
+        'agendamentos_procedimentos.agendamento_id'
+      )
+      .join(
+        'procedimentos',
+        'procedimentos.id',
+        '=',
+        'agendamentos_procedimentos.procedimento_id'
+      )
+      .select(
+        'agendamentos_procedimentos.id',
+        'procedimentos.procedimento',
+        'procedimentos.preco',
+        'agendamentos_procedimentos.procedimento_alterado_em',
+      );
+
+      return response.status(200).json({agendamento, procedimentos});
+    } catch (error) {
+      console.log(error);
+      
+      return response.status(400).json({erro: "Erro ao listar detalhes do agendamento."})
+    };
+  },
+
+  async agendar(request: Request, response: Response) {
     try {
       const { data, procedimento_id, horario_id} = request.body;
 
@@ -129,7 +161,7 @@ export default {
     }
   },
 
-  async remarcar(request: Request, response: Response, next: NextFunction) {
+  async remarcar(request: Request, response: Response) {
     try {
       const dataEhoraDeAgora = new Date();
   
@@ -160,7 +192,7 @@ export default {
     }
   },
 
-  async alterarProcedimento(request: Request, response: Response, next: NextFunction) {
+  async alterarProcedimento(request: Request, response: Response) {
     try {
       const { procedimento_id } = request.body;
 
@@ -197,7 +229,7 @@ export default {
     }
   },
 
-  async cancelar(request: Request, response: Response, next: NextFunction) { 
+  async cancelar(request: Request, response: Response) { 
     try {
       const { id } = request.params;
       await connection('agendamentos').where({ id }).del();
