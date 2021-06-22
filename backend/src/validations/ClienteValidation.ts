@@ -57,13 +57,11 @@ export default {
 
       telefone: yup.string().optional().strict(true)
         .trim("Não são permitidos espaços no começo ou no fim!")
-        .matches(regexNumeros, "O campo telefone não aceita letras!")
-        .min(10, "No mínimo 10 caracteres!")
         .max(10, "No máximo 10 caracteres!"),
 
       celular: yup.string().strict(true)
         .trim("Não são permitidos espaços no começo ou no fim!")
-        .matches(regexNumeros, "O campo celular só aceita letras!")
+        .matches(regexNumeros, "O campo celular não aceita letras!")
         .min(11, "No mínimo 11 caracteres!")
         .max(11, "No máximo 11 caracteres!")
         .required("O campo número de celular é obrigatório!"),
