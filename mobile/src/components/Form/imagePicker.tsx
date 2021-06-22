@@ -1,25 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 
+import styles from './styles/imagePicker';
+
 import * as ImagePicker from 'expo-image-picker';
 
 import { useField } from '@unform/core';
+
+import { useTheme } from '@react-navigation/native';
 
 interface ImagePickerInputProps {
   name: string;
 };
 
 export default function ImagePickerInput({name}: ImagePickerInputProps) {
-  const [image, setImage] = useState<string>('');
+  const [image, setImage] = useState('');
 
   const { fieldName, registerField, error } = useField(name);
 
   const imagePickerRef = useRef(null);
+
+  const {colors} = useTheme();
 
   async function handleSelectImages() {
     const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -65,75 +71,30 @@ export default function ImagePickerInput({name}: ImagePickerInputProps) {
         </View>
       ) : (
         <View style={styles.imageInputContainer}>
-          { error && <Text style={styles.errorMessage}>{error}</Text>}
           <TouchableOpacity 
             ref={imagePickerRef}
-            style={error ? styles.error : styles.imageInput} 
+            style={[
+              styles.imageInput,
+              {
+                backgroundColor: colors.card,
+                borderColor: colors.primary
+              }
+            ]} 
             onPress={handleSelectImages}
           >
-            <Icon name="add" size={30} color="#7A7A7A" />
-            <Text style={styles.imageInputText}>Sua foto</Text>
+            <Icon name="add" size={30} color={colors.primary} />
+            <Text 
+              style={[
+                styles.imageInputText,
+                {color: colors.primary}
+              ]}
+            >
+                Sua foto
+              </Text>
           </TouchableOpacity>
+          { error && <Text style={styles.errorMessage}>{error}</Text>}
         </View>
       )}
     </>
   );
-}
-
-const styles = StyleSheet.create({
-  error: {
-    backgroundColor: '#222325',
-    borderStyle: 'dashed',
-    borderWidth: 1.4,
-    borderColor: "#c52626",
-    margin: 15,
-    width: 150,
-    height: 150,
-    borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-
-  },
-
-  errorMessage: {
-    textAlign: "center",
-    fontSize: 16,
-    color: "#c52626",
-  },
-
-  imageInputContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  imageInput: {
-    backgroundColor: '#222325',
-    borderStyle: 'dashed',
-    borderColor: '#7A7A7A',
-    borderWidth: 1.4,
-    margin: 15,
-    width: 150,
-    height: 150,
-    borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  imageInputText: {
-    color: "#7A7A7A",
-    fontFamily: "Roboto_400Regular",
-    fontSize: 15,
-  },
-
-  uploadedImageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  uploadedImage: {
-    margin: 15,
-    width: 150,
-    height: 150,
-    borderRadius: 100,
-  }
-});
+};
