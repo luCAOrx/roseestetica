@@ -1,15 +1,19 @@
 import React from 'react';
 
-import { StyleSheet, Text } from 'react-native';
-import { RectButtonProperties, TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacityProps } from 'react-native';
 
-interface CustomButtonProps extends RectButtonProperties {
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import styles from './styles';
+
+interface CustomButtonProps extends TouchableOpacityProps {
   title: string;
   width?: number;
   backgroundColor: string;
   height: number;
   fontSize: number;
   marginBottom?: number;
+  color: string;
 }
 
 export default function CustomButton({
@@ -19,33 +23,33 @@ export default function CustomButton({
   height,
   fontSize,
   marginBottom,
+  color,
   ...rest
 }: CustomButtonProps) {
-  const styles = StyleSheet.create({
-    container: {
-      height: height,
-      margin: 15,
-      width: width,
-      marginBottom: marginBottom,
-  
-      backgroundColor: backgroundColor,
-      borderRadius: 8,
-  
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    
-    title: {
-      fontFamily: "Roboto_900Black",
-      fontSize: fontSize,
-      lineHeight: 18,
-      color: "#D2D2E3",
-    },
-  });
-  
   return(
-    <TouchableOpacity style={styles.container} {...rest}>
-      <Text style={styles.title}>{title}</Text>
+    <TouchableOpacity 
+      style={[
+        styles.container,
+        {
+          height: height,
+          width: width,
+          marginBottom: marginBottom,
+          backgroundColor: backgroundColor
+        }
+      ]} 
+      {...rest}
+    >
+      <Text 
+        style={[
+          styles.title,
+          {
+            fontSize: fontSize,
+            color: color
+          }
+        ]}
+      >
+        {title}
+        </Text>
     </TouchableOpacity>
     
   );
