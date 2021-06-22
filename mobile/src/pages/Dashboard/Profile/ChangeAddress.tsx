@@ -52,15 +52,7 @@ export default function ChangeAddress() {
       numero: cliente.numero,
       complemento: cliente.complemento,
       cep: cliente.cep
-    });
-
-    cliente.complemento === "undefined" &&
-    formRef.current?.setFieldValue("complemento", "");
-
-    const data = formRef.current?.getData();
-
-    console.log(data);
-    
+    });    
   }, []);
 
   async function handleSubmit(adressData: AdressData) {
