@@ -40,16 +40,6 @@ routes.post('/cadastro',
   ClienteController.cadastrar,
 );
 
-routes.get('/perfil/:id',
-  authMiddleware,
-  ClienteController.listarDadosPessoais
-);
-
-routes.get('/perfil/foto/:cliente_id',
-  authMiddleware,
-  ClienteController.listarFoto
-);
-
 routes.put('/atualizar_dados_pessoais/:id',
   authMiddleware,
   ClienteValidation.atualizarDadosPessoais,
