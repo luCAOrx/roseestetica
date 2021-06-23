@@ -104,7 +104,15 @@ export default function Select({
       },
       setValue() {
         if (selectRef.current) {
-          return isGender ? setSelectedGenderId(value) : setSelectedCityId(value);
+          if (isGender) {
+            setSelectedGenderId(value);
+
+            return selectedGenderId;
+          } else {
+            setSelectedCityId(value);
+
+            return selectedCityId
+          }
         }
       }
     });
