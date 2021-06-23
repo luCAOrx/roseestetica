@@ -84,51 +84,6 @@ export default {
     }
   },
 
-  async listarDadosPessoais(request: Request, response: Response) {
-    try {
-      const { id } = request.params;
-  
-      const cliente = await connection('clientes')
-        .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
-        .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
-        .where('clientes.id', id)
-        .select([
-          'clientes.id',
-          'clientes.nome',
-          'clientes.cpf',
-          'sexos.sexo',
-          'clientes.telefone',
-          'clientes.celular',
-          'cidades.cidade',
-          'clientes.bairro',
-          'clientes.logradouro',
-          'clientes.numero',
-          'clientes.complemento',
-          'clientes.cep',
-          'clientes.email',
-        ])
-        .first();
-  
-      return response.json(cliente);
-  
-    } catch (erro) {
-      return response.status(400).json({ erro: 'Erro ao listar dados pessoais.' });
-    }
-  },
-
-  async listarFoto(request: Request, response: Response) {
-    try {
-      const { cliente_id } = request.params;
-
-      const imagem = await connection('imagens')
-      .where({ cliente_id }).select('*').first();
-
-      return response.status(200).json({ chave_da_imagem: imagem.chave_da_imagem});
-    } catch (error) {
-      return response.status(400).json({ erro: 'Erro ao lista foto' });
-    }
-  },
-
   async cadastrar(request: Request, response: Response) {
     try {
       const senha = await bcrypt.hash(request.body.senha, 8);
