@@ -187,6 +187,7 @@ export default function ChangeAddress() {
             placeholder="Número" 
             icon="looks-5"
             name="numero"
+            maxLength={6}
             keyboardType="numeric" 
             returnKeyType="next"
             onSubmitEditing={() => complementRef.current?.focus()}
