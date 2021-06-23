@@ -66,15 +66,23 @@ export default function Schedule() {
   const availableHour = availableAppointments.map(schedule => schedule.horario);
 
   useEffect(() => {
-    api.get('agendamentos_disponiveis', {params: {
-      data: selectedDay
-    }}).then(response => {
-      setAvailableAppointments(response.data);
-    });
+    async function loadavAilableSchedules() {
+      api.get('agendamentos_disponiveis', {params: {
+        data: selectedDay
+      }}).then(response => {
+        setAvailableAppointments(response.data);
+      });
+    };
+
+    loadavAilableSchedules();
   }, [selectedDay]);
 
   const onDayPress = (day: DateObject) => {
     setSelectedDay(day.dateString);
+  };
+
+  function handleNavigateToAppointments() {
+    navigation.navigate("Appointments");
   };
 
   async function handleSubmit(scheduleData: ReScheduleData) {
@@ -102,7 +110,12 @@ export default function Schedule() {
         setTimeout(() => {
           setSucessMessage(false);
 
-          navigation.navigate('Appointments')
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Appointments'}]
+          });
+
+          handleNavigateToAppointments();
         }, threeSeconds);
       }).catch((err: AxiosError) => {
         const apiErrorMessage = err.response?.data.erro;
