@@ -194,7 +194,13 @@ export default function Detail() {
             <Text 
               style={[
                 !detail.remarcado_em ? 
-                [styles.text, {color: colors.primary}] : styles.text
+                [
+                  styles.text, 
+                  {color: colors.primary}
+                ] : [
+                  styles.text,
+                  {color: colors.text}
+                ]
               ]}
             >
               {detail.remarcado_em === null ?
@@ -229,7 +235,13 @@ export default function Detail() {
             <Text 
               style={[
                 !procedure.procedimento_alterado_em ? 
-                [styles.text, {color: colors.primary}] : styles.text
+                [
+                  styles.text, 
+                  {color: colors.primary}
+                ] : [
+                  styles.text,
+                  {color: colors.text}
+                ]
               ]}
             >
               {procedure.procedimento_alterado_em === null ? 
