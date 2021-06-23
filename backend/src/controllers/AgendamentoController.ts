@@ -215,9 +215,11 @@ export default {
 
       await transaction('agendamentos_procedimentos').insert(procedimentos);
 
-      await transaction('agendamentos_procedimentos').update({
+      await transaction('agendamentos_procedimentos')
+      .update({
         procedimento_alterado_em: dataEhoraDeAgora
-      });
+      })
+      .where({ agendamento_id });
 
       transaction.commit();
 
