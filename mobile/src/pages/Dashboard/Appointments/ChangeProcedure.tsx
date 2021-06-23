@@ -50,9 +50,13 @@ export default function Schedule() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    api.get('procedimentos').then(response => {
-      setProcedures(response.data);
-    });
+    async function loadProcedures() {
+      api.get('procedimentos').then(response => {
+        setProcedures(response.data);
+      });
+    };
+
+    loadProcedures();
   }, []);
   
   function handleSelectProcedure(id: number) {
@@ -65,6 +69,10 @@ export default function Schedule() {
     } else {
       setSelectedProcedure([...selectedProcedure, id]);
     }
+  };
+
+  function handleNavigateToAppointments() {
+    navigation.navigate("Appointments");
   };
 
   async function handleSubmit(scheduleData: ScheduleData) {
@@ -85,16 +93,13 @@ export default function Schedule() {
 
       formRef.current?.setErrors({});
 
-      api.put(`alterar_procedimento/${params.agendamento_id}`, data).then(() => {
+      await api.put(`alterar_procedimento/${params.agendamento_id}`, data).then(() => {
         setSucessMessage(true);
 
         setTimeout(() => {
           setSucessMessage(false);
 
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Appointments'}]
-          });
+          handleNavigateToAppointments();
         }, threeSeconds);
       }).catch((err: AxiosError) => {
         const apiErrorMessage = err.response?.data.erro;
