@@ -5,6 +5,7 @@ export async function up(knex: Knex) {
     table.increments('id').primary();
 
     table.string('imagem').notNullable();
+    table.string('imagem_aws_url').notNullable();
     table.string('nome', 90).notNullable();
     table.string('cpf', 11).notNullable().unique();
     table.integer('sexo_id').unsigned().notNullable();
