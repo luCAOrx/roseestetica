@@ -8,19 +8,13 @@ import connection from '../database/connection';
 
 import bcrypt, { compare, hashSync } from 'bcryptjs';
 
-import { sign } from 'jsonwebtoken';
-
 import { randomBytes } from 'crypto';
 
 import mailer from '../modules/mailer';
 
-import authConfig from '../config/auth';
-
-function gerarToken(params: {}) {
-  return sign(params, authConfig.secret, {
-    expiresIn: 86400 * 1000
-  });
-}
+import GenerateTokenProvider from '../providers/GenerateTokenProvider';
+import GenerateRefreshTokenProvider from '../providers/GenerateRefreshTokenProvider';
+import dayjs from 'dayjs';
 
 export default {
   async autenticar(request: Request, response: Response) {
@@ -73,14 +67,60 @@ export default {
       cliente.expiracao_reset_senha = undefined;
       cliente.criado_em = undefined;
       cliente.atualizado_em = undefined;
+
+      const token = await GenerateTokenProvider.generateToken({ id: cliente.id });
+
+      await connection('refresh_token')
+      .where({cliente_id: cliente.id})
+      .del();
+
+      const refreshToken = await GenerateRefreshTokenProvider.generateRefreshToken(cliente.id);
   
       return response.json({
         cliente: clienteSerializado,
-        token: gerarToken({ id: cliente.id }),
+        token,
+        refreshToken
       });
   
     } catch (erro) {
       return response.status(400).json({ erro: 'Erro em se autenticar.' });
+    }
+  },
+
+  async refreshToken(request: Request, response: Response) {
+    try {
+      const { refresh_token } = request.body;
+  
+      const refreshToken = await connection('refresh_token')
+      .where({id: refresh_token})
+      .select('*')
+      .first();
+  
+      if (!refreshToken) {
+        return response.status(400).json({ erro: 'Refresh token inválido.' });
+      };
+
+      const refreshTokenExpirou = dayjs().isAfter(
+        dayjs.unix(refreshToken.espira_em)
+      );
+  
+      const token = await GenerateTokenProvider.generateToken({id: refreshToken.cliente_id});
+
+      if (refreshTokenExpirou) {
+        await connection('refresh_token')
+        .where({cliente_id: refreshToken.cliente_id})
+        .del();
+
+        const novoRefreshToken = await GenerateRefreshTokenProvider.generateRefreshToken(
+          refreshToken.cliente_id
+        );
+
+        return response.json({token, refreshToken: novoRefreshToken});
+      }
+  
+      return response.json({token});
+    } catch (error) {
+      return response.status(400).json({ erro: "Erro ao gerar o refresh token." })
     }
   },
 
@@ -101,9 +141,10 @@ export default {
         email,
         sexo_id,
         cidade_id,
+        imagem_aws_url
       } = request.body;
 
-      const { filename: imagem } = request.file;
+      const imagem = request.file?.filename;
 
       const dataEhoraDeAgora = new Date();
 
@@ -131,6 +172,7 @@ export default {
   
       await connection('clientes').insert({
         imagem,
+        imagem_aws_url,
         nome,
         cpf,
         telefone,
@@ -149,6 +191,7 @@ export default {
 
       const dados = {
         imagem,
+        imagem_aws_url,
         nome,
         cpf,
         telefone,
@@ -352,7 +395,7 @@ export default {
     try {
       const { id } = request.params;
 
-      const { filename: imagem } = request.file;
+      const imagem = request.file?.filename;
   
       const dataEhoraDeAgora = new Date();
 
