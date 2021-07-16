@@ -34,6 +34,10 @@ routes.post('/login',
   ClienteController.autenticar
 );
 
+routes.post('/refresh_token',
+  ClienteController.refreshToken
+);
+
 routes.post('/cadastro', 
   upload.single('foto'),
   ClienteValidation.cadastrar,
