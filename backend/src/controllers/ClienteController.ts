@@ -14,6 +14,7 @@ import mailer from '../modules/mailer';
 
 import GenerateTokenProvider from '../providers/GenerateTokenProvider';
 import GenerateRefreshTokenProvider from '../providers/GenerateRefreshTokenProvider';
+
 import dayjs from 'dayjs';
 
 export default {
@@ -33,33 +34,42 @@ export default {
         return response.status(400).json({ erro: 'E-mail ou senha inválido.' });
       };
 
-      const dados = await connection('clientes')
-        .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
-        .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
-        .where({ email })
-        .select([
-          'clientes.id',
-          'clientes.imagem',
-          'clientes.nome',
-          'clientes.cpf',
-          'clientes.sexo_id',
-          'sexos.sexo',
-          'clientes.telefone',
-          'clientes.celular',
-          'clientes.cidade_id',
-          'cidades.cidade',
-          'clientes.bairro',
-          'clientes.logradouro',
-          'clientes.numero',
-          'clientes.complemento',
-          'clientes.cep',
-          'clientes.email',
-        ])
-        .first();
+      const clientes = await connection('clientes')
+      .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
+      .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
+      .where({ email })
+      .select([
+        'clientes.id',
+        'clientes.nome',
+        'clientes.cpf',
+        'clientes.sexo_id',
+        'sexos.sexo',
+        'clientes.telefone',
+        'clientes.celular',
+        'clientes.cidade_id',
+        'cidades.cidade',
+        'clientes.bairro',
+        'clientes.logradouro',
+        'clientes.numero',
+        'clientes.complemento',
+        'clientes.cep',
+        'clientes.email',
+      ])
+      .first();
+
+      const imagens = await connection('imagens')
+      .where('cliente_id', cliente.id)
+      .select(['imagem', 'imagem_aws_url'])
+      .first();
+
+      const dados = {
+        clientes,
+        imagens
+      };
 
       const clienteSerializado = {
         ...dados,
-        imagem_url: `http://10.0.0.190:3333/uploads/${cliente.imagem}`,
+        imagem_url: `http://10.0.0.190:3333/uploads/${imagens.imagem}`,
       };
   
       cliente.senha = undefined;
@@ -77,7 +87,9 @@ export default {
       const refreshToken = await GenerateRefreshTokenProvider.generateRefreshToken(cliente.id);
   
       return response.json({
-        cliente: clienteSerializado,
+        cliente: clienteSerializado.clientes,
+        imagem: clienteSerializado.imagens,
+        imagem_url: clienteSerializado.imagem_url,
         token,
         refreshToken
       });
@@ -169,10 +181,10 @@ export default {
         
         return response.status(400).json({ erro: 'Esse e-mail já existe.' });
       };
+
+      const transaction = await connection.transaction();
   
-      await connection('clientes').insert({
-        imagem,
-        imagem_aws_url,
+      const idInserido = await transaction('clientes').insert({
         nome,
         cpf,
         telefone,
@@ -188,6 +200,17 @@ export default {
         cidade_id,
         criado_em: dataEhoraDeAgora
       });
+
+      const id = idInserido[0];
+
+      await transaction('imagens').insert({
+        imagem,
+        imagem_aws_url,
+        cliente_id: id,
+        criado_em: dataEhoraDeAgora
+      });
+
+      await transaction.commit();
 
       const dados = {
         imagem,
@@ -208,6 +231,14 @@ export default {
   
       return response.status(201).json({cliente: dados});
     } catch (erro) {      
+      const imagem = request.file?.filename;
+
+      if (imagem) {
+        fileSystem.unlinkSync(path.resolve(
+          __dirname, '..', '..', `uploads/${imagem}`
+        ));
+      };
+
       return response.status(400).json({ erro: 'Falha ao se cadastrar.' })
     }
   },
@@ -239,7 +270,6 @@ export default {
       .where('clientes.id', id)
       .select([
         'clientes.id',
-        'clientes.imagem',
         'clientes.nome',
         'clientes.cpf',
         'clientes.sexo_id',
@@ -257,12 +287,26 @@ export default {
       ])
       .first();
 
+      const imagens = await connection('imagens')
+      .where('cliente_id', id)
+      .select(['imagem', 'imagem_aws_url'])
+      .first();
+
+      const dados = {
+        clientes,
+        imagens
+      };
+
       const clienteSerializado = {
-        ...clientes,
-        imagem_url: `http://10.0.0.190:3333/uploads/${clientes.imagem}`,
+        ...dados,
+        imagem_url: `http://10.0.0.190:3333/uploads/${imagens.imagem}`,
       };
   
-      return response.status(201).json({ cliente: clienteSerializado });
+      return response.status(201).json({ 
+        cliente: clienteSerializado.clientes,
+        imagem: clienteSerializado.imagens,
+        imagem_url: clienteSerializado.imagem_url,
+      });
   
     } catch (erro) {
       return response.status(400).json({ erro: 'Erro ao atualizar dados pessoais.' });
@@ -302,7 +346,6 @@ export default {
       .where('clientes.id', id)
       .select([
         'clientes.id',
-        'clientes.imagem',
         'clientes.nome',
         'clientes.cpf',
         'clientes.sexo_id',
@@ -320,12 +363,26 @@ export default {
       ])
       .first();
 
+      const imagens = await connection('imagens')
+      .where('cliente_id', id)
+      .select(['imagem', 'imagem_aws_url'])
+      .first();
+
+      const dados = {
+        clientes,
+        imagens
+      };
+
       const clienteSerializado = {
-        ...clientes,
-        imagem_url: `http://10.0.0.190:3333/uploads/${clientes.imagem}`,
+        ...dados,
+        imagem_url: `http://10.0.0.190:3333/uploads/${imagens.imagem}`,
       };
   
-      return response.status(201).json({ cliente: clienteSerializado });
+      return response.status(201).json({ 
+        cliente: clienteSerializado.clientes,
+        imagem: clienteSerializado.imagens,
+        imagem_url: clienteSerializado.imagem_url,
+      });
   
     } catch (erro) {
       return response.status(400).json({ erro: 'Erro ao atualizar dados pessoais.' });
@@ -341,7 +398,7 @@ export default {
 
       const emailExiste = await connection('clientes')
       .where({ email })
-      .select('email', 'imagem')
+      .select('email')
       .first();
   
       if (emailExiste) {
@@ -361,7 +418,6 @@ export default {
       .where('clientes.id', id)
       .select([
         'clientes.id',
-        'clientes.imagem',
         'clientes.nome',
         'clientes.cpf',
         'clientes.sexo_id',
@@ -379,12 +435,26 @@ export default {
       ])
       .first();
 
+      const imagens = await connection('imagens')
+      .where('cliente_id', id)
+      .select(['imagem', 'imagem_aws_url'])
+      .first();
+
+      const dados = {
+        clientes,
+        imagens
+      };
+
       const clienteSerializado = {
-        ...clientes,
-        imagem_url: `http://10.0.0.190:3333/uploads/${clientes.imagem}`,
+        ...dados,
+        imagem_url: `http://10.0.0.190:3333/uploads/${imagens.imagem}`,
       };
   
-      return response.status(201).json({ cliente: clienteSerializado });
+      return response.status(201).json({ 
+        cliente: clienteSerializado.clientes,
+        imagem: clienteSerializado.imagens,
+        imagem_url: clienteSerializado.imagem_url,
+      });
   
     } catch (erro) {
       return response.status(400).json({ erro: 'Erro ao atualizar login.' });
@@ -399,29 +469,30 @@ export default {
   
       const dataEhoraDeAgora = new Date();
 
-      const cliente = await connection('clientes')
-      .where({ id }).select('imagem').first();
+      const imagens = await connection('imagens')
+      .where('cliente_id', id)
+      .select(['imagem', 'imagem_aws_url'])
+      .first();
 
-      if (cliente) {
+      if (imagens) {
         fileSystem.unlinkSync(path.resolve(
-          __dirname, '..', '..', `uploads/${cliente.imagem}`
+          __dirname, '..', '..', `uploads/${imagens.imagem}`
         ));
       };
       
-      await connection('clientes')
+      await connection('imagens')
       .update({ 
-        imagem, 
+        imagem,
         atualizado_em: dataEhoraDeAgora 
       })
-      .where({ id });
+      .where('cliente_id', id);
   
-      const dados = await connection('clientes')
+      const clientes = await connection('clientes')
       .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
       .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
       .where('clientes.id', id)
       .select([
         'clientes.id',
-        'clientes.imagem',
         'clientes.nome',
         'clientes.cpf',
         'clientes.sexo_id',
@@ -439,13 +510,35 @@ export default {
       ])
       .first();
 
+      const imagemAtualizada = await connection('imagens')
+      .where('cliente_id', id)
+      .select(['imagem', 'imagem_aws_url'])
+      .first();
+
+      const dados = {
+        clientes,
+        imagemAtualizada
+      };
+
       const clienteSerializado = {
         ...dados,
-        imagem_url: `http://10.0.0.190:3333/uploads/${dados.imagem}`,
+        imagem_url: `http://10.0.0.190:3333/uploads/${imagemAtualizada.imagem}`,
       };
   
-      return response.status(201).json({ cliente: clienteSerializado });
+      return response.status(201).json({ 
+        cliente: clienteSerializado.clientes,
+        imagem: clienteSerializado.imagemAtualizada,
+        imagem_url: clienteSerializado.imagem_url,
+      });
     } catch (error) {
+      const imagem = request.file?.filename;
+
+      if (imagem) {
+        fileSystem.unlinkSync(path.resolve(
+          __dirname, '..', '..', `uploads/${imagem}`
+        ));
+      };
+
       return response.status(400).json({ erro: 'Erro ao atualizar a foto.' });
     }
   },
@@ -533,13 +626,13 @@ export default {
     try {
       const { id } = request.params;
 
-      const cliente = await connection('clientes')
-      .where({ id })
+      const imagem = await connection('imagens')
+      .where('cliente_id', id)
       .first();
 
-      if (cliente) {
+      if (imagem) {
         fileSystem.unlinkSync(path.resolve(
-          __dirname, '..', '..', `uploads/${cliente.imagem}`
+          __dirname, '..', '..', `uploads/${imagem.imagem}`
         ));
       };
 
