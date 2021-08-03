@@ -20,7 +20,7 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
       errors[`${err.path}`] = err.errors;
     });
 
-    const { filename: imagem } = request.file;
+    const imagem = request.file?.filename;
 
     fileSystem.unlinkSync(path.resolve(
       __dirname, '..', '..', `uploads/${imagem}`
@@ -35,7 +35,7 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
     if (error.code === 'LIMIT_FILE_SIZE') {
       const message = error.message = 'O arquivo não pode ter mais que 2mb.'
 
-      const { filename: imagem } = request.file;
+      const imagem = request.file?.filename;
 
       fileSystem.unlinkSync(path.resolve(
         __dirname, '..', '..', `uploads/${imagem}`
@@ -45,7 +45,7 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
     }
   }
 
-  const { filename: imagem } = request.file;
+  const imagem = request.file?.filename;
 
   fileSystem.unlinkSync(path.resolve(
     __dirname, '..', '..', `uploads/${imagem}`
