@@ -9,11 +9,11 @@ describe('O cliente', () => {
 
   it('deve ser capaz de se autenticar se as credencias forem validas', async () => {
     const response = await request(app).post('/login').send({
-      email: "rafaela2@gmail.com",
-      senha: "12345678"
+      email: "rafaelaa@gmail.com",
+      senha: "123456789"
     });
 
-    console.log(response.body);
+    console.log(response.body.erro);
 
     expect(response.status).toBe(200);
   });

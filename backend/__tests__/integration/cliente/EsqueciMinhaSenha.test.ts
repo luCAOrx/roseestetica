@@ -7,12 +7,12 @@ describe('O cliente', () => {
     await connection.destroy();
   });
 
-  it('deve enviar um e-mail para receber um token e recuperar sua senha', async () => {
+  it('deve ser capaz de enviar um e-mail para receber o código.', async () => {
     const response = await request(app)
       .post('/esqueci_minha_senha')
-      .send({ email: "rafaela@gmail.com" });
-
-      console.log(response.body);
+      .send({ 
+        email: "rafaelaa@gmail.com" 
+      });
 
       expect(response.status).toBe(200);
   });

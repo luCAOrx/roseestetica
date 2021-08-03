@@ -7,16 +7,14 @@ describe('O cliente', () => {
     await connection.destroy();
   });
 
-  it('deve inserir o token que foi enviado para seu e-mail para recuperar sua senha', async () => {
+  it('deve ser capaz de inserir o código que foi enviado para seu e-mail', async () => {
     const response = await request(app)
       .put('/atualizar_senha')
       .send({ 
-        email: "rafaela@gmail.com",
-        token: "00ee8deaff4caf497813267910efbb68c86ab12c",
+        email: "rafaelaa@gmail.com",
+        token: "0ee617b9436d2e368bf325be5fbdc9c0b8e38517",
         senha: "123456789"
       });
-
-      console.log(response.body);
 
       expect(response.status).toBe(201);
   });
