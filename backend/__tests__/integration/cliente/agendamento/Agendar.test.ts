@@ -1,14 +1,6 @@
 import request from 'supertest';
 import app from '../../../../src/app';
 import connection from '../../../../src/database/connection';
-import jwt from 'jsonwebtoken';
-import authConfig from '../../../../src/config/auth';
-
-function gerarToken(params = {}) {
-  return jwt.sign(params, authConfig.secret, {
-    expiresIn: process.env.JWT_EXPIRES_IN
-  });
-}
 
 describe('O cliente', () => {
   afterAll(async () => {
@@ -16,17 +8,32 @@ describe('O cliente', () => {
   });
 
   it('deve ser capaz de se agendar', async () => {
+    const authenticate = await request(app)
+    .post('/login')
+    .send({
+      email: "rafaelaa@gmail.com",
+      senha: "123456789"
+    })
+    .then(response => response.body.refreshToken.id);
+    
+    const refreshToken = await request(app)
+    .post('/refresh_token')
+    .send({
+      refresh_token: authenticate
+    })
+    .then(response => response.body.token);
+
     const response = await request(app)
-      .post('/agendar/5')
-      .send({
-        data: 20210413,
-        procedimento_id: [2],
-        horario_id: 1
-      })
-      .set('Authorization' ,`Bearer ${gerarToken()}`);
+    .post('/agendar/1')
+    .send({
+      data: 20210724,
+      procedimento_id: [1,2,3],
+      horario_id: 1
+    })
+    .set('Authorization' ,`Bearer ${refreshToken}`);
 
-      console.log(response.body);
+    console.log(response.body);
 
-      expect(response.status).toBe(201);
+    expect(response.status).toBe(201);
   });
 });

@@ -1,14 +1,6 @@
 import request from 'supertest';
 import app from '../../../../src/app';
 import connection from '../../../../src/database/connection';
-import jwt from 'jsonwebtoken';
-import authConfig from '../../../../src/config/auth';
-
-function gerarToken(params = {}) {
-  return jwt.sign(params, authConfig.secret, {
-    expiresIn: process.env.JWT_EXPIRES_IN
-  });
-}
 
 describe('O cliente', () => {
   afterAll(async () => {
@@ -16,22 +8,77 @@ describe('O cliente', () => {
   });
 
   it('deve ser capaz de vizualizar horários disponíveis', async () => {
-    const response = await request(app)
-      .get('/agendamentos_disponiveis?data=20210414')
-      .set('Authorization' ,`Bearer ${gerarToken()}`);
+    const authenticate = await request(app)
+    .post('/login')
+    .send({
+      email: "rafaelaa@gmail.com",
+      senha: "123456789"
+    })
+    .then(response => response.body.refreshToken.id);
+    
+    const refreshToken = await request(app)
+    .post('/refresh_token')
+    .send({
+      refresh_token: authenticate
+    })
+    .then(response => response.body.token);
 
-      expect(response.status).toBe(200);
+    const response = await request(app)
+      .get('/agendamentos_disponiveis?data=202107')
+      .set('Authorization' ,`Bearer ${refreshToken}`);
 
       console.log(response.body);
+
+      expect(response.status).toBe(200);
   });
 
   it('deve ser capaz de vizualizar seu histórico de agendamentos', async () => {
+    const authenticate = await request(app)
+    .post('/login')
+    .send({
+      email: "rafaelaa@gmail.com",
+      senha: "123456789"
+    })
+    .then(response => response.body.refreshToken.id);
+    
+    const refreshToken = await request(app)
+    .post('/refresh_token')
+    .send({
+      refresh_token: authenticate
+    })
+    .then(response => response.body.token);
+
     const response = await request(app)
-      .get('/meus_agendamentos/2/?page=1')
-      .set('Authorization' ,`Bearer ${gerarToken()}`);
+    .get('/meus_agendamentos/1?page=1')
+    .set('Authorization' ,`Bearer ${refreshToken}`);
 
-      expect(response.status).toBe(200);
+    console.log(response.body.erro);
 
-      console.log(response.body);
+    expect(response.status).toBe(200);
+  });
+
+  it('deve ser capaz de vizualizar detalhes do agendamentos', async () => {
+    const authenticate = await request(app)
+    .post('/login')
+    .send({
+      email: "rafaelaa@gmail.com",
+      senha: "123456789"
+    })
+    .then(response => response.body.refreshToken.id);
+    
+    const refreshToken = await request(app)
+    .post('/refresh_token')
+    .send({
+      refresh_token: authenticate
+    })
+    .then(response => response.body.token);
+
+    const response = await request(app)
+    .get('/detalhes_do_agendamento/1/1')
+    .set('Authorization' ,`Bearer ${refreshToken}`);
+
+    console.log(response.body);
+
+    expect(response.status).toBe(200);
   });
 });
