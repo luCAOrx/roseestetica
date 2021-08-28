@@ -32,7 +32,7 @@ interface AdressData {
 }
 
 export default function ChangeAddress() {
-  const {cliente, updateProfile} = useAuth();
+  const {cliente, updateProfile, requestRefreshToken} = useAuth();
 
   const {colors} = useTheme();
 
@@ -123,10 +123,17 @@ export default function ChangeAddress() {
         setTimeout(() => {  
           setSucessMessage(false);
         }, threeSeconds);
-      }).catch((err: AxiosError) => {
-        const apiErrorMessage = err.response?.data.erro;
-  
-        Alert.alert('Erro', apiErrorMessage);
+      }).catch(async (error: AxiosError) => {
+        const apiErrorMessage = error.response?.data.erro;
+
+        if (error.response?.status === 401) {
+          await requestRefreshToken();
+          formRef.current?.submitForm();
+        };
+
+        if (error.response?.status === 400) {
+          Alert.alert('Erro', apiErrorMessage);
+        };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
