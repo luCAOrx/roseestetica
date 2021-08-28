@@ -14,18 +14,27 @@ import { MaterialIcons as Icon } from '@expo/vector-icons';
 
 import CustomButton from '../../components/Button';
 
+import dayjs from 'dayjs';
+
+import { useAuth } from '../../contexts/auth';
+
 interface CardAppointmentsProps {
   text: string;
   agendamento_id: number;
   id: number;
+  data: string;
 };
 
-function CardAppointments({text, agendamento_id, id}: CardAppointmentsProps) {
+function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProps) {
   const [loading, setLoading] = useState(false);
 
   const {colors} = useTheme();
 
   const navigation = useNavigation();
+
+  const dataDeAgora = dayjs().format('YYYY/MM/DD');
+
+  const {requestRefreshToken} = useAuth();
 
   function handleNavigateToDetail() {
     navigation.navigate('Detail', {agendamento_id});
@@ -40,18 +49,24 @@ function CardAppointments({text, agendamento_id, id}: CardAppointmentsProps) {
   };
 
   async function handleDeleteSchedule() {
-    const threeSeconds = 3000;
-
     await api.delete(`cancelar/${id}`).then(() => {
-      setTimeout(() => {
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'Appointments'}]
-        });
-      }, threeSeconds);
-    }).catch((error: AxiosError) => {
-      const apiErrorMessage = error.response?.data.erro;
-      Alert.alert('Erro', apiErrorMessage);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Appointments'}]
+      });
+    }).catch(async (error: AxiosError) => {
+      const apiErrorMessage = error.response?.data.mensagem;
+
+      if (error.response?.status === 401) {
+        await requestRefreshToken();
+
+        await handleDeleteSchedule();
+      };
+
+      if (error.response?.status === 400) {
+        Alert.alert('Falha ao cancelar agendamento', apiErrorMessage);
+      };
+
     });
   };
 
@@ -59,7 +74,10 @@ function CardAppointments({text, agendamento_id, id}: CardAppointmentsProps) {
     <View 
       style={[
         styles.card,
-        {backgroundColor: colors.card}
+        {
+          backgroundColor: colors.card,
+          height: dayjs(data).isBefore(dayjs(dataDeAgora)) ? 160 : 400
+        }
       ]}
     >
       <View style={styles.header}>
@@ -81,34 +99,40 @@ function CardAppointments({text, agendamento_id, id}: CardAppointmentsProps) {
         fontSize={15}
         onPress={handleNavigateToDetail}
       />
-      <CustomButton 
-        title="REMARCAR" 
-        backgroundColor={colors.buttonSecondaryBackground} 
-        color={colors.buttonText}
-        height={50}
-        fontSize={15}
-        onPress={handleNavigateToReschedule}
-      />
-      <CustomButton 
-        title="ALTERAR PROCEDIMENTO" 
-        backgroundColor={colors.buttonSecondaryBackground} 
-        color={colors.buttonText}
-        height={50}
-        fontSize={15}
-        onPress={handleNavigateToChangeProcedure}
-      />
-      <CustomButton 
-        title="CANCELAR" 
-        backgroundColor={colors.buttonTertiaryBackground} 
-        color={colors.buttonText}
-        height={50}
-        fontSize={15}
-        // loading={loading}
-        onPress={() => {
-          setLoading(true);
-          handleDeleteSchedule();
-        }}
-      />
+      {dayjs(data).isBefore(dataDeAgora) ? (
+          <View />
+        ) : (
+          <>
+            <CustomButton 
+              title="REMARCAR" 
+              backgroundColor={colors.buttonSecondaryBackground} 
+              color={colors.buttonText}
+              height={50}
+              fontSize={15}
+              onPress={handleNavigateToReschedule}
+            />
+            <CustomButton 
+              title="ALTERAR PROCEDIMENTO" 
+              backgroundColor={colors.buttonSecondaryBackground} 
+              color={colors.buttonText}
+              height={50}
+              fontSize={15}
+              onPress={handleNavigateToChangeProcedure}
+            />
+            <CustomButton 
+              title="CANCELAR" 
+              backgroundColor={colors.buttonTertiaryBackground} 
+              color={colors.buttonText}
+              height={50}
+              fontSize={15}
+              // loading={loading}
+              onPress={() => {
+                setLoading(true);
+                handleDeleteSchedule();
+              }}
+            />
+          </>
+        )}
     </View>
   );
 };
