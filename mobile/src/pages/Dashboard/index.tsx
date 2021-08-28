@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState} from 'react';
 
-
 import { Alert, RefreshControl, ScrollView } from 'react-native';
 
 import { useNavigation, useTheme } from '@react-navigation/native';
@@ -15,7 +14,6 @@ import Header from '../../components/Header';
 import CustomButton from '../../components/Button';
 import SucessScreen from '../../components/SucessScreen';
 import Loading from '../../components/Loading';
-
 
 import { useAuth } from '../../contexts/auth';
 
@@ -47,7 +45,7 @@ interface AvailableAppointments {
 };
 
 export default function Schedule() {
-  const {cliente} = useAuth();
+  const {cliente, requestRefreshToken} = useAuth();
 
   const {colors} = useTheme();
 
@@ -61,6 +59,7 @@ export default function Schedule() {
   const [selectedProcedure, setSelectedProcedure] = useState<number[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [sucessMessage, setSucessMessage] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const formRef = useRef<FormHandles>(null);
 
@@ -71,23 +70,49 @@ export default function Schedule() {
   const availableHour = availableAppointments.map(schedule => schedule.horario);
 
   useEffect(() => {
-    api.get('procedimentos').then(response => {
-      setProcedures(response.data);
-    });
-  }, []);
-  
-  async function loadAvailablesSchedules() {
-    await api.get('agendamentos_disponiveis', {params: {
-      data: selectedDay
-    }}).then(response => {
-      setAvailableAppointments(response.data);
-    });
-  };
+    async function loadAvailablesSchedules() {
+      await api.get('agendamentos_disponiveis', {params: {
+        data: selectedDay
+      }}).then(response => {
+        setAvailableAppointments(response.data);
+      }).catch(async (error: AxiosError) => {
+        const apiErrorMessage = error.response?.data.erro;
 
-  useEffect(() => {
-    loadAvailablesSchedules();
+        if (error.response?.status === 401) {
+          await requestRefreshToken();
+
+          await loadAvailablesSchedules();
+        };
+
+        if (error.response?.status === 400) {
+          Alert.alert('Erro', apiErrorMessage);
+        };
+      });
+    };
+
+    if (selectedDay) {
+      setIsLoading(true);
+      loadAvailablesSchedules();
+      setIsLoading(false);
+    };
   }, [selectedDay]);
 
+  useEffect(() => {
+    async function loadProcedures() {
+      await api.get('procedimentos').then(response => {
+        setProcedures(response.data);
+      }).catch((error: AxiosError) => {
+        const apiErrorMessage = error.response?.data.erro;
+
+        if (error.response?.status === 400) {
+          Alert.alert('Erro', apiErrorMessage);
+        };
+      });
+    };
+
+    loadProcedures();
+  }, []);
+  
   const onDayPress = (day: DateObject) => {
     setSelectedDay(day.dateString);
   };
@@ -135,9 +160,17 @@ export default function Schedule() {
             routes: [{name: 'Schedule'}]
           });
         }, threeSeconds);
-      }).catch((error: AxiosError) => {
+      }).catch(async (error: AxiosError) => {
         const apiErrorMessage = error.response?.data.erro;
-        Alert.alert('Erro ao agendar', apiErrorMessage);
+
+        if (error.response?.status === 401) {
+          await requestRefreshToken();
+          formRef.current?.submitForm();
+        };
+
+        if (error.response?.status === 400) {
+          Alert.alert('Erro', apiErrorMessage);
+        };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -182,12 +215,16 @@ export default function Schedule() {
           {selectedDay ? 
             <>
               <Header title="Selecione o horário" showIcon={false} fontSize={26} />
-              <SelectHour
-                name="horario_id"
-                available={situation}
-                availableTime={availableHour}
-                selectedDay={selectedDay} 
-              />
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <SelectHour
+                  name="horario_id"
+                  available={situation}
+                  availableTime={availableHour}
+                  selectedDay={selectedDay} 
+                />
+              )}
             </> : null
           }
 
