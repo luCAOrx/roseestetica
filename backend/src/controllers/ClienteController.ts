@@ -487,46 +487,17 @@ export default {
       })
       .where('cliente_id', id);
   
-      const clientes = await connection('clientes')
-      .join('sexos', 'sexos.id', '=', 'clientes.sexo_id')
-      .join('cidades', 'cidades.id', '=', 'clientes.cidade_id')
-      .where('clientes.id', id)
-      .select([
-        'clientes.id',
-        'clientes.nome',
-        'clientes.cpf',
-        'clientes.sexo_id',
-        'sexos.sexo',
-        'clientes.telefone',
-        'clientes.celular',
-        'clientes.cidade_id',
-        'cidades.cidade',
-        'clientes.bairro',
-        'clientes.logradouro',
-        'clientes.numero',
-        'clientes.complemento',
-        'clientes.cep',
-        'clientes.email',
-      ])
-      .first();
-
       const imagemAtualizada = await connection('imagens')
       .where('cliente_id', id)
       .select(['imagem', 'imagem_aws_url'])
       .first();
 
-      const dados = {
-        clientes,
-        imagemAtualizada
-      };
-
       const clienteSerializado = {
-        ...dados,
+        imagemAtualizada,
         imagem_url: `http://10.0.0.190:3333/uploads/${imagemAtualizada.imagem}`,
       };
   
       return response.status(201).json({ 
-        cliente: clienteSerializado.clientes,
         imagem: clienteSerializado.imagemAtualizada,
         imagem_url: clienteSerializado.imagem_url,
       });
