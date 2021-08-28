@@ -23,6 +23,7 @@ import api from '../../../services/api';
 import { AxiosError } from 'axios';
 
 import getValidationErros from '../../../utils/handleErrors';
+import Loading from '../../../components/Loading';
 
 interface ReScheduleData {
   data: string;
@@ -41,7 +42,7 @@ interface ScheduleParams {
 };
 
 export default function Schedule() {
-  const {cliente} = useAuth();
+  const {cliente, requestRefreshToken} = useAuth();
 
   const route = useRoute();
   const params = route.params as ScheduleParams;
@@ -56,6 +57,7 @@ export default function Schedule() {
   const [selectedDay, setSelectedDay] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [sucessMessage, setSucessMessage] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const formRef = useRef<FormHandles>(null);
 
@@ -66,15 +68,23 @@ export default function Schedule() {
   const availableHour = availableAppointments.map(schedule => schedule.horario);
 
   useEffect(() => {
-    async function loadavAilableSchedules() {
+    async function loadAvailablesSchedules() {
       api.get('agendamentos_disponiveis', {params: {
         data: selectedDay
       }}).then(response => {
         setAvailableAppointments(response.data);
+      }).catch(async (error: AxiosError) => {
+        if (error.response?.status === 401) {
+          await requestRefreshToken();
+
+          await loadAvailablesSchedules();
+        }
       });
     };
 
-    loadavAilableSchedules();
+    setIsLoading(true);
+    loadAvailablesSchedules();
+    setIsLoading(false);
   }, [selectedDay]);
 
   const onDayPress = (day: DateObject) => {
@@ -117,11 +127,18 @@ export default function Schedule() {
 
           handleNavigateToAppointments();
         }, threeSeconds);
-      }).catch((err: AxiosError) => {
-        const apiErrorMessage = err.response?.data.erro;
-        Alert.alert("Erro", apiErrorMessage);
+      }).catch(async (error: AxiosError) => {
+        const apiErrorMessage = error.response?.data.mensagem;
+
+        if (error.response?.status === 401) {
+          await requestRefreshToken();
+          formRef.current?.submitForm();
+        };
+
+        if (error.response?.status === 400) {
+          Alert.alert('Falha ao remarcar agendamento', apiErrorMessage);
+        };
       });
-      
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErros(err);
@@ -177,12 +194,16 @@ export default function Schedule() {
           {selectedDay ? 
             <>
               <Header title="Selecione o horário" showIcon={false} fontSize={26} />
-              <SelectHour
-                name="horario_id"
-                available={situation}
-                availableTime={availableHour}
-                selectedDay={selectedDay} 
-              />
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <SelectHour
+                  name="horario_id"
+                  available={situation}
+                  availableTime={availableHour}
+                  selectedDay={selectedDay} 
+                />
+              )}
             </> :
             null
           }
