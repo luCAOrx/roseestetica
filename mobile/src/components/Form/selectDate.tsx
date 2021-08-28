@@ -53,7 +53,6 @@ export default function SelectDate({name, selectedDay, onDayPress}: SelectDatePr
           textDayHeaderFontSize: 16,
           selectedDayTextColor: colors.background
         }}
-        enableSwipeMonths
         onDayPress={onDayPress}
         renderArrow={(direction = "left" ) => (
           <>
@@ -74,6 +73,9 @@ export default function SelectDate({name, selectedDay, onDayPress}: SelectDatePr
         markedDates={{
           [selectedDay]: {selected: true, selectedColor: colors.text}
         }}
+        hideArrows={true}
+        disableMonthChange={true}
+        firstDay={7}
       />
       { error && <Text style={styles.errorMessage}>{error}</Text>}
     </>
