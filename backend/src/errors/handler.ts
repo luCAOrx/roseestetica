@@ -45,12 +45,6 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
     }
   }
 
-  const imagem = request.file?.filename;
-
-  fileSystem.unlinkSync(path.resolve(
-    __dirname, '..', '..', `uploads/${imagem}`
-  ));
-
   console.log(error);
   return response.status(500).json({ message: 'Internal server error' });
 }
