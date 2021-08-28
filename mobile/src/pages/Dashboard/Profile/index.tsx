@@ -19,7 +19,7 @@ import api from '../../../services/api';
 import { AxiosError } from 'axios';
 
 export default function Profile() {
-  const {cliente , signOut} = useAuth();
+  const {cliente, imagem_url, requestRefreshToken, signOut} = useAuth();
 
   const {toggleTheme} = useContext(ToggleThemeContext);
 
@@ -42,9 +42,18 @@ export default function Profile() {
   async function handleDeleteClient () {
     await api.delete(`deletar/${cliente.id}`).then(() => {
       handleSignOut();
-    }).catch((error: AxiosError) => {
+    }).catch(async (error: AxiosError) => {
       const apiErrorMessage = error.response?.data.erro;
-      Alert.alert('Erro', apiErrorMessage);
+
+      if (error.response?.status === 401) {
+        await requestRefreshToken();
+
+        await handleDeleteClient();
+      };
+
+      if (error.response?.status === 400) {
+        Alert.alert('Erro', apiErrorMessage);
+      };
     });
   };
 
@@ -66,9 +75,7 @@ export default function Profile() {
         <View style={styles.header} >
           <Image 
             style={styles.image}
-            source={{
-              uri: cliente?.imagem_url
-            }}
+            source={{uri: imagem_url}}
           />
           <View style={styles.textContainer} >
             <Text 
