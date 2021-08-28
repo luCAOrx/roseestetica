@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -27,7 +27,7 @@ interface LoginData {
 };
 
 export default function ChangeLoginData() {
-  const {cliente, updateProfile} = useAuth();
+  const {cliente, updateProfile, requestRefreshToken} = useAuth();
 
   const {colors} = useTheme();
 
@@ -70,13 +70,17 @@ export default function ChangeLoginData() {
         setTimeout(() => {  
           setSucessMessage(false);
         }, threeSeconds);
+      }).catch(async (error: AxiosError) => {
+        const apiErrorMessage = error.response?.data.erro;
 
-        console.log(data);
-        
-      }).catch((err: AxiosError) => {
-        const apiErrorMessage = err.response?.data.erro;
-  
-        formRef.current?.setFieldError("email", apiErrorMessage);
+        if (error.response?.status === 401) {
+          await requestRefreshToken();
+          formRef.current?.submitForm();
+        };
+
+        if (error.response?.status === 400) {
+          Alert.alert('Erro', apiErrorMessage);
+        };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
