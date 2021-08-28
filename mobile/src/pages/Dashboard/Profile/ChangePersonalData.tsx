@@ -37,7 +37,7 @@ interface PersonalData {
 };
 
 export default function ChangePersonalData() {
-  const {cliente, updateProfile} = useAuth();
+  const {cliente, imagem_url, updateProfile, updatePhoto, requestRefreshToken} = useAuth();
   
   const {colors} = useTheme();
   
@@ -47,6 +47,7 @@ export default function ChangePersonalData() {
   const modalizeRef = useRef<Modalize>(null);
   
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
+  const [ sucessMessagePhoto, setSucessMessagePhoto ] = useState<Boolean>(false);
   
   useEffect(() => {
     formRef.current?.setData({
@@ -108,10 +109,17 @@ export default function ChangePersonalData() {
         setTimeout(() => {  
           setSucessMessage(false);
         }, threeSeconds);
-      }).catch((err: AxiosError) => {
-        const apiErrorMessage = err.response?.data.erro;
-  
-        Alert.alert('Erro', apiErrorMessage);
+      }).catch(async (error: AxiosError) => {
+        const apiErrorMessage = error.response?.data.erro;
+
+        if (error.response?.status === 401) {
+          await requestRefreshToken();
+          formRef.current?.submitForm();
+        };
+
+        if (error.response?.status === 400) {
+          Alert.alert('Erro', apiErrorMessage);
+        };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -147,19 +155,26 @@ export default function ChangePersonalData() {
       } as any);
 
       await api.patch(`atualizar_foto/${cliente.id}`, data).then(response => {
-        updateProfile(response.data.cliente);
+        updatePhoto(response.data.imagem, response.data.imagem_url);
 
         onClose();
 
-        setSucessMessage(true);
+        setSucessMessagePhoto(true);
         
         setTimeout(() => {
-          setSucessMessage(false);
+          setSucessMessagePhoto(false);
         }, threeSeconds);
-      }).catch((error: AxiosError) => {
+      }).catch(async (error: AxiosError) => {
         const apiErrorMessage = error.response?.data.erro;
 
-        Alert.alert('Erro', apiErrorMessage);
+        if (error.response?.status === 401) {
+          await requestRefreshToken();
+          formRef.current?.submitForm();
+        };
+
+        if (error.response?.status === 400) {
+          Alert.alert('Erro', apiErrorMessage);
+        };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -183,7 +198,7 @@ export default function ChangePersonalData() {
           <View style={styles.imageProfileContainer}>
             <Image 
               style={styles.imageProfile}
-              source={{ uri: cliente?.imagem_url }}
+              source={{ uri: imagem_url }}
             />
 
             <CustomButton 
@@ -197,45 +212,6 @@ export default function ChangePersonalData() {
               onPress={onOpen}
             />
           </View>
-
-          <Modalize 
-            ref={modalizeRef}
-            snapPoint={300}
-            modalHeight={300}
-            modalStyle={[
-              styles.modal,
-              {backgroundColor: colors.background}
-            ]}
-            withHandle={false}
-            HeaderComponent={
-              <View style={styles.headerModalContainer}>
-                <TouchableOpacity onPress={onClose}>
-                  <Icon name='close' size={30} color="#ff669d"/>
-                </TouchableOpacity>
-
-                <Text 
-                  style={[
-                    styles.title,
-                    {color: colors.text}
-                  ]}
-                >
-                  Alterar foto do perfil
-                </Text>
-
-                <TouchableOpacity 
-                  onPress={() => {
-                    formRef.current?.submitForm();
-                  }}
-                >
-                  <Icon name='done' size={30} color="#34CB79"/>
-                </TouchableOpacity>
-              </View>
-            }
-          >
-            <Form ref={formRef} onSubmit={handleUpdateImage}>
-              <ImagePicker name="foto" />
-            </Form>
-          </Modalize>
 
           <Input 
             placeholder="Nome completo"
@@ -300,6 +276,43 @@ export default function ChangePersonalData() {
           />
         </Form>
       </ScrollView>  
+      <Modalize 
+        ref={modalizeRef}
+        snapPoint={300}
+        modalHeight={300}
+        modalStyle={[
+          styles.modal,
+          {backgroundColor: colors.background}
+        ]}
+        withHandle={false}
+        HeaderComponent={
+          <View style={styles.headerModalContainer}>
+            <TouchableOpacity onPress={onClose}>
+              <Icon name='close' size={30} color="#ff669d"/>
+            </TouchableOpacity>
+
+            <Text 
+              style={[
+                styles.title,
+                {color: colors.text}
+              ]}
+            >
+              Alterar foto do perfil
+            </Text>
+
+            <TouchableOpacity 
+              onPress={() => formRef.current?.submitForm()}
+            >
+              <Icon name='done' size={30} color="#34CB79"/>
+            </TouchableOpacity>
+          </View>
+        }
+      >
+        <Form ref={formRef} onSubmit={handleUpdateImage}>
+          <ImagePicker name="foto" />
+        </Form>
+      </Modalize>
+      <SucessScreen title="Foto do perfil atualizada" show={sucessMessagePhoto}/>
       <SucessScreen title="Dados pessoais atualizados" show={sucessMessage}/>
     </>
   );
