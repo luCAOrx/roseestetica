@@ -179,39 +179,32 @@ export default {
       .select('horario_id')
       .first()
 
-      const dataDoAgendamentoNoBancoDeDados = await connection('agendamentos')
-      .where({ id })
-      .select('data')
-      .first();
-
       const dataDeAgora = dayjs().format('YYYY/MM/DD');
 
-      const dataDoAgendamento = dayjs(dataDoAgendamentoNoBancoDeDados.data).format('YYYY/MM/DD');
-
-      if (dayjs(dataDeAgora).isBefore(dayjs(dataDoAgendamento))) {
-        if(horarioIndisponivel) {          
-          return response.status(400).json({ 
-            mensagem: 'Horário indisponível, agende para outro dia/horário.' 
-          });
-        } else {
-          await connection('agendamentos')
-          .update({
-            data, 
-            horario_id, 
-            remarcado_em: dataEhoraDeAgora
-          })
-          .where('id', id)
-          .andWhere('cliente_id', cliente_id);
-        }    
-      } else {
-        return response.status(400).json({
-          erro: 'Falha ao remarcar agendamento, o dia para remarcar já passou.'
+      if(horarioIndisponivel) {          
+        return response.status(400).json({ 
+          mensagem: 'Horário indisponível, agende para outro dia/horário.' 
         });
-      }
+      };
 
-      return response.status(201).json({ mensagem: 'Atendimento remarcado com sucesso.' });
+      if (dayjs(data).isBefore(dataDeAgora)) {
+        return response.status(400).json({
+          mensagem: 'O dia para remarcar já passou.'
+        });
+      } else {
+        await connection('agendamentos')
+        .update({
+          data, 
+          horario_id, 
+          remarcado_em: dataEhoraDeAgora
+        })
+        .where('id', id)
+        .andWhere('cliente_id', cliente_id);
+  
+        return response.status(201).json({ mensagem: 'Atendimento remarcado com sucesso.' });
+      };
     } catch (erro) {
-      return response.status(400).json({ erro: 'Falha ao remarcar agendamento.' });
+      return response.status(400).json({ mensagem: 'Falha ao remarcar agendamento.' });
     }
   },
 
@@ -230,24 +223,28 @@ export default {
 
       const transaction = await connection.transaction();
 
-      await transaction('agendamentos_procedimentos')
-      .where({ agendamento_id })
-      .delete();
-
       const dataEhoraDeAgora = new Date();
 
       const dataDoAgendamentoNoBancoDeDados = await connection('agendamentos')
-      .where('id', agendamento_id)
+      .where({ id: agendamento_id })
       .select('data')
       .first();
 
-      const dataDeAgora = dayjs().format('YYYY/MM/DD');
+      const dataDeAgoraFormatada = dayjs().format('YYYY/MM/DD');
 
       const dataDoAgendamento = dayjs(dataDoAgendamentoNoBancoDeDados.data).format('YYYY/MM/DD');
 
-      if (dayjs(dataDeAgora).isBefore(dayjs(dataDoAgendamento))) {
+      if (dayjs(dataDoAgendamento).isBefore(dataDeAgoraFormatada)) {
+        return response.status(400).json({
+          mensagem: 'Não pode remarcar para um dia anterior do atual.'
+        });
+      } else {
+        await transaction('agendamentos_procedimentos')
+        .where({ agendamento_id })
+        .delete();
+
         await transaction('agendamentos_procedimentos').insert(procedimentos);
-  
+
         await transaction('agendamentos_procedimentos')
         .update({
           procedimento_alterado_em: dataEhoraDeAgora
@@ -255,16 +252,12 @@ export default {
         .where({ agendamento_id });
   
         transaction.commit();
-  
+        
         return response.status(201).json(procedimentos);
-      }
-
-      return response.status(400).json({
-        erro: 'Falha ao alterar procedimento, o dia para alterar o procedimento passou.'
-      });
+      };
     } catch (erro) {
       console.log(erro)
-      return response.status(400).json({ erro: 'Falha em alterar o procedimento.' });
+      return response.status(400).json({ mensagem: 'Falha em alterar o procedimento.' });
     }
   },
 
@@ -281,19 +274,18 @@ export default {
 
       const dataDoAgendamento = dayjs(dataDoAgendamentoNoBancoDeDados.data).format('YYYY/MM/DD');
 
-      if (dayjs(dataDeAgora).isBefore(dayjs(dataDoAgendamento))) {
+      if (dayjs(dataDoAgendamento).isBefore(dayjs(dataDeAgora))) {
+        return response.status(400).json({
+          mensagem: 'O dia para cancelar já passou.'
+        });
+      } else {
         await connection('agendamentos').where({ id }).del();
         
         return response.status(204).json();
-      }
+      };
 
-      return response.status(400).json({
-        erro: 'Falha ao cancelar agendamento, a data do agentamento não é igual a data de hoje.'
-      });
     } catch (erro) {
-      console.log(erro);
-      
-      return response.status(400).json({ erro: 'Falha ao cancelar agendamento.' });
+      return response.status(400).json({ mensagem: 'Falha ao cancelar agendamento.' });
     }
   }
 }
