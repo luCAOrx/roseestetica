@@ -9,6 +9,7 @@ import { FormHandles } from '@unform/core';
 
 import Header from '../../../components/Header';
 import { SelectProcedure } from '../../../components/Form';
+import Loading from '../../../components/Loading';
 import CustomButton from '../../../components/Button';
 import SucessScreen from '../../../components/SucessScreen';
 
@@ -19,6 +20,8 @@ import api from '../../../services/api';
 import { AxiosError } from 'axios';
 
 import getValidationErros from '../../../utils/handleErrors';
+
+import { useAuth } from '../../../contexts/auth';
 
 interface Procedure {
   id: number;
@@ -48,6 +51,8 @@ export default function Schedule() {
   const formRef = useRef<FormHandles>(null);
 
   const navigation = useNavigation();
+
+  const {requestRefreshToken} = useAuth();
 
   useEffect(() => {
     async function loadProcedures() {
@@ -101,9 +106,17 @@ export default function Schedule() {
 
           handleNavigateToAppointments();
         }, threeSeconds);
-      }).catch((err: AxiosError) => {
-        const apiErrorMessage = err.response?.data.erro;
-        Alert.alert("Erro", apiErrorMessage);
+      }).catch(async (error: AxiosError) => {
+        const apiErrorMessage = error.response?.data.mensagem;
+
+        if (error.response?.status === 401) {
+          await requestRefreshToken();
+          formRef.current?.submitForm();
+        };
+
+        if (error.response?.status === 400) {
+          Alert.alert('Falha ao alterar o procedimento', apiErrorMessage);
+        };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -119,17 +132,20 @@ export default function Schedule() {
       <ScrollView>        
         <Header title="Alterar o procedimento" showIcon fontSize={25} />
         <Form ref={formRef} onSubmit={handleSubmit} >
-          {procedures.map(procedure => (
-            <SelectProcedure
-              key={procedure.id} 
-              name="procedimento_id" 
-              procedure={procedure.procedimento} 
-              price={procedure.preco}
-              id={procedure.id}
-              handleSelectProcedure={handleSelectProcedure}
-              selectedProcedure={selectedProcedure}
-            />
-          ))}
+        {!procedures.length ? 
+            <Loading /> :
+            procedures.map(procedure => (
+              <SelectProcedure
+                key={procedure.id} 
+                name="procedimento_id" 
+                procedure={procedure.procedimento} 
+                price={procedure.preco}
+                id={procedure.id}
+                handleSelectProcedure={handleSelectProcedure}
+                selectedProcedure={selectedProcedure}
+              />
+            ))
+          }
 
           <CustomButton 
             title="ALTERAR O PROCEDIMENTO" 
