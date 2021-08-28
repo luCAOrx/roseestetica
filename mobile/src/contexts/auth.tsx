@@ -10,10 +10,10 @@ import { AxiosError } from 'axios';
 
 import Loading from '../components/Loading';
 
+import dayjs from 'dayjs';
+
 interface Cliente {
   id: number;
-  imagem: string;
-  imagem_url: string;
   nome: string;
   cpf: string;
   telefone: string;
@@ -30,15 +30,31 @@ interface Cliente {
   senha: string;
 };
 
+interface Imagem {
+  imagem: string;
+  imagem_aws_url: string;
+};
+
 interface AuthState {
   cliente: Cliente;
+  imagem: Imagem;
+  imagem_url: string;
   token: string;
+  refreshToken: {
+    id: string;
+    espira_em: number;
+    cliente_id: number;
+  }
 };
 
 interface AuthContextData {
   cliente: Cliente;
+  imagem: Imagem;
+  imagem_url: string;
   signIn(credentials: SignInCredentials): Promise<void>;
-  updateProfile(data: any): Promise<void>;
+  requestRefreshToken(): Promise<void>;
+  updateProfile(cliente: Cliente): Promise<void>;
+  updatePhoto(imagem: Imagem, imagem_url: string): Promise<void>;
   signOut(): void;
 };
 
@@ -57,15 +73,32 @@ export const AuthProvider: React.FC = ({ children }) => {
     async function loadStoragedData() {
       const cliente = await SecureStore.getItemAsync('cliente');
 
+      const imagem = await SecureStore.getItemAsync('imagem');
+
+      const imagem_url = await SecureStore.getItemAsync('imagem_url');
+
       const token = await SecureStore.getItemAsync('token');
 
-      if (cliente && token) {
+      const refreshToken = await SecureStore.getItemAsync('refreshToken');
+
+      if (loading) {
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Loading />
+        </View>
+      };
+
+      if (cliente && imagem && imagem_url && token && refreshToken) {
         api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
         setData({
           cliente: JSON.parse(cliente),
-          token
+          imagem: JSON.parse(imagem),
+          imagem_url,
+          token,
+          refreshToken: JSON.parse(refreshToken)
         });
       };
+
       setLoading(false);
     };
 
@@ -75,16 +108,26 @@ export const AuthProvider: React.FC = ({ children }) => {
   async function signIn(credentials: SignInCredentials) {
     const { email, senha } = credentials;
 
-    await api.post('login', {email, senha}).then((response) => {
-      SecureStore.setItemAsync('cliente', JSON.stringify(response.data.cliente));
-      SecureStore.setItemAsync('token', response.data.token);
+    await api.post('login', {email, senha}).then(async (response) => {
+      await SecureStore.setItemAsync('cliente', JSON.stringify(response.data.cliente));
+      await SecureStore.setItemAsync('imagem', JSON.stringify(response.data.imagem));
+      await SecureStore.setItemAsync('imagem_url', response.data.imagem_url);
+      await SecureStore.setItemAsync('token', response.data.token);
+      await SecureStore.setItemAsync('refreshToken', JSON.stringify(response.data.refreshToken));
       
       api.defaults.headers['Authorization'] = `Bearer ${response.data.token}`;
 
       setData({
         cliente: response.data.cliente,
-        token: response.data.token
-      });
+        imagem: response.data.imagem,
+        imagem_url: response.data.imagem_url,
+        token: response.data.token,
+        refreshToken: {
+          id: response.data.refreshToken.id,
+          espira_em: response.data.refreshToken.espira_em,
+          cliente_id: response.data.refreshToken.cliente_id
+        }
+      });      
     }).catch((error: AxiosError) => {
        const apiErrorMessage = error.response?.data.erro;
        
@@ -92,31 +135,92 @@ export const AuthProvider: React.FC = ({ children }) => {
     });
   };
 
+  async function requestRefreshToken() {
+    const {id, espira_em} = data.refreshToken;
+
+    const refreshTokenExpired = dayjs().isAfter(
+      dayjs.unix(espira_em)
+    );
+
+    if (refreshTokenExpired) {
+
+      await api.post('refresh_token', {refresh_token: id}).then(async response => {
+        await SecureStore.deleteItemAsync('token');
+        await SecureStore.deleteItemAsync('refreshToken');
+
+        await SecureStore.setItemAsync('token', response.data.token);
+        await SecureStore.setItemAsync(
+          'refreshToken', 
+          JSON.stringify(response.data.refreshToken)
+        );
+        
+        api.defaults.headers['Authorization'] = `Bearer ${response.data.token}`;
+        
+        setData({
+          cliente: data.cliente,
+          imagem: data.imagem,
+          imagem_url: data.imagem_url,
+          token: response.data.token,
+          refreshToken: {
+            id: response.data.refreshToken.id,
+            espira_em: response.data.refreshToken.espira_em,
+            cliente_id: response.data.refreshToken.cliente_id
+          }
+        });
+
+      }).catch((error: AxiosError) => {
+        Alert.alert('Erro', error.response?.data);
+
+        signOut();
+      });
+    };
+  };
+  
   async function updateProfile(cliente: Cliente) {
     await SecureStore.setItemAsync('cliente', JSON.stringify(cliente));
 
-    setData({ cliente, token: data.token });
+    setData({ 
+      cliente, 
+      imagem: data.imagem,
+      imagem_url: data.imagem_url,
+      token: data.token, 
+      refreshToken: data.refreshToken 
+    });
+  };
+
+  async function updatePhoto(imagem: Imagem, imagem_url: string) {
+    await SecureStore.setItemAsync('imagem', JSON.stringify(imagem));
+    await SecureStore.setItemAsync('imagem_url', imagem_url);
+
+    setData({ 
+      cliente: data.cliente, 
+      imagem,
+      imagem_url,
+      token: data.token, 
+      refreshToken: data.refreshToken 
+    });
   };
 
   async function signOut() {
     await SecureStore.deleteItemAsync('cliente');
+    await SecureStore.deleteItemAsync('imagem');
+    await SecureStore.deleteItemAsync('imagem_url');
     await SecureStore.deleteItemAsync('token');
+    await SecureStore.deleteItemAsync('refreshToken');
 
     setData({} as AuthState);
-  };
-
-  if (loading) {
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Loading />
-    </View>
   };
 
   return (
     <AuthContext.Provider 
       value={{
         cliente: data.cliente, 
+        imagem: data.imagem,
+        imagem_url: data.imagem_url,
         signIn, 
+        requestRefreshToken,
         updateProfile,
+        updatePhoto,
         signOut 
       }}
     >
