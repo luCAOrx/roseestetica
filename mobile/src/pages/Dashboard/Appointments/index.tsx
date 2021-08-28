@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import api from '../../../services/api';
 
-import { FlatList, Text, ScrollView, RefreshControl } from 'react-native';
+import { Alert, FlatList, Text, ScrollView, RefreshControl } from 'react-native';
 
 import styles from '../styles/appointments';
 
@@ -15,6 +15,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { useAuth } from '../../../contexts/auth';
 
 import { useTheme } from '@react-navigation/native';
+import { AxiosError } from 'axios';
 
 interface MySchedules {
   id: number;
@@ -23,7 +24,7 @@ interface MySchedules {
 };
 
 export default function Appointments() {
-  const {cliente} = useAuth();
+  const {cliente, requestRefreshToken} = useAuth();
 
   const {colors} = useTheme();
 
@@ -51,7 +52,19 @@ export default function Appointments() {
       setTotalPage(Math.ceil(totalSchedules / 5));
       setPage(pageNumber + 1);
       setLoading(false);
-    }).catch(err => console.log(err.response.data.erro));
+      
+    }).catch(async (error: AxiosError) => {
+      const apiErrorMessage = error.response?.data.erro;
+
+      if (error.response?.status === 401) {
+        await requestRefreshToken();
+        await loadSchedules(1, true);
+      };
+
+      if (error.response?.status === 400) {
+        Alert.alert('Erro', apiErrorMessage);
+      };
+    });
   };
 
   useEffect(() => {
@@ -107,6 +120,7 @@ export default function Appointments() {
               }
               agendamento_id={schedule.id}
               id={schedule.id}
+              data={schedule.data}
             />
           )}
         />
