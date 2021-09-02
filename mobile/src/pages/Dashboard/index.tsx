@@ -161,7 +161,7 @@ export default function Schedule() {
           });
         }, threeSeconds);
       }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
+        const apiErrorMessage = error.response?.data.mensagem;
 
         if (error.response?.status === 401) {
           await requestRefreshToken();
