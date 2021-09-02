@@ -121,15 +121,18 @@ export default {
 
       const transaction = await connection.transaction();
       
-      const horarioDisponivel = await transaction('agendamentos')
+      const horarioIndisponivel = await transaction('agendamentos')
       .where({ horario_id, data })
       .select('horario_id')
       .first()
 
-      if (horarioDisponivel)
+      const dataDeAgora = dayjs().format('YYYY/MM/DD');
+
+      if (horarioIndisponivel) {
         return response.status(400).json({ 
           mensagem: 'Horário indisponível,agende para outro dia/horário.' 
         });
+      };
 
       const dataEhoraDeAgora = new Date();
 
@@ -141,25 +144,30 @@ export default {
         agendado_em: dataEhoraDeAgora,
       }
 
-      const idInserido = await transaction('agendamentos')
-      .where('id', id)
-      .insert(agendamento);
-
-      const agendamento_id = idInserido[0];
-
-      const agendamentosProcedimentos = procedimento_id.map((procedimento_id: number) => {
-        return {
-          agendamento_id,
-          procedimento_id
-        }
-      });
-
-      await transaction('agendamentos_procedimentos').insert(agendamentosProcedimentos);
-
-      await transaction.commit();
-
-      return response.status(201).json({ mensagem: 'Atendimento agendado com sucesso!' });
-
+      if (dayjs(data).isBefore(dataDeAgora)) {
+        return response.status(400).json({
+          mensagem: 'O dia para agendar para este dia já passou.'
+        });
+      } else {
+        const idInserido = await transaction('agendamentos')
+        .where('id', id)
+        .insert(agendamento);
+  
+        const agendamento_id = idInserido[0];
+  
+        const agendamentosProcedimentos = procedimento_id.map((procedimento_id: number) => {
+          return {
+            agendamento_id,
+            procedimento_id
+          }
+        });
+  
+        await transaction('agendamentos_procedimentos').insert(agendamentosProcedimentos);
+  
+        await transaction.commit();
+  
+        return response.status(201).json({ mensagem: 'Atendimento agendado com sucesso!' });
+      };
     } catch (erro) {
       console.log(erro)
       return response.status(400).json({ erro: 'Falha ao agendar!' });
