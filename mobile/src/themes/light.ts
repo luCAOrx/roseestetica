@@ -1,4 +1,6 @@
-export default {
+import { CustomTheme } from '@react-navigation/native';
+
+export const light: CustomTheme = {
   dark: false,
   colors: {
     primary: '#A0A0B2',
@@ -27,6 +29,7 @@ export default {
     stepIndicatorLabelUnFinishedColor: '#D2D2E3',
   
     separatorFinishedColor: '#2FB86E',
-    separatorUnFinishedColor: '#333333'
+    separatorUnFinishedColor: '#333333',
+    notification: '#333333'
   },
-};
+}
