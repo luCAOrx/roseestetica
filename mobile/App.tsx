@@ -23,8 +23,8 @@ import Routes from './src/routes';
 
 import usePersistedState from './src/hooks/usePersistedState';
 
-import dark from './src/themes/dark';
-import light from './src/themes/light';
+import { dark } from './src/themes/dark';
+import { light } from './src/themes/light';
 
 export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
