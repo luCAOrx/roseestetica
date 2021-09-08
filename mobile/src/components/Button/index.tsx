@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { Text, TouchableOpacityProps } from 'react-native';
-
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
 import styles from './styles';
 
@@ -38,6 +36,7 @@ export default function CustomButton({
         }
       ]} 
       {...rest}
+      testID="button"
     >
       <Text 
         style={[
@@ -47,9 +46,10 @@ export default function CustomButton({
             color: color
           }
         ]}
+        testID="text"
       >
         {title}
-        </Text>
+      </Text>
     </TouchableOpacity>
     
   );
