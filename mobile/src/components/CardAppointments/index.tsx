@@ -79,6 +79,7 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
           height: dayjs(data).isBefore(dayjs(dataDeAgora)) ? 160 : 400
         }
       ]}
+      testID="card"
     >
       <View style={styles.header}>
         <Icon name="event-available" size={20} color={colors.text}/>
@@ -87,6 +88,7 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
             styles.text,
             {color: colors.text}
           ]}
+          testID="text-card"
         >
           {text}
         </Text>
