@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { Text, View } from 'react-native';
-
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, View, TouchableOpacity } from 'react-native';
 
 import { useNavigation, useTheme } from '@react-navigation/native';
 
@@ -27,10 +25,14 @@ export default function Header({title, showIcon, fontSize, showStep, position}: 
 
   return (
     <>
-      <View style={styles.container}>
+      <View style={styles.container} testID="headerContainer">
         {
           showIcon ?
-          <TouchableOpacity style={styles.button} onPress={navigation.goBack}>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={navigation.goBack} 
+            testID="headerButton"
+          >
             <MaterialIcons name="arrow-back" size={30} color={colors.text}/>
           </TouchableOpacity> : 
           <View />
@@ -44,6 +46,7 @@ export default function Header({title, showIcon, fontSize, showStep, position}: 
               color: colors.text
             }
           ]}
+          testID="headerTitle"
         >
           {title}
         </Text>
