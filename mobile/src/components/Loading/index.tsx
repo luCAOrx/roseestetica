@@ -8,6 +8,7 @@ export default function Loading() {
       color="#333"
       animating
       style={{ justifyContent: 'center', alignItems: 'center' }}
+      testID="loading"
     />
   );
 };
