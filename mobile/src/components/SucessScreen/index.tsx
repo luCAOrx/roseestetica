@@ -1,8 +1,10 @@
 import React from 'react';
 
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
+
+import styles from './styles';
 
 interface SucessScreenProps {
   show: Boolean;
@@ -11,35 +13,9 @@ interface SucessScreenProps {
 
 export default function SucessScreen({title, show}: SucessScreenProps) {
   return show && (
-    <View style={styles.container}>
+    <View style={styles.container} testID="sucessScreenContainer">
       <Feather name="check-circle" color="#34CB79" size={50}/>
-      <Text style={styles.text}>{title}</Text>
+      <Text style={styles.text} testID="sucessScreenTitle">{title}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-
-    height: Dimensions.get("screen").height,
-
-    position: "absolute",
-
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-
-    backgroundColor: "rgba(18, 18, 18, 0.8)"
-  },
-
-  text: {
-    fontFamily: "Roboto_900Black",
-    fontSize: 25,
-
-    color: "#D2D2E3"
-  }
-});
