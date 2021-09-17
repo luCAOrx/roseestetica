@@ -44,7 +44,7 @@ describe('The appointments card', () => {
   });
 
   it('must have the same text as the property passed', () => {
-    const {getByTestId} = render(
+    const cardAppointments = render(
       <CardAppointments 
         text='seg 08 de set de 2021 ás 08:00h' 
         agendamento_id={1} 
@@ -53,6 +53,12 @@ describe('The appointments card', () => {
       />
     );
 
-    expect(getByTestId('text-card')).toHaveTextContent('seg 08 de set de 2021 ás 08:00h');
+    expect(cardAppointments.getByTestId('text-card')).toHaveTextContent('seg 08 de set de 2021 ás 08:00h');
+
+    expect(cardAppointments.container.findByProps({
+      agendamento_id: 1
+    })).toHaveProp('agendamento_id', 1);
+    
+    expect(cardAppointments.container.findByProps({id: 1})).toHaveProp('id', 1);
   });
 });
