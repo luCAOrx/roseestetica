@@ -1,12 +1,10 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
-import { Text, TextInput, TextInputProps, View } from 'react-native';
+import { Text, TextInput, TextInputProps, View, TouchableOpacity } from 'react-native';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { useField } from '@unform/core';
-
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { useTheme } from '@react-navigation/native';
 
@@ -85,12 +83,14 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
             borderWidth: 1
           }
         ]}
+        testID="formInputContainer"
       >
         <MaterialIcons 
           style={{margin: 10}} 
           name={icon} 
           size={20} 
           color= {focus ? colors.text : colors.primary}
+          testID="formInputIcon"
         />
         
         <TextInput 
@@ -109,25 +109,27 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
             }
           }}
           {...rest}
-          />
+          testID="formInput"
+        />
 
         {isPassword && 
           <TouchableOpacity 
-          style={{marginRight: 10,}} 
-          onPress={() => {
-            setShow(!show) 
-            setVisiblePassword(!visiblePassword)
-          }}
+            style={{marginRight: 10}} 
+            onPress={() => {
+              setShow(!show) 
+              setVisiblePassword(!visiblePassword)
+            }}
+            testID="formInputButtonPasswordVisibility"
           >
             <MaterialIcons 
               name={show === false ? "visibility" : "visibility-off"} 
               size={20} 
               color={colors.buttonSecondaryBackground}
-              />
+            />
           </TouchableOpacity>
         }
       </View>
-      { error && <Text style={styles.errorMessage}>{error}</Text>}
+      { error && <Text style={styles.errorMessage} testID="formInputError">{error}</Text>}
     </>
   )
 };
