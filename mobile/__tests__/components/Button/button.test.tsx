@@ -10,7 +10,7 @@ import styles from '../../../src/components/Button/styles';
 
 describe('The button', () => {
   it('must have the same text as the property passed', () => {
-    const {getByTestId} = render(
+    const button = render(
       <CustomButton 
         title='Press here'
         backgroundColor='#29214e'
@@ -21,7 +21,21 @@ describe('The button', () => {
       />
     );
   
-    expect(getByTestId('text')).toHaveTextContent('Press here');
+    expect(button.getByTestId('text')).toHaveTextContent('Press here');
+
+    expect(button.container.findByProps({
+      backgroundColor: '#29214e'
+    })).toHaveProp('backgroundColor', '#29214e');
+
+    expect(button.container.findByProps({
+      color: '#d2d2e3'
+    })).toHaveProp('color', '#d2d2e3');
+
+    expect(button.container.findByProps({fontSize: 15})).toHaveProp('fontSize', 15);
+
+    expect(button.container.findByProps({height: 50})).toHaveProp('height', 50);
+
+    expect(button.container.findByProps({width: 50})).toHaveProp('width', 50);
   });
 
   it('must have the default style and the property', () => {
