@@ -20,13 +20,19 @@ jest.mock("@react-navigation/native", () => {
 
 describe('The header', () => {
   it('must have the mandatory properties and those that are not', () => {
-    const { getByTestId } = render(
+    const header = render(
       <Header title="Teste" fontSize={15} position={2} showIcon showStep/>
     );
 
-    expect(getByTestId('headerTitle')).toHaveTextContent('Teste');
-    expect(getByTestId('headerTitle')).toHaveStyle({fontSize: 15});
-    expect(getByTestId('headerContainer')).toBeTruthy();
+    expect(header.getByTestId('headerTitle')).toHaveTextContent('Teste');
+
+    expect(header.container.findByProps({fontSize: 15})).toHaveProp('fontSize', 15);
+
+    expect(header.container.findByProps({position: 2})).toHaveProp('position', 2);
+
+    expect(header.container.findByProps({showIcon: true})).toHaveProp('showIcon', true);
+
+    expect(header.container.findByProps({showStep: true})).toHaveProp('showStep',true);
   });
 
   it('must have the same styles as the parent component', () => {
