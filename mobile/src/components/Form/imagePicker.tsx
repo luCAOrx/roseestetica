@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Image, Text, View } from 'react-native';
-
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Image, Text, View, TouchableOpacity } from 'react-native';
 
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 
@@ -70,7 +68,7 @@ export default function ImagePickerInput({name}: ImagePickerInputProps) {
           />
         </View>
       ) : (
-        <View style={styles.imageInputContainer}>
+        <View style={styles.imageInputContainer} testID="imageInputContainer">
           <TouchableOpacity 
             ref={imagePickerRef}
             style={[
@@ -81,6 +79,7 @@ export default function ImagePickerInput({name}: ImagePickerInputProps) {
               }
             ]} 
             onPress={handleSelectImages}
+            testID="imageInputButton"
           >
             <Icon name="add" size={30} color={colors.primary} />
             <Text 
@@ -88,11 +87,12 @@ export default function ImagePickerInput({name}: ImagePickerInputProps) {
                 styles.imageInputText,
                 {color: colors.primary}
               ]}
+              testID="imageInputText"
             >
                 Sua foto
               </Text>
           </TouchableOpacity>
-          { error && <Text style={styles.errorMessage}>{error}</Text>}
+          { error && <Text style={styles.errorMessage} testID="imagePickerErrorMessage">{error}</Text>}
         </View>
       )}
     </>
