@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Text, View } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 
 import { useTheme } from '@react-navigation/native';
 
 import styles from './styles/select';
 
 import { MaterialIcons as Icon } from '@expo/vector-icons';
-
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Modalize } from 'react-native-modalize';
 
@@ -127,12 +125,14 @@ export default function Select({
           {backgroundColor: colors.card}
         ]} 
         onPress={onOpen}
+        testID="selectButtonContainer"
       >
         <Icon 
           style={{margin: 10}} 
           name={icon} 
           size={20} 
           color={colors.primary} 
+          testID="selectPrimaryIcon"
         />
         
         {isGender ? (
@@ -146,6 +146,7 @@ export default function Select({
                 {color: colors.primary}
               ]
             }
+            testID="selectPlaceholderGender"
           >
             {selectedGender?.length ? selectedGender : placeholder}
           </Text>
@@ -161,6 +162,7 @@ export default function Select({
                 {color: colors.primary}
               ]
             }
+            testID="selectPlaceholderCity"
           >
             {selectedCity?.length ? selectedCity : placeholder}
           </Text>
@@ -171,6 +173,7 @@ export default function Select({
           name="keyboard-arrow-down"
           size={20} 
           color={colors.primary} 
+          testID="selectSecondaryIcon"
         />
       </TouchableOpacity>
 
@@ -237,7 +240,7 @@ export default function Select({
           </View>
         ))}
       </Modalize>
-      { error && <Text style={styles.errorMessage}>{error}</Text>}
+      { error && <Text style={styles.errorMessage} testID="selectErrorMessage">{error}</Text>}
     </>
   );
 };
