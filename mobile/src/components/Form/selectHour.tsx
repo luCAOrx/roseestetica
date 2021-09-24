@@ -2,11 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import api from '../../services/api';
 
-import { Text } from 'react-native';
+import { Text, ScrollView, TouchableOpacity } from 'react-native';
 
 import styles from './styles/selectHour';
-
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 import { useField } from '@unform/core';
 import { useTheme } from '@react-navigation/native';
@@ -84,6 +82,7 @@ export default function SelectHour({name, available, availableTime, selectedDay}
               selectedHour.includes(hour.id) ? styles.selectedHour : {}
             ]}
             onPress={() => handleSelectHour(hour.id)}
+            testID="selectHourButton"
           >
             <Text 
               style={[
@@ -96,7 +95,7 @@ export default function SelectHour({name, available, availableTime, selectedDay}
           </TouchableOpacity>
         ))}
       </ScrollView>
-      { error && <Text style={styles.errorMessage}>{error}</Text>}
+      { error && <Text style={styles.errorMessage} testID="selectHourError">{error}</Text>}
     </>
   );
 };
