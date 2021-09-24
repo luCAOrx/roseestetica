@@ -77,7 +77,7 @@ export default function SelectDate({name, selectedDay, onDayPress}: SelectDatePr
         disableMonthChange={true}
         firstDay={7}
       />
-      { error && <Text style={styles.errorMessage}>{error}</Text>}
+      { error && <Text style={styles.errorMessage} testID="selectDateError">{error}</Text>}
     </>
   );
 };
