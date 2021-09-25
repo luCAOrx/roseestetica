@@ -574,10 +574,10 @@ export default {
         .first();
 
       if (!cliente)
-        return response.status(400).json({ erro: 'E-mail inválido.' });
+        return response.status(400).json({ EmailError: 'E-mail inválido.' });
   
       if (token !== cliente.token_reset_senha)
-        return response.status(400).json({ erro: 'Token inválido.' });
+        return response.status(400).json({ TokenError: 'Token inválido.' });
   
       const dataEhoraDeAgora = new Date();
   
