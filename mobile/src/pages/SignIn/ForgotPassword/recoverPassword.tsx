@@ -78,9 +78,11 @@ export default function RecoverPassword() {
           handleNavigateToSignIn();
         }, threeSeconds);
       }).catch((error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
+        const apiEmailErrorMessage = error.response?.data.EmailError;
+        const apiTokenErrorMessage = error.response?.data.TokenError;
 
-        formRef.current?.setFieldError("token", apiErrorMessage)
+        formRef.current?.setFieldError("email", apiEmailErrorMessage);
+        formRef.current?.setFieldError("token", apiTokenErrorMessage);
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
