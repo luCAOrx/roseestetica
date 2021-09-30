@@ -17,6 +17,12 @@ import GenerateRefreshTokenProvider from '../providers/GenerateRefreshTokenProvi
 
 import dayjs from 'dayjs';
 
+import aws from 'aws-sdk';
+
+import { promisify } from 'util';
+
+const s3 = new aws.S3();
+
 export default {
   async autenticar(request: Request, response: Response) {
     try {
@@ -69,27 +75,27 @@ export default {
 
       const clienteSerializado = {
         ...dados,
-        imagem_url: `http://10.0.0.190:3333/uploads/${imagens.imagem}`,
+        imagem_local_url: `${process.env.APP_URL}/uploads/${imagens.imagem}`,
       };
-  
+      
       cliente.senha = undefined;
       cliente.token_reset_senha = undefined;
       cliente.expiracao_reset_senha = undefined;
       cliente.criado_em = undefined;
       cliente.atualizado_em = undefined;
-
+  
       const token = await GenerateTokenProvider.generateToken({ id: cliente.id });
 
-      await connection('refresh_token')
-      .where({cliente_id: cliente.id})
-      .del();
+      await connection('refresh_token').where({cliente_id: cliente.id}).del();
 
       const refreshToken = await GenerateRefreshTokenProvider.generateRefreshToken(cliente.id);
   
       return response.json({
         cliente: clienteSerializado.clientes,
-        imagem: clienteSerializado.imagens,
-        imagem_url: clienteSerializado.imagem_url,
+        imagem_url: 
+          process.env.STORAGE_TYPE === 'local' ? 
+          clienteSerializado.imagem_local_url : 
+          clienteSerializado.imagens.imagem_aws_url,
         token,
         refreshToken
       });
@@ -152,11 +158,10 @@ export default {
         cep,
         email,
         sexo_id,
-        cidade_id,
-        imagem_aws_url
+        cidade_id
       } = request.body;
 
-      const imagem = request.file?.filename;
+      const { key: imagem, location: imagem_aws_url = '' } = request.file as Express.MulterS3.File;
 
       const dataEhoraDeAgora = new Date();
 
@@ -165,19 +170,37 @@ export default {
 
       const emailExiste = await connection('clientes')
       .where({ email }).select('email').first();
-  
+
+      if (!imagem) {
+        return response.status(400).json({ erro: 'O campo imagem é obrigatório.' });
+      };
+
       if (cpfExiste) {
-        fileSystem.unlinkSync(path.resolve(
+        process.env.STORAGE_TYPE === 'local' ?
+
+        promisify(fileSystem.unlink)(path.resolve(
           __dirname, '..', '..', `uploads/${imagem}`
-        ));
+        )) :
+
+        s3.deleteObject({
+          Bucket: 'roseestetica-upload',
+          Key: imagem
+        }).promise();
 
         return response.status(400).json({ erro: 'Esse cpf já existe.' });
       };
   
       if (emailExiste) {
-        fileSystem.unlinkSync(path.resolve(
+        process.env.STORAGE_TYPE === 'local' ?
+
+        promisify(fileSystem.unlink)(path.resolve(
           __dirname, '..', '..', `uploads/${imagem}`
-        ));
+        )) :
+
+        s3.deleteObject({
+          Bucket: 'roseestetica-upload',
+          Key: imagem
+        }).promise();
         
         return response.status(400).json({ erro: 'Esse e-mail já existe.' });
       };
@@ -213,32 +236,48 @@ export default {
       await transaction.commit();
 
       const dados = {
-        imagem,
+        cliente: {
+          nome,
+          cpf,
+          telefone,
+          celular,
+          bairro,
+          logradouro,
+          numero,
+          complemento,
+          cep,
+          email,
+          sexo_id,
+          cidade_id
+        },
         imagem_aws_url,
-        nome,
-        cpf,
-        telefone,
-        celular,
-        bairro,
-        logradouro,
-        numero,
-        complemento,
-        cep,
-        email,
-        sexo_id,
-        cidade_id
+      };
+
+      const clienteSerializado = {
+        ...dados,
+        imagem_local_url: `${process.env.APP_URL}/uploads/${imagem}`,
       };
   
-      return response.status(201).json({cliente: dados});
+      return response.status(201).json({
+        cliente: clienteSerializado.cliente,
+        imagem_url: process.env.STORAGE_TYPE === 'local' ? 
+        clienteSerializado.imagem_local_url : 
+        clienteSerializado.imagem_aws_url,
+      });
     } catch (erro) {      
-      const imagem = request.file?.filename;
+      const { key: imagem } = request.file as Express.MulterS3.File;
 
-      if (imagem) {
-        fileSystem.unlinkSync(path.resolve(
-          __dirname, '..', '..', `uploads/${imagem}`
-        ));
-      };
+      process.env.STORAGE_TYPE === 'local' ?
 
+      promisify(fileSystem.unlink)(path.resolve(
+        __dirname, '..', '..', `uploads/${imagem}`
+      )) :
+
+      s3.deleteObject({
+        Bucket: 'roseestetica-upload',
+        Key: imagem
+      }).promise();
+      
       return response.status(400).json({ erro: 'Falha ao se cadastrar.' })
     }
   },
@@ -299,13 +338,14 @@ export default {
 
       const clienteSerializado = {
         ...dados,
-        imagem_url: `http://10.0.0.190:3333/uploads/${imagens.imagem}`,
+        imagem_local_url: `${process.env.APP_URL}/uploads/${imagens.imagem}`,
       };
   
       return response.status(201).json({ 
         cliente: clienteSerializado.clientes,
-        imagem: clienteSerializado.imagens,
-        imagem_url: clienteSerializado.imagem_url,
+        imagem_url: process.env.STORAGE_TYPE === 'local' ? 
+        clienteSerializado.imagem_local_url : 
+        clienteSerializado.imagens.imagem_aws_url,
       });
   
     } catch (erro) {
@@ -375,13 +415,14 @@ export default {
 
       const clienteSerializado = {
         ...dados,
-        imagem_url: `http://10.0.0.190:3333/uploads/${imagens.imagem}`,
+        imagem_local_url: `${process.env.APP_URL}/uploads/${imagens.imagem}`,
       };
   
       return response.status(201).json({ 
         cliente: clienteSerializado.clientes,
-        imagem: clienteSerializado.imagens,
-        imagem_url: clienteSerializado.imagem_url,
+        imagem_url: process.env.STORAGE_TYPE === 'local' ? 
+        clienteSerializado.imagem_local_url : 
+        clienteSerializado.imagens.imagem_aws_url,
       });
   
     } catch (erro) {
@@ -447,13 +488,14 @@ export default {
 
       const clienteSerializado = {
         ...dados,
-        imagem_url: `http://10.0.0.190:3333/uploads/${imagens.imagem}`,
+        imagem_local_url: `${process.env.APP_URL}/uploads/${imagens.imagem}`,
       };
   
       return response.status(201).json({ 
         cliente: clienteSerializado.clientes,
-        imagem: clienteSerializado.imagens,
-        imagem_url: clienteSerializado.imagem_url,
+        imagem_url: process.env.STORAGE_TYPE === 'local' ? 
+        clienteSerializado.imagem_local_url : 
+        clienteSerializado.imagens.imagem_aws_url,
       });
   
     } catch (erro) {
@@ -465,7 +507,7 @@ export default {
     try {
       const { id } = request.params;
 
-      const imagem = request.file?.filename;
+      const { key: imagem, location: imagem_aws_url = '' } = request.file as Express.MulterS3.File;
   
       const dataEhoraDeAgora = new Date();
 
@@ -474,15 +516,21 @@ export default {
       .select(['imagem', 'imagem_aws_url'])
       .first();
 
-      if (imagens) {
-        fileSystem.unlinkSync(path.resolve(
+      if (process.env.STORAGE_TYPE === 'local') {
+        promisify(fileSystem.unlink)(path.resolve(
           __dirname, '..', '..', `uploads/${imagens.imagem}`
         ));
+      } else {
+        s3.deleteObject({
+          Bucket: 'roseestetica-upload',
+          Key: imagens.imagem
+        }).promise();
       };
-      
+
       await connection('imagens')
       .update({ 
         imagem,
+        imagem_aws_url,
         atualizado_em: dataEhoraDeAgora 
       })
       .where('cliente_id', id);
@@ -494,22 +542,28 @@ export default {
 
       const clienteSerializado = {
         imagemAtualizada,
-        imagem_url: `http://10.0.0.190:3333/uploads/${imagemAtualizada.imagem}`,
+        imagem_local_url: `${process.env.APP_URL}/uploads/${imagemAtualizada.imagem}`,
       };
   
       return response.status(201).json({ 
-        imagem: clienteSerializado.imagemAtualizada,
-        imagem_url: clienteSerializado.imagem_url,
+        imagem_url: process.env.STORAGE_TYPE === 'local' ? 
+        clienteSerializado.imagem_local_url : 
+        clienteSerializado.imagemAtualizada.imagem_aws_url,
       });
     } catch (error) {
-      const imagem = request.file?.filename;
+      const { key: imagem } = request.file as Express.MulterS3.File;
 
-      if (imagem) {
-        fileSystem.unlinkSync(path.resolve(
+      if (process.env.STORAGE_TYPE === 'local') {
+        promisify(fileSystem.unlink)(path.resolve(
           __dirname, '..', '..', `uploads/${imagem}`
         ));
+      } else {
+        s3.deleteObject({
+          Bucket: 'roseestetica-upload',
+          Key: imagem
+        }).promise();
       };
-
+      
       return response.status(400).json({ erro: 'Erro ao atualizar a foto.' });
     }
   },
@@ -601,10 +655,15 @@ export default {
       .where('cliente_id', id)
       .first();
 
-      if (imagem) {
-        fileSystem.unlinkSync(path.resolve(
+      if (process.env.STORAGE_TYPE === 'local') {
+        promisify(fileSystem.unlink)(path.resolve(
           __dirname, '..', '..', `uploads/${imagem.imagem}`
         ));
+      } else {
+        s3.deleteObject({
+          Bucket: 'roseestetica-upload',
+          Key: imagem.imagem
+        }).promise();
       };
 
       await connection('clientes').where({ id }).del();
