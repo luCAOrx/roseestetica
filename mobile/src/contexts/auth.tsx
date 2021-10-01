@@ -30,14 +30,8 @@ interface Cliente {
   senha: string;
 };
 
-interface Imagem {
-  imagem: string;
-  imagem_aws_url: string;
-};
-
 interface AuthState {
   cliente: Cliente;
-  imagem: Imagem;
   imagem_url: string;
   token: string;
   refreshToken: {
@@ -49,12 +43,11 @@ interface AuthState {
 
 interface AuthContextData {
   cliente: Cliente;
-  imagem: Imagem;
   imagem_url: string;
   signIn(credentials: SignInCredentials): Promise<void>;
   requestRefreshToken(): Promise<void>;
   updateProfile(cliente: Cliente): Promise<void>;
-  updatePhoto(imagem: Imagem, imagem_url: string): Promise<void>;
+  updatePhoto(imagem_url: string): Promise<void>;
   signOut(): void;
 };
 
@@ -73,8 +66,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     async function loadStoragedData() {
       const cliente = await SecureStore.getItemAsync('cliente');
 
-      const imagem = await SecureStore.getItemAsync('imagem');
-
       const imagem_url = await SecureStore.getItemAsync('imagem_url');
 
       const token = await SecureStore.getItemAsync('token');
@@ -87,12 +78,11 @@ export const AuthProvider: React.FC = ({ children }) => {
         </View>
       };
 
-      if (cliente && imagem && imagem_url && token && refreshToken) {
+      if (cliente && imagem_url && token && refreshToken) {
         api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
         setData({
           cliente: JSON.parse(cliente),
-          imagem: JSON.parse(imagem),
           imagem_url,
           token,
           refreshToken: JSON.parse(refreshToken)
@@ -110,7 +100,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     await api.post('login', {email, senha}).then(async (response) => {
       await SecureStore.setItemAsync('cliente', JSON.stringify(response.data.cliente));
-      await SecureStore.setItemAsync('imagem', JSON.stringify(response.data.imagem));
       await SecureStore.setItemAsync('imagem_url', response.data.imagem_url);
       await SecureStore.setItemAsync('token', response.data.token);
       await SecureStore.setItemAsync('refreshToken', JSON.stringify(response.data.refreshToken));
@@ -119,7 +108,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 
       setData({
         cliente: response.data.cliente,
-        imagem: response.data.imagem,
         imagem_url: response.data.imagem_url,
         token: response.data.token,
         refreshToken: {
@@ -158,7 +146,6 @@ export const AuthProvider: React.FC = ({ children }) => {
         
         setData({
           cliente: data.cliente,
-          imagem: data.imagem,
           imagem_url: data.imagem_url,
           token: response.data.token,
           refreshToken: {
@@ -181,20 +168,17 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     setData({ 
       cliente, 
-      imagem: data.imagem,
       imagem_url: data.imagem_url,
       token: data.token, 
       refreshToken: data.refreshToken 
     });
   };
 
-  async function updatePhoto(imagem: Imagem, imagem_url: string) {
-    await SecureStore.setItemAsync('imagem', JSON.stringify(imagem));
+  async function updatePhoto(imagem_url: string) {
     await SecureStore.setItemAsync('imagem_url', imagem_url);
 
     setData({ 
       cliente: data.cliente, 
-      imagem,
       imagem_url,
       token: data.token, 
       refreshToken: data.refreshToken 
@@ -203,7 +187,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   async function signOut() {
     await SecureStore.deleteItemAsync('cliente');
-    await SecureStore.deleteItemAsync('imagem');
     await SecureStore.deleteItemAsync('imagem_url');
     await SecureStore.deleteItemAsync('token');
     await SecureStore.deleteItemAsync('refreshToken');
@@ -215,7 +198,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     <AuthContext.Provider 
       value={{
         cliente: data.cliente, 
-        imagem: data.imagem,
         imagem_url: data.imagem_url,
         signIn, 
         requestRefreshToken,
