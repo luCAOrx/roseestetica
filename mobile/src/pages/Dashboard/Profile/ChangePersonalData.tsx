@@ -155,7 +155,7 @@ export default function ChangePersonalData() {
       } as any);
 
       await api.patch(`atualizar_foto/${cliente.id}`, data).then(response => {
-        updatePhoto(response.data.imagem, response.data.imagem_url);
+        updatePhoto(response.data.imagem_url);
 
         onClose();
 
