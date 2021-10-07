@@ -579,9 +579,10 @@ export default {
         return response.status(400).json({ erro: 'E-mail inválido.' });
       }
   
-      const token = randomBytes(20).toString('hex');
+      const token = randomBytes(5).toString('hex');
   
       const expiracaoResetSenha = new Date();
+
       expiracaoResetSenha.setHours(expiracaoResetSenha.getHours() + 1);
   
       await connection('clientes')
@@ -591,11 +592,11 @@ export default {
         }).where({ email });
 
       const mail = {
-        subject: 'Recuperar senha',
-        from: 'suporte@roseestetica.com',
+        subject: `Recuperar senha, seu código é: ${token}`,
+        from: '"Rose estética" <lucaorxrx@gmail.com>',
         to: email,
         template: 'esqueci_minha_senha',
-        context: { token },
+        context: { token }
       }
   
       mailer.sendMail(mail, async (erro) => {
