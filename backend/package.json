@@ -7,8 +7,10 @@
     "start": "node src/server.js",
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
     "test": "cross-env NODE_ENV=test jest",
-    "knex:seed": "knex --knexfile knexfile.ts seed:run",
-    "knex:migrate": "knex --knexfile knexfile.ts migrate:latest"
+    "development:knex:seed": "knex --knexfile knexfile.ts seed:run",
+    "development:knex:migrate": "knex --knexfile knexfile.ts migrate:latest",
+    "production:knex:migrate": "knex --knexfile knexfile.ts migrate:latest --env production",
+    "production:knex:seed": "knex --knexfile knexfile.ts seed:run --env production"
   },
   "author": "luCAO",
   "license": "ISC",
