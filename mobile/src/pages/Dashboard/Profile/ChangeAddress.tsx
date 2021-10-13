@@ -43,6 +43,7 @@ export default function ChangeAddress() {
   const cepRef = useRef<TextInput>(null);
 
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
+  const [ isRequested, setIsRequested ] = useState(false);
 
   useEffect(() => {
     formRef.current?.setData({
@@ -123,6 +124,8 @@ export default function ChangeAddress() {
         setTimeout(() => {  
           setSucessMessage(false);
         }, threeSeconds);
+
+        setIsRequested(false);
       }).catch(async (error: AxiosError) => {
         const apiErrorMessage = error.response?.data.erro;
 
@@ -133,10 +136,14 @@ export default function ChangeAddress() {
 
         if (error.response?.status === 400) {
           Alert.alert('Erro', apiErrorMessage);
+
+          setIsRequested(false);
         };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -222,6 +229,8 @@ export default function ChangeAddress() {
             keyboardType="number-pad"
             returnKeyType="send"
             onSubmitEditing={() => {
+              setIsRequested(true);
+              
               formRef.current?.submitForm();
             }}
           />
@@ -232,7 +241,10 @@ export default function ChangeAddress() {
             color={colors.buttonText}
             height={50}
             fontSize={18}
+            isRequested={isRequested}
             onPress={() => {
+              setIsRequested(true);
+
               formRef.current?.submitForm();
             }} 
           />
