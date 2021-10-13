@@ -60,7 +60,6 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadStoragedData() {
@@ -72,12 +71,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 
       const refreshToken = await SecureStore.getItemAsync('refreshToken');
 
-      if (loading) {
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Loading />
-        </View>
-      };
-
       if (cliente && imagem_url && token && refreshToken) {
         api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
@@ -88,8 +81,6 @@ export const AuthProvider: React.FC = ({ children }) => {
           refreshToken: JSON.parse(refreshToken)
         });
       };
-
-      setLoading(false);
     };
 
     loadStoragedData();
@@ -116,10 +107,6 @@ export const AuthProvider: React.FC = ({ children }) => {
           cliente_id: response.data.refreshToken.cliente_id
         }
       });      
-    }).catch((error: AxiosError) => {
-       const apiErrorMessage = error.response?.data.erro;
-       
-       Alert.alert('Erro', apiErrorMessage);
     });
   };
 
