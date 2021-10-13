@@ -49,6 +49,7 @@ export default function LoginData() {
   const {colors} = useTheme();
 
   const [ sucessMessage, setSucessMessage ] = useState(false);
+  const [ isRequested, setIsRequested ] = useState(false);
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -124,6 +125,8 @@ export default function LoginData() {
           handleNavigateToSignIn();
         }, threeSeconds);
       }).catch((error: AxiosError) => {
+        setIsRequested(false);
+
         const apiErrorMessage = error.response?.data.erro;
 
         formRef.current?.setErrors(apiErrorMessage);
@@ -132,6 +135,8 @@ export default function LoginData() {
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -166,6 +171,8 @@ export default function LoginData() {
             isPassword
             returnKeyType="send"
             onSubmitEditing={() => {
+              setIsRequested(true);
+              
               formRef.current?.submitForm();
             }}
           />
@@ -176,7 +183,10 @@ export default function LoginData() {
             color={colors.buttonText}
             height={50}
             fontSize={18}
+            isRequested={isRequested}
             onPress={() => {
+              setIsRequested(true);
+              
               formRef.current?.submitForm();
             }} 
           />
