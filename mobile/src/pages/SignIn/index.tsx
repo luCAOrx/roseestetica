@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { 
+  Alert,
   Animated, 
   Keyboard, 
   KeyboardAvoidingView, 
@@ -13,8 +14,6 @@ import {
 import styles from './styles/signin';
 
 import { useNavigation, useTheme } from '@react-navigation/native';
-
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import logoDarkTheme from '../../images/logo-dark-theme.png';
 
@@ -46,6 +45,8 @@ export default function Login() {
   const {signIn} = useAuth();
   
   const navigation = useNavigation();
+
+  const [ isRequested, setIsRequested] = useState(false);
 
   const [logo] = useState(new Animated.ValueXY({
     x: 350, y: 55
@@ -82,9 +83,19 @@ export default function Login() {
 
       formRef.current?.setErrors({});
 
-      await signIn(data)
+      await signIn(data).catch(error => {
+        const apiErrorMessage = error.response?.data.erro;
+
+        if (error.response?.status === 400) {
+          Alert.alert('Erro', apiErrorMessage);
+          
+          setIsRequested(false);
+        };
+      });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -169,17 +180,22 @@ export default function Login() {
             isPassword
             returnKeyType="send"
             onSubmitEditing={() => {
+              setIsRequested(true);
+
               formRef.current?.submitForm();
             }}
           />
 
           <CustomButton 
             title="Entrar" 
-            backgroundColor={colors.buttonSecondaryBackground}
+            backgroundColor={colors.buttonPrimaryBackground}
             color={colors.buttonText}
             height={50}
             fontSize={18}
+            isRequested={isRequested}
             onPress={() => {
+              setIsRequested(true);
+
               formRef.current?.submitForm();
             }}
           />
