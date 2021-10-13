@@ -23,7 +23,7 @@ interface Credentials {
 };
 
 export default function ForgotMyPassword() {
-  const [loading, setLoading] = useState(false);
+  const [ isRequested, setIsRequested ] = useState(false);
 
   const {colors} = useTheme();
 
@@ -32,7 +32,6 @@ export default function ForgotMyPassword() {
   const navigation = useNavigation();
 
   function handleNavigateToRecoverPassword() {
-    setLoading(false);
     navigation.navigate("RecoverPassword");
   };
 
@@ -58,11 +57,11 @@ export default function ForgotMyPassword() {
       await api.post('esqueci_minha_senha', data).then(() => {
         handleNavigateToRecoverPassword();
       }).catch((error: AxiosError) => {
+        setIsRequested(false);
+
         const apiErrorMessage = error.response?.data.erro;
 
         formRef.current?.setFieldError("email", apiErrorMessage);
-
-        setLoading(false);
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -70,7 +69,7 @@ export default function ForgotMyPassword() {
         
         formRef.current?.setErrors(errors);
 
-        setLoading(false);
+        setIsRequested(false);
       };
     };
   };
@@ -89,7 +88,8 @@ export default function ForgotMyPassword() {
           returnKeyType="next"
           textContentType="emailAddress"
           onSubmitEditing={() => {
-            setLoading(true);
+            setIsRequested(true);
+
             formRef.current?.submitForm();
           }}
         />
@@ -101,9 +101,10 @@ export default function ForgotMyPassword() {
         color={colors.buttonText}
         height={50}
         fontSize={18}
-        loading={loading}
+        isRequested={isRequested}
         onPress={() => {
-          setLoading(true);
+          setIsRequested(true);
+
           formRef.current?.submitForm();
         }}
       />
