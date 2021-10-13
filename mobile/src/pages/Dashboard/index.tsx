@@ -60,6 +60,7 @@ export default function Schedule() {
   const [refreshing, setRefreshing] = useState(false);
   const [sucessMessage, setSucessMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRequested, setIsRequested] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
 
@@ -86,6 +87,8 @@ export default function Schedule() {
 
         if (error.response?.status === 400) {
           Alert.alert('Erro', apiErrorMessage);
+
+          setIsLoading(false);
         };
       });
     };
@@ -106,6 +109,8 @@ export default function Schedule() {
 
         if (error.response?.status === 400) {
           Alert.alert('Erro', apiErrorMessage);
+
+          setIsLoading(false);
         };
       });
     };
@@ -169,11 +174,15 @@ export default function Schedule() {
         };
 
         if (error.response?.status === 400) {
+          setIsRequested(false);
+
           Alert.alert('Erro', apiErrorMessage);
         };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -181,7 +190,7 @@ export default function Schedule() {
     };
   };
 
-  async function refreshAvailablesSchedules() {
+  function refreshAvailablesSchedules() {
     setRefreshing(true);
 
     navigation.reset({
@@ -250,7 +259,12 @@ export default function Schedule() {
             color={colors.buttonText}
             height={50}
             fontSize={15}
-            onPress={() => formRef.current?.submitForm()}
+            isRequested={isRequested}
+            onPress={() => {
+              formRef.current?.submitForm();
+
+              setIsRequested(true);
+            }}
           />
         </Form>
       </ScrollView>
