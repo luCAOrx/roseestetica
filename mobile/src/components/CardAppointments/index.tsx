@@ -26,7 +26,7 @@ interface CardAppointmentsProps {
 };
 
 function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProps) {
-  const [loading, setLoading] = useState(false);
+  const [ isRequested, setIsRequested] = useState(false);
 
   const {colors} = useTheme();
 
@@ -49,25 +49,38 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
   };
 
   async function handleDeleteSchedule() {
-    await api.delete(`cancelar/${id}`).then(() => {
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Appointments'}]
-      });
-    }).catch(async (error: AxiosError) => {
-      const apiErrorMessage = error.response?.data.mensagem;
-
-      if (error.response?.status === 401) {
-        await requestRefreshToken();
-
-        await handleDeleteSchedule();
-      };
-
-      if (error.response?.status === 400) {
-        Alert.alert('Falha ao cancelar agendamento', apiErrorMessage);
-      };
-
-    });
+    Alert.alert('Cancelar agendamento', 'Tem certeza que deseja cancelar seu agendamento?', [
+      {
+        text: 'Sim',
+        onPress: async () => await api.delete(`cancelar/${id}`).then(() => {
+          setIsRequested(true);
+          
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Appointments'}]
+          });
+        }).catch(async (error: AxiosError) => {
+          const apiErrorMessage = error.response?.data.mensagem;
+    
+          if (error.response?.status === 401) {
+            await requestRefreshToken();
+    
+            await handleDeleteSchedule();
+          };
+    
+          if (error.response?.status === 400) {
+            Alert.alert('Falha ao cancelar agendamento', apiErrorMessage);
+    
+            setIsRequested(false);
+          };
+    
+        })
+      },
+      {
+        text: 'Não',
+        onPress: () => { setIsRequested(false) }
+      }
+    ]);
   };
 
   return (
@@ -127,9 +140,8 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
               color={colors.buttonText}
               height={50}
               fontSize={15}
-              // loading={loading}
+              isRequested={isRequested}
               onPress={() => {
-                setLoading(true);
                 handleDeleteSchedule();
               }}
             />
