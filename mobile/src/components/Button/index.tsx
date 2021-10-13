@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
+import Loading from '../Loading';
+
 import styles from './styles';
 
 interface CustomButtonProps extends TouchableOpacityProps {
@@ -12,6 +14,7 @@ interface CustomButtonProps extends TouchableOpacityProps {
   fontSize: number;
   marginBottom?: number;
   color: string;
+  isRequested?: Boolean;
 }
 
 export default function CustomButton({
@@ -22,6 +25,7 @@ export default function CustomButton({
   fontSize,
   marginBottom,
   color,
+  isRequested,
   ...rest
 }: CustomButtonProps) {
   return(
@@ -48,7 +52,7 @@ export default function CustomButton({
         ]}
         testID="text"
       >
-        {title}
+        { isRequested ? <Loading /> : title }
       </Text>
     </TouchableOpacity>
     
