@@ -34,6 +34,7 @@ export default function ChangeLoginData() {
   const formRef = useRef<FormHandles>(null);
 
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
+  const [ isRequested, setIsRequested ] = useState(false);
 
   useEffect(() => {
     formRef.current?.setData({
@@ -63,13 +64,17 @@ export default function ChangeLoginData() {
       formRef.current?.setErrors({});
 
       await api.put(`atualizar_login/${cliente?.id}`, data).then(response => {
-        updateProfile(response.data.cliente)
+        updateProfile(response.data.cliente);
+
+        setIsRequested(true);
 
         setSucessMessage(true);
         
         setTimeout(() => {  
           setSucessMessage(false);
         }, threeSeconds);
+
+        setIsRequested(false);
       }).catch(async (error: AxiosError) => {
         const apiErrorMessage = error.response?.data.erro;
 
@@ -80,10 +85,14 @@ export default function ChangeLoginData() {
 
         if (error.response?.status === 400) {
           Alert.alert('Erro', apiErrorMessage);
+
+          setIsRequested(false);
         };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -109,6 +118,8 @@ export default function ChangeLoginData() {
             autoCapitalize="words"
             returnKeyType="send"
             onSubmitEditing={() => {
+              setIsRequested(true);
+              
               formRef.current?.submitForm();
             }} 
           />
@@ -119,7 +130,10 @@ export default function ChangeLoginData() {
             color={colors.buttonText}
             height={50}
             fontSize={18}
+            isRequested={isRequested}
             onPress={() => {
+              setIsRequested(true);
+
               formRef.current?.submitForm();
             }} 
           />
