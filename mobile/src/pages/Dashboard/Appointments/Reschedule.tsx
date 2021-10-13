@@ -58,6 +58,7 @@ export default function Schedule() {
   const [refreshing, setRefreshing] = useState(false);
   const [sucessMessage, setSucessMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRequested, setIsRequested] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
 
@@ -74,11 +75,19 @@ export default function Schedule() {
       }}).then(response => {
         setAvailableAppointments(response.data);
       }).catch(async (error: AxiosError) => {
+        const apiErrorMessage = error.response?.data.erro;
+
         if (error.response?.status === 401) {
           await requestRefreshToken();
 
           await loadAvailablesSchedules();
-        }
+        };
+
+        if (error.response?.status === 400) {
+          Alert.alert('Erro', apiErrorMessage);
+
+          setIsRequested(false);
+        };
       });
     };
 
@@ -127,6 +136,8 @@ export default function Schedule() {
 
           handleNavigateToAppointments();
         }, threeSeconds);
+
+        setIsRequested(true);
       }).catch(async (error: AxiosError) => {
         const apiErrorMessage = error.response?.data.mensagem;
 
@@ -137,10 +148,14 @@ export default function Schedule() {
 
         if (error.response?.status === 400) {
           Alert.alert('Falha ao remarcar agendamento', apiErrorMessage);
+
+          setIsRequested(false);
         };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -162,7 +177,7 @@ export default function Schedule() {
   //   return () => backHandler.remove();
   // });
 
-  async function refreshAvailablesSchedules() {
+  function refreshAvailablesSchedules() {
     setRefreshing(true);
 
     navigation.reset({
@@ -214,7 +229,12 @@ export default function Schedule() {
             color={colors.buttonText}
             height={50}
             fontSize={15}
-            onPress={() => formRef.current?.submitForm()}
+            isRequested={isRequested}
+            onPress={() => {
+              formRef.current?.submitForm();
+
+              setIsRequested(true);
+            }}
           />
         </Form>
       </ScrollView>
