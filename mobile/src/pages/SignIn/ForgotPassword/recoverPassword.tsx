@@ -32,6 +32,7 @@ interface ForgotPassword {
 
 export default function RecoverPassword() {
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
+  const [ isRequested, setIsRequested ] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
   const tokenInputRef = useRef<TextInput>(null);
@@ -78,6 +79,8 @@ export default function RecoverPassword() {
           handleNavigateToSignIn();
         }, threeSeconds);
       }).catch((error: AxiosError) => {
+        setIsRequested(false);
+
         const apiEmailErrorMessage = error.response?.data.EmailError;
         const apiTokenErrorMessage = error.response?.data.TokenError;
 
@@ -86,6 +89,8 @@ export default function RecoverPassword() {
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -143,13 +148,15 @@ export default function RecoverPassword() {
     
           <Input 
             ref={passwordInputRef}
-            placeholder="Senha"
+            placeholder="Sua nova senha"
             icon="lock"
             name="senha"
             maxLength={50}
             isPassword
             returnKeyType="send"
             onSubmitEditing={() => {
+              setIsRequested(true);
+
               formRef.current?.submitForm();
             }}
           />
@@ -162,7 +169,10 @@ export default function RecoverPassword() {
           color={colors.buttonText}
           height={50}
           fontSize={18}
+          isRequested={isRequested}
           onPress={() => {
+            setIsRequested(true);
+
             formRef.current?.submitForm();
           }} 
         />
