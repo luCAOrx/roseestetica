@@ -9,10 +9,11 @@ import Header from '../../../components/Header';
 import { ImagePicker, Input, InputMask } from '../../../components/Form/index';
 import CustomButton from '../../../components/Button';
 import SucessScreen from '../../../components/SucessScreen';
-
-import { MaterialIcons as Icon } from '@expo/vector-icons';
+import Loading from '../../../components/Loading';
 
 import styles from '../styles/ChangePersonalData';
+
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 
 import { useAuth } from '../../../contexts/auth';
 
@@ -45,9 +46,10 @@ export default function ChangePersonalData() {
   const phoneNumberInputRef = useRef<TextInput>(null);
   const cellPhoneNumberInputRef = useRef<TextInput>(null);
   const modalizeRef = useRef<Modalize>(null);
-  
+
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
   const [ sucessMessagePhoto, setSucessMessagePhoto ] = useState<Boolean>(false);
+  const [ isRequested, setIsRequested ] = useState(false);
   
   useEffect(() => {
     formRef.current?.setData({
@@ -109,6 +111,8 @@ export default function ChangePersonalData() {
         setTimeout(() => {  
           setSucessMessage(false);
         }, threeSeconds);
+
+        setIsRequested(false);
       }).catch(async (error: AxiosError) => {
         const apiErrorMessage = error.response?.data.erro;
 
@@ -118,11 +122,15 @@ export default function ChangePersonalData() {
         };
 
         if (error.response?.status === 400) {
+          setIsRequested(false);
+
           Alert.alert('Erro', apiErrorMessage);
         };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -160,6 +168,8 @@ export default function ChangePersonalData() {
         onClose();
 
         setSucessMessagePhoto(true);
+
+        setIsRequested(false);
         
         setTimeout(() => {
           setSucessMessagePhoto(false);
@@ -173,11 +183,15 @@ export default function ChangePersonalData() {
         };
 
         if (error.response?.status === 400) {
+          setIsRequested(false);
+
           Alert.alert('Erro', apiErrorMessage);
         };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -270,8 +284,11 @@ export default function ChangePersonalData() {
             color={colors.buttonText}
             height={50}
             fontSize={18}
+            isRequested={isRequested}
             onPress={() => {
               formRef.current?.submitForm();
+
+              setIsRequested(true);
             }} 
           />
         </Form>
@@ -301,9 +318,16 @@ export default function ChangePersonalData() {
             </Text>
 
             <TouchableOpacity 
-              onPress={() => formRef.current?.submitForm()}
+              onPress={() => {
+                formRef.current?.submitForm()
+
+                setIsRequested(true);
+              }}
             >
-              <Icon name='done' size={30} color="#34CB79"/>
+              {isRequested ? 
+                <Loading /> : 
+                <Icon name='done' size={30} color="#34CB79"/>
+              }
             </TouchableOpacity>
           </View>
         }
