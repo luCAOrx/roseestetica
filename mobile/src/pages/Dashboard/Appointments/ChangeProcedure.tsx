@@ -47,6 +47,7 @@ export default function Schedule() {
 
   const [selectedProcedure, setSelectedProcedure] = useState<number[]>([]);
   const [sucessMessage, setSucessMessage] = useState<Boolean>(false);
+  const [ isRequested, setIsRequested ] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
 
@@ -116,10 +117,14 @@ export default function Schedule() {
 
         if (error.response?.status === 400) {
           Alert.alert('Falha ao alterar o procedimento', apiErrorMessage);
+
+          setIsRequested(false);
         };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+        
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
@@ -153,7 +158,12 @@ export default function Schedule() {
             color={colors.buttonText}
             height={50}
             fontSize={15}
-            onPress={() => formRef.current?.submitForm()}
+            isRequested={isRequested}
+            onPress={() => {
+              setIsRequested(true);
+
+              formRef.current?.submitForm();
+            }}
           />
         </Form>
       </ScrollView>
