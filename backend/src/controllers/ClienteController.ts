@@ -222,9 +222,9 @@ export default {
         sexo_id,
         cidade_id,
         criado_em: dataEhoraDeAgora
-      });
+      }).returning('*')
 
-      const id = idInserido[0];
+      const id = idInserido[0].id;
 
       await transaction('imagens').insert({
         imagem,

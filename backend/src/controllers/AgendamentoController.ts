@@ -151,9 +151,10 @@ export default {
       } else {
         const idInserido = await transaction('agendamentos')
         .where('id', id)
-        .insert(agendamento);
+        .insert(agendamento)
+        .returning('*')
   
-        const agendamento_id = idInserido[0];
+        const agendamento_id = idInserido[0].id;
   
         const agendamentosProcedimentos = procedimento_id.map((procedimento_id: number) => {
           return {
