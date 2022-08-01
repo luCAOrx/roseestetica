@@ -3,8 +3,8 @@ require('dotenv/config');
 module.exports = {
 
   development: {
-    client: 'mysql',
-    version: '5.7',
+    client: 'pg',
+    version: '14.4',
     connection: {
       host : process.env.KNEX_HOST,
       port: process.env.KNEX_PORT,
