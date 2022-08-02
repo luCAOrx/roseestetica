@@ -56,14 +56,18 @@ module.exports = {
   },
 
   production: {
-    client: 'mysql',
-    version: '5.7',
+    client: 'pg',
+    version: '14.4',
     connection: {
       host : process.env.RDS_HOST,
       port: process.env.RDS_PORT,
       user : process.env.RDS_USER,
       password : process.env.RDS_PASSWORD,
       database : process.env.RDS_DATABASE,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
     },
     useNullAsDefault: true,
     migrations: {
