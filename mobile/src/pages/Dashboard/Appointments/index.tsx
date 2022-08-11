@@ -15,7 +15,6 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { useAuth } from '../../../contexts/auth';
 
 import { useTheme } from '@react-navigation/native';
-import { AxiosError } from 'axios';
 
 interface MySchedules {
   id: number;
@@ -38,7 +37,7 @@ export default function Appointments() {
 
   async function loadSchedules(pageNumber = page, shouldRefresh = false) {
     if (loading) return;
-
+    
     if (totalPage && pageNumber > totalPage) return;
     
     setLoading(true);
@@ -46,22 +45,22 @@ export default function Appointments() {
     await api.get(`meus_agendamentos/${cliente?.id}`, {params: {
       page: pageNumber
     }}).then(response => {
-      const totalSchedules = response.headers['x-total-count'];
+      const totalSchedules = response.headers['x-total-count'].length;
 
       setMySchedules(shouldRefresh ? response.data : [...mySchedules, ...response.data]);
       setTotalPage(Math.ceil(totalSchedules / 5));
       setPage(pageNumber + 1);
       setLoading(false);
       
-    }).catch(async (error: AxiosError) => {
-      const apiErrorMessage = error.response?.data.erro;
+    }).catch(async error => {
+      const apiErrorMessage = error.response.data.erro;
 
-      if (error.response?.status === 401) {
+      if (error.response.status === 401) {
         await requestRefreshToken();
         await loadSchedules(1, true);
       };
 
-      if (error.response?.status === 400) {
+      if (error.response.status === 400) {
         Alert.alert('Erro', apiErrorMessage);
       };
     });
@@ -69,6 +68,9 @@ export default function Appointments() {
 
   useEffect(() => {
     loadSchedules();
+    return function cleanup() {
+      loadSchedules();
+    }
   }, []);
 
   async function refreshList() {
