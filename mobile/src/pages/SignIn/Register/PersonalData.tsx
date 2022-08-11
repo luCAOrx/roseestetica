@@ -39,14 +39,17 @@ export default function PersonalData() {
   function handleNavigateToAddress(personalData: PersonalData) {
     const { foto, nome, cpf, telefone, celular, sexo_id } = personalData;
 
-    navigation.navigate("Address", { 
+    navigation.navigate("Address" as never, { 
       foto, nome, cpf, telefone, celular, sexo_id
-    });
+    } as never);
   }
 
   async function handleSubmit(personalData: PersonalData) {
-    const { foto, nome, cpf, telefone, celular, sexo_id } = personalData;
+    let { foto, nome, cpf, telefone, celular, sexo_id } = personalData;
 
+    
+    if (telefone === undefined) telefone = ''
+    
     const regexLetras = /^([a-zA-Zà-úÀ-Ú]|\s+)+$/;
 
     try {
