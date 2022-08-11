@@ -16,8 +16,6 @@ import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
-import { AxiosError } from 'axios';
-
 import getValidationErros from '../../../utils/handleErrors';
 
 import { useTheme } from '@react-navigation/native';
@@ -81,6 +79,8 @@ export default function ChangeAddress() {
       cep
     };
 
+    if (data.complemento.length === 1) data.complemento = ''
+
     try {
       const schema = Yup.object().shape({
         cidade_id: Yup.number().required("O campo cidade é obrigatório!"),
@@ -116,7 +116,11 @@ export default function ChangeAddress() {
 
       formRef.current?.setErrors({});
 
+      setIsRequested(true);
+
       await api.put(`atualizar_endereco/${cliente?.id}`, data).then(response => {
+        setIsRequested(false);
+
         updateProfile(response.data.cliente)
 
         setSucessMessage(true);
@@ -124,20 +128,18 @@ export default function ChangeAddress() {
         setTimeout(() => {  
           setSucessMessage(false);
         }, threeSeconds);
+      }).catch(async error => {
+        const apiErrorMessage = error.response.data.erro;
 
-        setIsRequested(false);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
-
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           await requestRefreshToken();
           formRef.current?.submitForm();
         };
 
-        if (error.response?.status === 400) {
-          Alert.alert('Erro', apiErrorMessage);
-
+        if (error.response.status === 400) {
           setIsRequested(false);
+          
+          Alert.alert('Erro', apiErrorMessage);
         };
       });
     } catch (err) {
