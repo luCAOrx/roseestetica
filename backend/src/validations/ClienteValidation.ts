@@ -95,7 +95,6 @@ export default {
 
       complemento: yup.string().optional().strict(true)
         .trim("Não são permitidos espaços no começo ou no fim!")
-        .min(3, "No mínimo 3 caracteres!")
         .max(90, "No máximo 90 caracteres!"),
 
       cep: yup.string().strict(true)
