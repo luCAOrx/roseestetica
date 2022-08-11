@@ -1,7 +1,10 @@
+import Constants from 'expo-constants';
 import axios from 'axios';
 
+const serverUrl = Constants.manifest?.extra?.serverUrl
+
 const api = axios.create({
-  baseURL: "http://10.0.0.190:3333"
+  baseURL: serverUrl
 });
 
 export default api;
