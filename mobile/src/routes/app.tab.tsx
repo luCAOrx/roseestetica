@@ -15,38 +15,40 @@ export default function Dashboard() {
 
   return (
     <AppTab.Navigator 
-      tabBarOptions={{
-        style: {
+      screenOptions={{
+        tabBarStyle: {
           backgroundColor: colors.background,
           borderTopColor: colors.border,
           height: 70,
         },
 
-        tabStyle: {
+        tabBarItemStyle: {
           alignItems: 'center',
           justifyContent: 'center',
         },
 
-        iconStyle: {
+        tabBarIconStyle: {
           flex: 0,
-          width: 20,
-          height: 20,
+          width: 25,
+          height: 25,
         },
 
-        labelStyle: {
+        tabBarLabelStyle: {
           fontFamily: "Roboto_400Regular",
           fontSize: 15,
         },
 
-        activeTintColor: colors.text,
-        inactiveTintColor: colors.border
+        tabBarActiveTintColor: colors.text,
+        tabBarInactiveTintColor: colors.border,
+
+        headerShown: false
       }}
 
       initialRouteName='Schedule'
     >
 
       <AppTab.Screen 
-        name="Schedule" 
+        name="ScheduleTab" 
         component={ScheduleStack}
         options={{
           tabBarLabel: "Agendar",
@@ -64,7 +66,7 @@ export default function Dashboard() {
       />     
 
       <AppTab.Screen 
-        name="Appointments" 
+        name="AppointmentsTab" 
         component={AppointmentsStack}
         options={{
           tabBarLabel: "Agendamentos",
@@ -81,7 +83,7 @@ export default function Dashboard() {
       />
 
       <AppTab.Screen 
-        name="Profile" 
+        name="ProfileTab" 
         component={ProfileStack}
         options={{
           tabBarLabel: "Perfil",
