@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
 
   text: {
     flex: 1,
+    padding: 10,
     textAlign: "left",
     fontFamily: "Roboto_400Regular",
     lineHeight: 18,
