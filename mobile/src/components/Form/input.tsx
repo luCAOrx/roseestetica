@@ -11,7 +11,7 @@ import { useTheme } from '@react-navigation/native';
 import styles from './styles/input';
 
 interface InputProps extends TextInputProps {
-  icon: string;
+  icon: keyof typeof MaterialIcons.glyphMap;
   name: string;
   isPassword?: boolean;
   rawText?: string;
