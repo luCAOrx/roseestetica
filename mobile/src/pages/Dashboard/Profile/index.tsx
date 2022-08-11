@@ -10,7 +10,7 @@ import {
   TouchableOpacity 
 } from 'react-native';
 
-import { MaterialIcons, FontAwesome5, Feather } from '@expo/vector-icons';
+import { MaterialIcons, Feather } from '@expo/vector-icons';
 
 import { useNavigation, useTheme } from '@react-navigation/native';
 
@@ -19,8 +19,6 @@ import { useAuth } from '../../../contexts/auth';
 import ToggleThemeContext from '../../../contexts/toogleTheme';
 
 import api from '../../../services/api';
-
-import { AxiosError } from 'axios';
 
 import SucessScreen from '../../../components/SucessScreen';
 
@@ -38,15 +36,15 @@ export default function Profile() {
   const [ sucessMessage, setSucessMessage ] = useState(false);
 
   function handleNavigateToPersonalData() {
-    navigation.navigate("ChangePersonalData");
+    navigation.navigate("ChangePersonalData" as never);
   };
 
   function handleNavigateToAddress() {
-    navigation.navigate("ChangeAddress");
+    navigation.navigate("ChangeAddress" as never);
   };
 
   function handleNavigateToLoginData() {
-    navigation.navigate("ChangeLoginData");
+    navigation.navigate("ChangeLoginData" as never);
   };
 
   async function handleDeleteClient () {
@@ -63,16 +61,24 @@ export default function Profile() {
           }, threeSeconds);
 
           handleSignOut();
-        }).catch(async (error: AxiosError) => {
-          const apiErrorMessage = error.response?.data.erro;
+        }).catch(async error => {
+          const apiErrorMessage = error.response.data.erro;
     
-          if (error.response?.status === 401) {
+          if (error.response.status === 401) {
             await requestRefreshToken();
     
-            await handleDeleteClient();
+            await api.delete(`deletar/${cliente.id}`).then(() => {
+              setSucessMessage(true);
+            
+              setTimeout(() => {  
+                setSucessMessage(false);
+              }, threeSeconds);
+    
+              handleSignOut();
+            })
           };
     
-          if (error.response?.status === 400) {
+          if (error.response.status === 400) {
             Alert.alert('Erro', apiErrorMessage);
           };
         })
@@ -113,7 +119,7 @@ export default function Profile() {
                   {color: colors.text}
                 ]}
               >
-                {cliente?.nome.split(' ').slice(0, 2).join(' ')}
+                {cliente?.nome.split(' ').slice(0, 3).join(' ')}
               </Text>
             </View>
           </View>
