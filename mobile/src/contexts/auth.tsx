@@ -2,13 +2,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import * as SecureStore from 'expo-secure-store';
 
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 
 import api from '../services/api';
-
-import { AxiosError } from 'axios';
-
-import Loading from '../components/Loading';
 
 import dayjs from 'dayjs';
 
@@ -49,6 +45,7 @@ interface AuthContextData {
   updateProfile(cliente: Cliente): Promise<void>;
   updatePhoto(imagem_url: string): Promise<void>;
   signOut(): void;
+  loading: boolean;
 };
 
 interface SignInCredentials {
@@ -60,9 +57,10 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadStoragedData() {
+    async function loadStorageData() {
       const cliente = await SecureStore.getItemAsync('cliente');
 
       const imagem_url = await SecureStore.getItemAsync('imagem_url');
@@ -72,7 +70,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       const refreshToken = await SecureStore.getItemAsync('refreshToken');
 
       if (cliente && imagem_url && token && refreshToken) {
-        api.defaults.headers['Authorization'] = `Bearer ${token}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
         setData({
           cliente: JSON.parse(cliente),
@@ -80,10 +78,12 @@ export const AuthProvider: React.FC = ({ children }) => {
           token,
           refreshToken: JSON.parse(refreshToken)
         });
+
+        setLoading(false)
       };
     };
 
-    loadStoragedData();
+    loadStorageData();
   }, []);
 
   async function signIn(credentials: SignInCredentials) {
@@ -95,7 +95,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       await SecureStore.setItemAsync('token', response.data.token);
       await SecureStore.setItemAsync('refreshToken', JSON.stringify(response.data.refreshToken));
       
-      api.defaults.headers['Authorization'] = `Bearer ${response.data.token}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
 
       setData({
         cliente: response.data.cliente,
@@ -129,7 +129,7 @@ export const AuthProvider: React.FC = ({ children }) => {
           JSON.stringify(response.data.refreshToken)
         );
         
-        api.defaults.headers['Authorization'] = `Bearer ${response.data.token}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         
         setData({
           cliente: data.cliente,
@@ -142,8 +142,8 @@ export const AuthProvider: React.FC = ({ children }) => {
           }
         });
 
-      }).catch((error: AxiosError) => {
-        Alert.alert('Erro', error.response?.data);
+      }).catch(error => {
+        Alert.alert('Erro', error.response.data);
 
         signOut();
       });
@@ -190,7 +190,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         requestRefreshToken,
         updateProfile,
         updatePhoto,
-        signOut 
+        signOut,
+        loading
       }}
     >
       {children}
