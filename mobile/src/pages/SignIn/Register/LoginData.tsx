@@ -18,8 +18,6 @@ import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
-import { AxiosError } from 'axios';
-
 import getValidationErros from '../../../utils/handleErrors';
 
 interface Data {
@@ -56,7 +54,7 @@ export default function LoginData() {
   const params = route.params as Data;
 
   function handleNavigateToSignIn() {
-    navigation.navigate("SignIn");
+    navigation.navigate("SignIn" as never);
   };
   
   async function handleSubmit(loginData: LoginData) {
@@ -118,20 +116,25 @@ export default function LoginData() {
       data.append('email', email);
       data.append('senha', senha);
 
-      await api.post('cadastro', data).then(() => {
+      setIsRequested(true);
+
+      await api.post('cadastro', data, {headers: {'Content-Type': 'multipart/form-data'}}).then(() => {
+        setIsRequested(false);
         setSucessMessage(true);
         
         setTimeout(() => {
           handleNavigateToSignIn();
         }, threeSeconds);
-      }).catch((error: AxiosError) => {
+      }).catch(error => {
         setIsRequested(false);
 
-        const apiErrorMessage = error.response?.data.erro;
+        const apiErrorMessage = error.response.data.message;
 
-        formRef.current?.setErrors(apiErrorMessage);
+        if (error.response.status === 400) {
+          setIsRequested(false);
 
-        Alert.alert('Erro', apiErrorMessage);
+          Alert.alert('Erro', apiErrorMessage);
+        };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
