@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 
 import React, { useState, useCallback } from 'react';
 
-import { AppLoading } from 'expo';
+import * as SplashScreen from 'expo-splash-screen';
 
 import { 
   Roboto_400Regular, 
@@ -26,6 +26,8 @@ import usePersistedState from './src/hooks/usePersistedState';
 import { dark } from './src/themes/dark';
 import { light } from './src/themes/light';
 
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -36,8 +38,8 @@ export default function App() {
 
     setTheme(isDarkMode ? dark : light)
   }, [theme]);
-
-  let [fontsLoaded] = useFonts({
+  
+  const [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_900Black,
     Roboto_700Bold,
@@ -45,16 +47,18 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return <AppLoading />;
-  } else {
-    return (
-      <AuthProvider>
-        <ToggleThemeContext.Provider value={{toggleTheme, isDarkMode}}>
-          <NavigationContainer theme={theme}>
-            <Routes />
-          </NavigationContainer>
-        </ToggleThemeContext.Provider>
-      </AuthProvider>
-    );
+    return null
   }
+
+  SplashScreen.hideAsync();
+
+  return (
+    <AuthProvider>
+      <ToggleThemeContext.Provider value={{toggleTheme, isDarkMode}}>
+        <NavigationContainer theme={theme}>
+          <Routes />
+        </NavigationContainer>
+      </ToggleThemeContext.Provider>
+    </AuthProvider>
+  );
 }
