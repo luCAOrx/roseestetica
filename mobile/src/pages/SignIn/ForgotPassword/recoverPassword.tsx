@@ -20,8 +20,6 @@ import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
-import { AxiosError } from 'axios';
-
 import getValidationErros from '../../../utils/handleErrors';
 
 interface ForgotPassword {
@@ -43,7 +41,7 @@ export default function RecoverPassword() {
   const navigation = useNavigation();
 
   function handleNavigateToSignIn() {
-    navigation.navigate("SignIn");
+    navigation.navigate("SignIn" as never);
   };
 
   async function handleSubmit(forgotPassword: ForgotPassword) {
@@ -72,17 +70,21 @@ export default function RecoverPassword() {
 
       formRef.current?.setErrors({});
 
+      setIsRequested(true);
+
       await api.put('atualizar_senha', data).then(() => {
+        setIsRequested(false);
+
         setSucessMessage(true);
         
         setTimeout(() => {
           handleNavigateToSignIn();
         }, threeSeconds);
-      }).catch((error: AxiosError) => {
+      }).catch(error => {
         setIsRequested(false);
 
-        const apiEmailErrorMessage = error.response?.data.EmailError;
-        const apiTokenErrorMessage = error.response?.data.TokenError;
+        const apiEmailErrorMessage = error.response.data.EmailError;
+        const apiTokenErrorMessage = error.response.data.TokenError;
 
         formRef.current?.setFieldError("email", apiEmailErrorMessage);
         formRef.current?.setFieldError("token", apiTokenErrorMessage);
@@ -171,8 +173,6 @@ export default function RecoverPassword() {
           fontSize={18}
           isRequested={isRequested}
           onPress={() => {
-            setIsRequested(true);
-
             formRef.current?.submitForm();
           }} 
         />
