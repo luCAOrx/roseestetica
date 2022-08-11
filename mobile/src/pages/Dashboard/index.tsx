@@ -4,7 +4,7 @@ import { Alert, RefreshControl, ScrollView } from 'react-native';
 
 import { useNavigation, useTheme } from '@react-navigation/native';
 
-import { DateObject } from 'react-native-calendars';
+import { DateData } from 'react-native-calendars';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -21,8 +21,6 @@ import * as Yup from 'yup';
 
 import api from '../../services/api';
 
-import { AxiosError } from 'axios';
-
 import getValidationErros from '../../utils/handleErrors';
 
 interface Procedure {
@@ -33,7 +31,7 @@ interface Procedure {
 
 interface ScheduleData {
   data: string;
-  horario_id: Array<number>;
+  horario_id: number;
   procedimento_id: Array<number>;
 };
 
@@ -76,19 +74,19 @@ export default function Schedule() {
         data: selectedDay
       }}).then(response => {
         setAvailableAppointments(response.data);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
+      }).catch(async error => {
+        const apiErrorMessage = error.response.erro;
 
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           await requestRefreshToken();
 
           await loadAvailablesSchedules();
         };
 
-        if (error.response?.status === 400) {
-          Alert.alert('Erro', apiErrorMessage);
-
+        if (error.response.status === 400) {
           setIsLoading(false);
+
+          Alert.alert('Erro', apiErrorMessage);
         };
       });
     };
@@ -104,13 +102,13 @@ export default function Schedule() {
     async function loadProcedures() {
       await api.get('procedimentos').then(response => {
         setProcedures(response.data);
-      }).catch((error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
+      }).catch(error => {
+        const apiErrorMessage = error.response.erro;
 
-        if (error.response?.status === 400) {
-          Alert.alert('Erro', apiErrorMessage);
-
+        if (error.status === 400) {
           setIsLoading(false);
+          
+          Alert.alert('Erro', apiErrorMessage);
         };
       });
     };
@@ -118,7 +116,7 @@ export default function Schedule() {
     loadProcedures();
   }, []);
   
-  const onDayPress = (day: DateObject) => {
+  const onDayPress = (day: DateData) => {
     setSelectedDay(day.dateString);
   };
   
@@ -137,14 +135,14 @@ export default function Schedule() {
   async function handleSubmit(scheduleData: ScheduleData) {
     const {data, horario_id, procedimento_id} = scheduleData;
 
-    const dataFinal = {data, horario_id, procedimento_id};
+    const dataFinal = {data, horario_id: Number(horario_id), procedimento_id};
 
     const threeSeconds = 3000;
 
     try {
       const schema = Yup.object().shape({
         data: Yup.string().required("Você precisa selecionar um dia!"),
-        horario_id: Yup.array().min(1, "Você precisa selecionar um horário!"),
+        horario_id: Yup.number().min(1, "Você precisa selecionar um horário!"),
         procedimento_id: Yup.array().min(1, "Você precisa selecionar um procedimento!"),
       });
 
@@ -154,7 +152,10 @@ export default function Schedule() {
 
       formRef.current?.setErrors({});
 
+      setIsRequested(true);
+
       await api.post(`agendar/${cliente?.id}`, dataFinal).then(() => {
+        setIsRequested(false);
         setSucessMessage(true);
 
         setTimeout(() => {
@@ -162,18 +163,18 @@ export default function Schedule() {
 
           navigation.reset({
             index: 0,
-            routes: [{name: 'Schedule'}]
+            routes: [{name: 'Schedule' as never}]
           });
         }, threeSeconds);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.mensagem;
+      }).catch(async error => {
+        const apiErrorMessage = error.response.data.mensagem;
 
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           await requestRefreshToken();
           formRef.current?.submitForm();
         };
 
-        if (error.response?.status === 400) {
+        if (error.response.status === 400) {
           setIsRequested(false);
 
           Alert.alert('Erro', apiErrorMessage);
@@ -195,7 +196,7 @@ export default function Schedule() {
 
     navigation.reset({
       index: 0,
-      routes: [{name: 'Schedule'}]
+      routes: [{name: 'Schedule' as never}]
     })
 
     setRefreshing(false);
@@ -262,8 +263,6 @@ export default function Schedule() {
             isRequested={isRequested}
             onPress={() => {
               formRef.current?.submitForm();
-
-              setIsRequested(true);
             }}
           />
         </Form>
