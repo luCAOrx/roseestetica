@@ -26,7 +26,7 @@ export default function ImagePickerInput({name}: ImagePickerInputProps) {
   const {colors} = useTheme();
 
   async function handleSelectImages() {
-    const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== 'granted') {
       alert('Eita precisamos de acesso ás suas fotos...');
