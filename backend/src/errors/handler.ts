@@ -39,8 +39,6 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
       Key: imagem
     }).promise();
 
-    console.log(errors);
-
     return response.status(400).json({ message: 'Validation fails', errors })
   };
 
