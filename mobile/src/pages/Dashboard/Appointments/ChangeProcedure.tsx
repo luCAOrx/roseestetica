@@ -17,8 +17,6 @@ import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
-import { AxiosError } from 'axios';
-
 import getValidationErros from '../../../utils/handleErrors';
 
 import { useAuth } from '../../../contexts/auth';
@@ -78,7 +76,7 @@ export default function Schedule() {
   };
 
   function handleNavigateToAppointments() {
-    navigation.navigate("Appointments");
+    navigation.navigate("Appointments" as never);
   };
 
   async function handleSubmit(scheduleData: ScheduleData) {
@@ -99,7 +97,10 @@ export default function Schedule() {
 
       formRef.current?.setErrors({});
 
+      setIsRequested(true);
+
       await api.put(`alterar_procedimento/${params.agendamento_id}`, data).then(() => {
+        setIsRequested(false);
         setSucessMessage(true);
 
         setTimeout(() => {
@@ -107,18 +108,18 @@ export default function Schedule() {
 
           handleNavigateToAppointments();
         }, threeSeconds);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.mensagem;
+      }).catch(async error => {
+        const apiErrorMessage = error.response.data.mensagem;
 
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           await requestRefreshToken();
           formRef.current?.submitForm();
         };
 
-        if (error.response?.status === 400) {
-          Alert.alert('Falha ao alterar o procedimento', apiErrorMessage);
-
+        if (error.response.status === 400) {
           setIsRequested(false);
+
+          Alert.alert('Falha ao alterar o procedimento', apiErrorMessage);
         };
       });
     } catch (err) {
@@ -160,8 +161,6 @@ export default function Schedule() {
             fontSize={15}
             isRequested={isRequested}
             onPress={() => {
-              setIsRequested(true);
-
               formRef.current?.submitForm();
             }}
           />
