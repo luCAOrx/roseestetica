@@ -6,8 +6,6 @@ import { Alert, Text, View } from 'react-native';
 
 import styles from './styles';
 
-import { AxiosError } from 'axios';
-
 import { useNavigation, useTheme } from '@react-navigation/native';
 
 import { MaterialIcons as Icon } from '@expo/vector-icons';
@@ -37,38 +35,47 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
   const {requestRefreshToken} = useAuth();
 
   function handleNavigateToDetail() {
-    navigation.navigate('Detail', {agendamento_id});
+    navigation.navigate('Detail' as never, {agendamento_id} as never);
   };
 
   function handleNavigateToReschedule() {
-    navigation.navigate('Reschedule', {id});
+    navigation.navigate('Reschedule' as never, {id} as never);
   };
 
   function handleNavigateToChangeProcedure() {
-    navigation.navigate('ChangeProcedure', {agendamento_id});
+    navigation.navigate('ChangeProcedure' as never, {agendamento_id} as never);
   };
 
   async function handleDeleteSchedule() {
+    setIsRequested(true);
+
     Alert.alert('Cancelar agendamento', 'Tem certeza que deseja cancelar seu agendamento?', [
       {
         text: 'Sim',
         onPress: async () => await api.delete(`cancelar/${id}`).then(() => {
-          setIsRequested(true);
-          
+          setIsRequested(false);
+
           navigation.reset({
             index: 0,
-            routes: [{name: 'Appointments'}]
+            routes: [{name: 'Appointments' as never}]
           });
-        }).catch(async (error: AxiosError) => {
-          const apiErrorMessage = error.response?.data.mensagem;
+        }).catch(async error => {
+          const apiErrorMessage = error.response.data.mensagem
     
-          if (error.response?.status === 401) {
+          if (error.response.status === 401) {
             await requestRefreshToken();
     
-            await handleDeleteSchedule();
+            await api.delete(`cancelar/${id}`).then(() => {
+              setIsRequested(false);
+              
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Appointments' as never}]
+              });
+            })
           };
     
-          if (error.response?.status === 400) {
+          if (error.response.status === 400) {
             Alert.alert('Falha ao cancelar agendamento', apiErrorMessage);
     
             setIsRequested(false);
