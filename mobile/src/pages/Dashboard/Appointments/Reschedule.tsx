@@ -4,7 +4,7 @@ import { Alert, RefreshControl, ScrollView } from 'react-native';
 
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 
-import { DateObject } from 'react-native-calendars';
+import { DateData } from 'react-native-calendars';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -20,14 +20,12 @@ import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
-import { AxiosError } from 'axios';
-
 import getValidationErros from '../../../utils/handleErrors';
 import Loading from '../../../components/Loading';
 
 interface ReScheduleData {
   data: string;
-  horario_id: Array<number>;
+  horario_id: number;
 };
 
 interface AvailableAppointments {
@@ -74,19 +72,11 @@ export default function Schedule() {
         data: selectedDay
       }}).then(response => {
         setAvailableAppointments(response.data);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
-
-        if (error.response?.status === 401) {
+      }).catch(async error => {
+        if (error.response.status === 401) {
           await requestRefreshToken();
 
           await loadAvailablesSchedules();
-        };
-
-        if (error.response?.status === 400) {
-          Alert.alert('Erro', apiErrorMessage);
-
-          setIsRequested(false);
         };
       });
     };
@@ -96,25 +86,25 @@ export default function Schedule() {
     setIsLoading(false);
   }, [selectedDay]);
 
-  const onDayPress = (day: DateObject) => {
+  const onDayPress = (day: DateData) => {
     setSelectedDay(day.dateString);
   };
 
   function handleNavigateToAppointments() {
-    navigation.navigate("Appointments");
+    navigation.navigate("Appointments" as never);
   };
 
   async function handleSubmit(scheduleData: ReScheduleData) {
     const {data, horario_id} = scheduleData;
 
-    const dataFinal = {data, horario_id};
+    const dataFinal = {data, horario_id: Number(horario_id)};
 
     const threeSeconds = 3000;
 
     try {
       const schema = Yup.object().shape({
         data: Yup.string().required("Você precisa selecionar um dia!"),
-        horario_id: Yup.array().min(1, "Você precisa selecionar um horário!"),
+        horario_id: Yup.number().min(1, "Você precisa selecionar um horário!"),
       });
 
       await schema.validate(dataFinal, {
@@ -123,7 +113,10 @@ export default function Schedule() {
 
       formRef.current?.setErrors({});
 
+      setIsRequested(true);
+
       await api.put(`remarcar/${params.id}/${cliente?.id}`, dataFinal).then(() => {
+        setIsRequested(false);
         setSucessMessage(true);
 
         setTimeout(() => {
@@ -131,25 +124,23 @@ export default function Schedule() {
 
           navigation.reset({
             index: 0,
-            routes: [{name: 'Appointments'}]
+            routes: [{name: 'Appointments' as never}]
           });
 
           handleNavigateToAppointments();
         }, threeSeconds);
+      }).catch(async error => {
+        const apiErrorMessage = error.response.data.mensagem;
 
-        setIsRequested(true);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.mensagem;
-
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           await requestRefreshToken();
           formRef.current?.submitForm();
         };
 
-        if (error.response?.status === 400) {
-          Alert.alert('Falha ao remarcar agendamento', apiErrorMessage);
-
+        if (error.response.status === 400) {
           setIsRequested(false);
+
+          Alert.alert('Falha ao remarcar agendamento', apiErrorMessage);
         };
       });
     } catch (err) {
@@ -182,7 +173,7 @@ export default function Schedule() {
 
     navigation.reset({
       index: 0,
-      routes: [{name: 'Reschedule'}]
+      routes: [{name: 'Reschedule' as never}]
     })
 
     setRefreshing(false);
@@ -232,8 +223,6 @@ export default function Schedule() {
             isRequested={isRequested}
             onPress={() => {
               formRef.current?.submitForm();
-
-              setIsRequested(true);
             }}
           />
         </Form>
