@@ -55,16 +55,18 @@ export default function Address() {
     const { foto, nome, cpf, telefone, celular, sexo_id } = params;
     const { cidade_id, bairro, logradouro, numero, complemento, cep } = adressData;
 
-    navigation.navigate("LoginData", { 
+    navigation.navigate("LoginData" as never, { 
       foto, nome, cpf, telefone, celular, sexo_id,
       cidade_id, bairro, logradouro, numero, complemento, cep
-    });
+    } as never);
   }
 
   async function handleSubmit(adressData: Adress) {
     const { foto, nome, cpf, telefone, celular, sexo_id } = params;
     
-    const { cidade_id, bairro, logradouro, numero, complemento, cep } = adressData;
+    let { cidade_id, bairro, logradouro, numero, complemento, cep } = adressData;
+
+    if (complemento === undefined) complemento = ''
 
     const regexLetras = /^([a-zA-Zà-úÀ-Ú]|\s+)+$/;
 
@@ -90,7 +92,6 @@ export default function Address() {
           .required("O campo número é obrigatório!"),
         complemento: Yup.string().optional().strict(true)
           .trim("Não são permitidos espaços no começo ou no fim!")
-          .min(3, "No mínimo 3 caracteres!")
           .max(90, "No máximo 90 caracteres!"),
         cep: Yup.string()
         .min(8, "No mínimo 8 caracteres!")
