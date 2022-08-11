@@ -16,8 +16,6 @@ import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
-import { AxiosError } from 'axios';
-
 import getValidationErros from '../../../utils/handleErrors';
 
 import { useTheme } from '@react-navigation/native';
@@ -63,10 +61,12 @@ export default function ChangeLoginData() {
 
       formRef.current?.setErrors({});
 
-      await api.put(`atualizar_login/${cliente?.id}`, data).then(response => {
-        updateProfile(response.data.cliente);
+      setIsRequested(true);
 
-        setIsRequested(true);
+      await api.put(`atualizar_login/${cliente?.id}`, data).then(response => {
+        setIsRequested(false);
+
+        updateProfile(response.data.cliente);
 
         setSucessMessage(true);
         
@@ -75,18 +75,18 @@ export default function ChangeLoginData() {
         }, threeSeconds);
 
         setIsRequested(false);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
+      }).catch(async error => {
+        const apiErrorMessage = error.response.data.erro;
 
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           await requestRefreshToken();
           formRef.current?.submitForm();
         };
 
-        if (error.response?.status === 400) {
-          Alert.alert('Erro', apiErrorMessage);
-
+        if (error.response.status === 400) {
           setIsRequested(false);
+
+          Alert.alert('Erro', apiErrorMessage);
         };
       });
     } catch (err) {
