@@ -14,6 +14,8 @@ interface CustomButtonProps extends TouchableOpacityProps {
   fontSize: number;
   marginBottom?: number;
   color: string;
+  borderColor?: string;
+  borderWidth?: number;
   isRequested?: Boolean;
 }
 
@@ -25,6 +27,8 @@ export default function CustomButton({
   fontSize,
   marginBottom,
   color,
+  borderColor,
+  borderWidth,
   isRequested,
   ...rest
 }: CustomButtonProps) {
@@ -36,7 +40,9 @@ export default function CustomButton({
           height: height,
           width: width,
           marginBottom: marginBottom,
-          backgroundColor: backgroundColor
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          borderWidth: borderWidth
         }
       ]} 
       {...rest}
