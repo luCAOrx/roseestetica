@@ -44,7 +44,7 @@ const ForgotPasswordScreen = () => (
     screenOptions={{headerShown: false}}
   >
     <AuthStack.Screen 
-      name="ForgotPassword" 
+      name="ForgotPasswordScreen" 
       component={ForgotPassword}
       options={{
         headerShown: true,
