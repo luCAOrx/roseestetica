@@ -15,7 +15,7 @@ import { useField } from '@unform/core';
 import api from '../../services/api';
 
 interface SelectProps {
-  icon: string;
+  icon: keyof typeof Icon.glyphMap;
   placeholder: string;
   modalHeight: number;
   snapPoint: number;
