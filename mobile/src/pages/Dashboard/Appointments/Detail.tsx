@@ -12,8 +12,6 @@ import { useAuth } from '../../../contexts/auth';
 
 import api from '../../../services/api';
 
-import { AxiosError } from 'axios';
-
 import { format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
@@ -57,15 +55,15 @@ export default function Detail() {
       await api.get(`detalhes_do_agendamento/${cliente?.id}/${params.agendamento_id}`)
       .then(response => {
         setDetail(response.data);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
+      }).catch(async error => {
+        const apiErrorMessage = error.response.data.erro;
 
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           await requestRefreshToken();
           await loadDetail();
         };
 
-        if (error.response?.status === 400) {
+        if (error.response.status === 400) {
           Alert.alert('Erro', apiErrorMessage);
         };
       });
