@@ -8,7 +8,7 @@ import styles from './styles/selectDate';
 
 import { MaterialIcons as Icon } from '@expo/vector-icons';
 
-import { Calendar, DateObject } from 'react-native-calendars';
+import { Calendar, DateData } from 'react-native-calendars';
 
 import { useField } from '@unform/core';
 import { useTheme } from '@react-navigation/native';
@@ -16,7 +16,7 @@ import { useTheme } from '@react-navigation/native';
 interface SelectDateProps {
   name: string;
   selectedDay: string;
-  onDayPress(day: DateObject): void;
+  onDayPress(day: DateData): void;
 };
 
 export default function SelectDate({name, selectedDay, onDayPress}: SelectDateProps) {
@@ -39,7 +39,6 @@ export default function SelectDate({name, selectedDay, onDayPress}: SelectDatePr
   return (
     <>
       <Calendar 
-        ref={selectDateRef}
         theme={{
           calendarBackground: colors.background,
           dayTextColor: colors.text,
