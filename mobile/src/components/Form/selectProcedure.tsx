@@ -59,7 +59,7 @@ export default function SelectProcedure({
         <Checkbox
           style={styles.checkbox}
           value={isChecked}
-          color={colors.text}
+          color={colors.primary}
         />
         <Text 
           style={[
