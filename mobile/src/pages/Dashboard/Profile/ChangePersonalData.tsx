@@ -21,8 +21,6 @@ import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
-import { AxiosError } from 'axios';
-
 import getValidationErros from '../../../utils/handleErrors';
 
 import { useTheme } from '@react-navigation/native';
@@ -76,9 +74,12 @@ export default function ChangePersonalData() {
 
     const regexNumeros = /^([0-9]|\s+)+$/;
 
-    const {nome, telefone, celular} = personalData;
+    let {nome, telefone, celular} = personalData;
 
     const data = {nome, telefone, celular};
+
+    
+    if (data.telefone.length === 1) data.telefone = ''
 
     try {
       const schema = Yup.object().shape({
@@ -103,7 +104,10 @@ export default function ChangePersonalData() {
 
       formRef.current?.setErrors({});
 
+      setIsRequested(true);
+
       await api.put(`atualizar_dados_pessoais/${cliente.id}`, data).then(response => {
+        setIsRequested(false);
         updateProfile(response.data.cliente);
 
         setSucessMessage(true);
@@ -111,17 +115,15 @@ export default function ChangePersonalData() {
         setTimeout(() => {  
           setSucessMessage(false);
         }, threeSeconds);
+      }).catch(async error => {
+        const apiErrorMessage = error.response.data.erro;
 
-        setIsRequested(false);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
-
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           await requestRefreshToken();
           formRef.current?.submitForm();
         };
 
-        if (error.response?.status === 400) {
+        if (error.response.status === 400) {
           setIsRequested(false);
 
           Alert.alert('Erro', apiErrorMessage);
@@ -162,27 +164,29 @@ export default function ChangePersonalData() {
         uri: foto
       } as any);
 
-      await api.patch(`atualizar_foto/${cliente.id}`, data).then(response => {
+      setIsRequested(true);
+
+      await api.patch(`atualizar_foto/${cliente.id}`, data, {headers: {'Content-Type': 'multipart/form-data'}}).then(response => {
+        setIsRequested(false);
+
         updatePhoto(response.data.imagem_url);
 
         onClose();
 
         setSucessMessagePhoto(true);
-
-        setIsRequested(false);
         
         setTimeout(() => {
           setSucessMessagePhoto(false);
         }, threeSeconds);
-      }).catch(async (error: AxiosError) => {
-        const apiErrorMessage = error.response?.data.erro;
+      }).catch(async error => {
+        const apiErrorMessage = error.response.data.erro;
 
-        if (error.response?.status === 401) {
+        if (error.response.status === 401) {
           await requestRefreshToken();
           formRef.current?.submitForm();
         };
 
-        if (error.response?.status === 400) {
+        if (error.response.status === 400) {
           setIsRequested(false);
 
           Alert.alert('Erro', apiErrorMessage);
@@ -320,8 +324,6 @@ export default function ChangePersonalData() {
             <TouchableOpacity 
               onPress={() => {
                 formRef.current?.submitForm()
-
-                setIsRequested(true);
               }}
             >
               {isRequested ? 
