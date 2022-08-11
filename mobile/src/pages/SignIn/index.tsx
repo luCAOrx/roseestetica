@@ -53,11 +53,11 @@ export default function Login() {
   }));
 
   function handleNavigateToRegister() {
-    navigation.navigate("Register");
+    navigation.navigate("Register" as never);
   };
 
   function handleNavigateToForgotPassword() {
-    navigation.navigate("ForgotPassword");
+    navigation.navigate("ForgotPassword" as never);
   };
 
   async function handleSignIn(signInData: SignInData) {
@@ -83,13 +83,15 @@ export default function Login() {
 
       formRef.current?.setErrors({});
 
+      setIsRequested(true);
+      
       await signIn(data).catch(error => {
-        const apiErrorMessage = error.response?.data.erro;
+        const apiErrorMessage = error.response.data.erro;
 
         if (error.response?.status === 400) {
-          Alert.alert('Erro', apiErrorMessage);
-          
           setIsRequested(false);
+
+          Alert.alert('Erro', apiErrorMessage);
         };
       });
     } catch (err) {
@@ -205,6 +207,8 @@ export default function Login() {
           title="Criar uma conta" 
           backgroundColor="transparent"
           color={colors.text}
+          borderColor={colors.border}
+          borderWidth={1}
           height={50}
           fontSize={15}
           onPress={handleNavigateToRegister}
@@ -214,6 +218,8 @@ export default function Login() {
           title="Esqueci minha senha" 
           backgroundColor="transparent"
           color={colors.text}
+          borderColor={colors.border}
+          borderWidth={1}
           height={50}
           fontSize={15}
           onPress={handleNavigateToForgotPassword}
