@@ -14,8 +14,6 @@ import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
-import { AxiosError } from 'axios';
-
 import getValidationErros from '../../../utils/handleErrors';
 
 interface Credentials {
@@ -32,7 +30,7 @@ export default function ForgotMyPassword() {
   const navigation = useNavigation();
 
   function handleNavigateToRecoverPassword() {
-    navigation.navigate("RecoverPassword");
+    navigation.navigate("RecoverPassword" as never);
   };
 
   async function handleSubmit(credentials: Credentials) {
@@ -54,22 +52,24 @@ export default function ForgotMyPassword() {
 
       formRef.current?.setErrors({});
 
+      setIsRequested(true);
+
       await api.post('esqueci_minha_senha', data).then(() => {
         handleNavigateToRecoverPassword();
-      }).catch((error: AxiosError) => {
+      }).catch(error => {
         setIsRequested(false);
 
-        const apiErrorMessage = error.response?.data.erro;
+        const apiErrorMessage = error.response.data.erro;
 
         formRef.current?.setFieldError("email", apiErrorMessage);
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
+        setIsRequested(false);
+
         const errors = getValidationErros(err);
         
         formRef.current?.setErrors(errors);
-
-        setIsRequested(false);
       };
     };
   };
@@ -103,8 +103,6 @@ export default function ForgotMyPassword() {
         fontSize={18}
         isRequested={isRequested}
         onPress={() => {
-          setIsRequested(true);
-
           formRef.current?.submitForm();
         }}
       />
