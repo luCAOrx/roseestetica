@@ -110,7 +110,7 @@ export default function Profile() {
           <View style={styles.header} >
             <Image 
               style={styles.image}
-              source={{uri: imagem_url}}
+              source={{uri: imagem_url.split('.com//uploads').join('/uploads')}}
             />
             <View style={styles.textContainer} >
               <Text 
