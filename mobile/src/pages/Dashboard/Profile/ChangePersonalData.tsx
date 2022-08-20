@@ -74,12 +74,11 @@ export default function ChangePersonalData() {
 
     const regexNumeros = /^([0-9]|\s+)+$/;
 
-    let {nome, telefone, celular} = personalData;
+    const {nome, telefone, celular} = personalData;
 
     const data = {nome, telefone, celular};
-
     
-    if (data.telefone.length === 1) data.telefone = ''
+    if (data.telefone === '(') data.telefone = ''
 
     try {
       const schema = Yup.object().shape({
@@ -89,8 +88,13 @@ export default function ChangePersonalData() {
           .min(5, "No mínimo 5 caracteres!")
           .max(90, "No máximo 90 caracteres!")
           .required("O campo nome é obrigatório!"),
-        telefone: Yup.string().optional().nullable()
-          .max(10, "No máximo 10 caracteres!"),
+        telefone: Yup.string()
+          .matches(/.{10,}/, {
+            excludeEmptyString: true,
+            message: "No mínimo 10 caracteres!",
+          })
+          .max(10, "No máximo 10 caracteres!")
+          .notRequired(),
         celular: Yup.string()
           .matches(regexNumeros, "O campo celular não aceita letras!")
           .min(11, "No mínimo 11 caracteres!")
@@ -147,6 +151,12 @@ export default function ChangePersonalData() {
 
     const data = new FormData();
 
+    const localUri = foto;
+    const filename = localUri.split('/').pop();
+  
+    const match = /\.(\w+)$/.exec(String(filename));
+    const type = match ? `image/${match[1]}` : 'image/jpg';
+
     try {
       const schema = Yup.object().shape({
         foto: Yup.string().required('O campo foto é obrigatório.'),
@@ -159,8 +169,8 @@ export default function ChangePersonalData() {
       formRef.current?.setErrors({});
 
       data.append('foto', {
-        name: 'image_mobile.jpg',
-        type: 'image/jpg',
+        name: filename,
+        type,
         uri: foto
       } as any);
 
