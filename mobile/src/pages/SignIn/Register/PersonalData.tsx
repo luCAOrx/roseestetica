@@ -48,7 +48,7 @@ export default function PersonalData() {
     let { foto, nome, cpf, telefone, celular, sexo_id } = personalData;
 
     
-    if (telefone === undefined) telefone = ''
+    if (telefone === undefined || telefone === '(') telefone = ''
     
     const regexLetras = /^([a-zA-Zà-úÀ-Ú]|\s+)+$/;
 
@@ -64,7 +64,13 @@ export default function PersonalData() {
         cpf: Yup.string().required("O campo CPF é obrigatório!")
           .min(11, "No mínimo 11 caracteres!")
           .max(11, "No máximo 11 caracteres!"),
-        telefone: Yup.string().optional(),
+        telefone: Yup.string()
+          .matches(/.{10,}/, {
+            excludeEmptyString: true,
+            message: "No mínimo 10 caracteres!",
+          })
+          .max(10, "No máximo 10 caracteres!")
+          .notRequired(),
         celular: Yup.string().required("O campo número de celular é obrigatório!")
           .min(11, "No mínimo 11 caracteres!")
           .max(11, "No máximo 11 caracteres!"),
