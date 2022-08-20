@@ -81,6 +81,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 
         setLoading(false)
       };
+
+      setLoading(false)
     };
 
     loadStorageData();
@@ -143,7 +145,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         });
 
       }).catch(error => {
-        Alert.alert('Erro', error.response.data);
+        Alert.alert('Erro', error.response.data.erro);
 
         signOut();
       });
