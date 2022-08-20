@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import { Text, TextInput, TextInputProps, View, TouchableOpacity } from 'react-native';
 
@@ -32,6 +32,7 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
   isPassword,
   rawText, 
   onInitialData,
+  onChangeText,
   ...rest
 }, ref) => {
   const [show, setShow] = useState(false);
@@ -43,6 +44,16 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
   const inputRef = useRef<InputReference>(null);
 
   const {colors} = useTheme();
+
+  const handleChangeText = useCallback(
+    (value: string) => {
+      if (inputRef.current) inputRef.current.value = value;
+
+      if (onChangeText) onChangeText(value);
+    },
+    [onChangeText]
+  );
+
 
   useImperativeHandle(ref, () => ({
     focus() {
@@ -68,7 +79,14 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
           inputRef.current.setNativeProps({ text: value });
           inputRef.current.value = value;
         }
-      }
+      },
+      clearValue() {
+        if (inputRef.current) {
+          inputRef.current.setNativeProps({ text: '' });
+
+          inputRef.current.value = '';
+        }
+      },
     });
   }, [fieldName, rawText, registerField]);
 
@@ -103,11 +121,7 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
           secureTextEntry={isPassword ? visiblePassword : !visiblePassword}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
-          onChangeText={value => {
-            if (inputRef.current) {
-              inputRef.current.value = value;
-            }
-          }}
+          onChangeText={handleChangeText}
           {...rest}
           testID="formInput"
         />
