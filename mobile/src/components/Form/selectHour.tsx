@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import api from '../../services/api';
 
-import { Text, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, ScrollView, TouchableOpacity, View } from 'react-native';
 
 import styles from './styles/selectHour';
 
@@ -95,7 +95,18 @@ export default function SelectHour({name, available, availableTime, selectedDay}
           </TouchableOpacity>
         ))}
       </ScrollView>
-      { error && <Text style={styles.errorMessage} testID="selectHourError">{error}</Text>}
+      { 
+        error !== "Você precisa selecionar um horário!" ? (
+          <View />
+        ) : (
+          <Text 
+            style={styles.errorMessage} 
+            testID="selectHourError"
+          >
+            { error }
+          </Text>
+        )
+      }
     </>
   );
 };
