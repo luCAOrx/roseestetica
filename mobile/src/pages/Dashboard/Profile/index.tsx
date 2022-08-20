@@ -119,7 +119,7 @@ export default function Profile() {
                   {color: colors.text}
                 ]}
               >
-                {cliente?.nome.split(' ').slice(0, 3).join(' ')}
+                {cliente?.nome.split(' ').slice(0, 2).join(' ')}
               </Text>
             </View>
           </View>
