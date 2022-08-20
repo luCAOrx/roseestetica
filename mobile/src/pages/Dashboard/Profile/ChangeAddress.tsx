@@ -79,8 +79,6 @@ export default function ChangeAddress() {
       cep
     };
 
-    if (data.complemento.length === 1) data.complemento = ''
-
     try {
       const schema = Yup.object().shape({
         cidade_id: Yup.number().required("O campo cidade é obrigatório!"),
@@ -102,6 +100,10 @@ export default function ChangeAddress() {
           .max(6, "No máximo 6 caracteres!")
           .required("O campo número é obrigatório!"),
         complemento: Yup.string().optional().strict(true)
+          .matches(/.{5,}/, {
+            excludeEmptyString: true,
+            message: "No mínimo 5 caracteres!",
+          })
           .trim("Não são permitidos espaços no começo ou no fim!")
           .max(90, "No máximo 90 caracteres!"),
         cep: Yup.string()
