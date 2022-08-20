@@ -20,17 +20,17 @@ interface CardAppointmentsProps {
   text: string;
   agendamento_id: number;
   id: number;
-  data: string;
+  date: string;
 };
 
-function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProps) {
+function CardAppointments({text, agendamento_id, id, date}: CardAppointmentsProps) {
   const [ isRequested, setIsRequested] = useState(false);
 
   const {colors} = useTheme();
 
   const navigation = useNavigation();
 
-  const dataDeAgora = dayjs().format('YYYY/MM/DD');
+  const dateOfNow = dayjs().format('YYYY/MM/DD');
 
   const {requestRefreshToken} = useAuth();
 
@@ -96,7 +96,7 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
         styles.card,
         {
           backgroundColor: colors.card,
-          height: dayjs(data).isBefore(dayjs(dataDeAgora)) ? 160 : 400
+          height: dayjs(date).isBefore(dayjs(dateOfNow)) ? 160 : 400
         }
       ]}
       testID="card"
@@ -121,7 +121,7 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
         fontSize={15}
         onPress={handleNavigateToDetail}
       />
-      {dayjs(data).isBefore(dataDeAgora) ? (
+      {dayjs(date).isBefore(dateOfNow) ? (
           <View />
         ) : (
           <>
@@ -132,6 +132,7 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
               height={50}
               fontSize={15}
               onPress={handleNavigateToReschedule}
+              disabled={dayjs(date).isBefore(dateOfNow) ? true : false}
             />
             <CustomButton 
               title="ALTERAR PROCEDIMENTO" 
@@ -140,6 +141,7 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
               height={50}
               fontSize={15}
               onPress={handleNavigateToChangeProcedure}
+              disabled={dayjs(date).isBefore(dateOfNow) ? true : false}
             />
             <CustomButton 
               title="CANCELAR" 
@@ -151,6 +153,7 @@ function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProp
               onPress={() => {
                 handleDeleteSchedule();
               }}
+              disabled={dayjs(date).isBefore(dateOfNow) ? true : false}
             />
           </>
         )}
