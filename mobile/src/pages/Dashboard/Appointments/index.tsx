@@ -53,6 +53,8 @@ export default function Appointments() {
       setLoading(false);
       
     }).catch(async error => {
+      setLoading(false)
+      
       const apiErrorMessage = error.response.data.erro;
 
       if (error.response.status === 401) {
@@ -122,7 +124,7 @@ export default function Appointments() {
               }
               agendamento_id={schedule.id}
               id={schedule.id}
-              data={schedule.data}
+              date={schedule.data}
             />
           )}
         />
