@@ -75,6 +75,8 @@ export default function SelectDate({name, selectedDay, onDayPress}: SelectDatePr
         hideArrows={true}
         disableMonthChange={true}
         firstDay={7}
+        minDate={new Date().toString()}
+        disableAllTouchEventsForDisabledDays
       />
       { error && <Text style={styles.errorMessage} testID="selectDateError">{error}</Text>}
     </>
