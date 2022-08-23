@@ -177,7 +177,7 @@ export default function ChangePersonalData() {
 
       setUploadingImage(true);
 
-      await api.patch(`atualizar_foto/${cliente.id}`,
+      await api.post(`atualizar_foto/${cliente.id}`,
         data, {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -203,7 +203,7 @@ export default function ChangePersonalData() {
           formRef.current?.submitForm();
         };
 
-        if (error.response.status !== 201) {
+        if (error.response.status === 400) {
           setUploadingImage(false);
 
           Alert.alert('Erro', apiErrorMessage);
