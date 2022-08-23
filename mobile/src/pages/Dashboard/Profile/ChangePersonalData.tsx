@@ -48,6 +48,7 @@ export default function ChangePersonalData() {
   const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
   const [ sucessMessagePhoto, setSucessMessagePhoto ] = useState<Boolean>(false);
   const [ isRequested, setIsRequested ] = useState(false);
+  const [ isUploadingImage, setUploadingImage ] = useState(false);
   
   useEffect(() => {
     formRef.current?.setData({
@@ -174,10 +175,16 @@ export default function ChangePersonalData() {
         uri: foto
       } as any);
 
-      setIsRequested(true);
+      setUploadingImage(true);
 
-      await api.patch(`atualizar_foto/${cliente.id}`, data, {headers: {'Content-Type': 'multipart/form-data'}}).then(response => {
-        setIsRequested(false);
+      await api.patch(`atualizar_foto/${cliente.id}`,
+        data, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      ).then(response => {
+        setUploadingImage(false);
 
         updatePhoto(response.data.imagem_url);
 
@@ -196,15 +203,15 @@ export default function ChangePersonalData() {
           formRef.current?.submitForm();
         };
 
-        if (error.response.status === 400) {
-          setIsRequested(false);
+        if (error.response.status !== 201) {
+          setUploadingImage(false);
 
           Alert.alert('Erro', apiErrorMessage);
         };
       });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
-        setIsRequested(false);
+        setUploadingImage(false);
 
         const errors = getValidationErros(err);
         
@@ -336,7 +343,7 @@ export default function ChangePersonalData() {
                 formRef.current?.submitForm()
               }}
             >
-              {isRequested ? 
+              {isUploadingImage ? 
                 <Loading /> : 
                 <Icon name='done' size={30} color="#34CB79"/>
               }
