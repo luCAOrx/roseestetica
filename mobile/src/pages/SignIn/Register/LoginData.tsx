@@ -79,6 +79,12 @@ export default function LoginData() {
 
     const data = new FormData();
 
+    const localUri = foto;
+    const filename = localUri.split('/').pop();
+  
+    const match = /\.(\w+)$/.exec(String(filename));
+    const type = match ? `image/${match[1]}` : 'image/jpg';
+
     try {
       const schema = Yup.object().shape({
         email: Yup.string()
@@ -98,8 +104,8 @@ export default function LoginData() {
       formRef.current?.setErrors({});
 
       data.append('foto', {
-        name: 'image_mobile.jpg',
-        type: 'image/jpg',
+        name: filename,
+        type,
         uri: foto
       } as any);
       data.append('nome', nome); 
