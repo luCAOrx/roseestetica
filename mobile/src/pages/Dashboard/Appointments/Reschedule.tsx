@@ -12,7 +12,6 @@ import { FormHandles } from '@unform/core';
 import { SelectDate, SelectHour } from '../../../components/Form';
 import Header from '../../../components/Header';
 import CustomButton from '../../../components/Button';
-import SucessScreen from '../../../components/SucessScreen';
 
 import { useAuth } from '../../../contexts/auth';
 
@@ -22,6 +21,7 @@ import api from '../../../services/api';
 
 import getValidationErros from '../../../utils/handleErrors';
 import Loading from '../../../components/Loading';
+import { useSuccessScreen } from '../../../contexts/successScreen';
 
 interface ReScheduleData {
   data: string;
@@ -54,13 +54,17 @@ export default function Schedule() {
 
   const [selectedDay, setSelectedDay] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-  const [sucessMessage, setSucessMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isRequested, setIsRequested] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
 
   const navigation = useNavigation();
+
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
 
   const situation = availableAppointments.map(schedule => schedule.situacao);
 
@@ -117,10 +121,11 @@ export default function Schedule() {
 
       await api.put(`remarcar/${params.id}/${cliente?.id}`, dataFinal).then(() => {
         setIsRequested(false);
-        setSucessMessage(true);
+        handleTitleSuccessMessage("Remarcado com sucesso");
+        handleShowSuccessMessage(true);
 
         setTimeout(() => {
-          setSucessMessage(false);
+          handleShowSuccessMessage(false);
 
           navigation.reset({
             index: 0,
@@ -227,7 +232,6 @@ export default function Schedule() {
           />
         </Form>
       </ScrollView>
-      <SucessScreen title="Remarcado com sucesso!" show={sucessMessage}/>
     </>
   );
 };
