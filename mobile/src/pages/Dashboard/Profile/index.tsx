@@ -20,9 +20,9 @@ import ToggleThemeContext from '../../../contexts/toogleTheme';
 
 import api from '../../../services/api';
 
-import SucessScreen from '../../../components/SucessScreen';
-
 import styles from '../styles/profile';
+import { useSuccessScreen } from '../../../contexts/successScreen';
+import Loading from '../../../components/Loading';
 
 export default function Profile() {
   const {cliente, imagem_url, requestRefreshToken, signOut} = useAuth();
@@ -33,7 +33,12 @@ export default function Profile() {
 
   const navigation = useNavigation();
 
-  const [ sucessMessage, setSucessMessage ] = useState(false);
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
+
+  const [ isRequested, setIsRequested ] = useState(false);
 
   function handleNavigateToPersonalData() {
     navigation.navigate("ChangePersonalData" as never);
@@ -53,46 +58,51 @@ export default function Profile() {
     Alert.alert('Dletar conta', 'Tem certeza que deseja deletar a sua conta?', [
       {
         text: 'Sim',
-        onPress: async () => await api.delete(`deletar/${cliente.id}`).then(() => {
-          setSucessMessage(true);
-        
-          setTimeout(() => {  
-            setSucessMessage(false);
-          }, threeSeconds);
-
-          handleSignOut();
-        }).catch(async error => {
-          const apiErrorMessage = error.response.data.erro;
-    
-          if (error.response.status === 401) {
-            await requestRefreshToken();
-    
-            await api.delete(`deletar/${cliente.id}`).then(() => {
-              setSucessMessage(true);
-            
-              setTimeout(() => {  
-                setSucessMessage(false);
-              }, threeSeconds);
-    
-              handleSignOut();
-            })
-          };
-    
-          if (error.response.status === 400) {
-            Alert.alert('Erro', apiErrorMessage);
-          };
-        })
+        onPress: async () => {
+          setIsRequested(true);
+          
+          await api.delete(`deletar/${cliente.id}`).then(() => {
+            setIsRequested(false);
+  
+            handleTitleSuccessMessage("Conta deletada");
+            handleShowSuccessMessage(true);
+          
+            setTimeout(() => {  
+              handleShowSuccessMessage(false);
+              signOut();
+            }, threeSeconds);
+  
+          }).catch(async error => {
+            const apiErrorMessage = error.response.data.erro;
+      
+            if (error.response.status === 401) {
+              await requestRefreshToken();
+      
+              await api.delete(`deletar/${cliente.id}`).then(() => {
+                setIsRequested(false);
+  
+                handleTitleSuccessMessage("Conta deletada");
+                handleShowSuccessMessage(true);
+              
+                setTimeout(() => {  
+                  handleShowSuccessMessage(false);
+                  signOut();
+                }, threeSeconds);
+      
+              })
+            };
+      
+            if (error.response.status === 400) {
+              Alert.alert('Erro', apiErrorMessage);
+            };
+          })
+        }
       },
       {
         text: 'Não',
-        onPress: () => {}
+        onPress: () => { setIsRequested(false) }
       }
     ]);
-    
-  };
-
-  function handleSignOut() {
-    signOut();
   };
   
   return (
@@ -388,12 +398,17 @@ export default function Profile() {
             ]} 
             onPress={handleDeleteClient} 
           >
-            <Feather 
-              name="alert-triangle" 
-              color="#C52233" 
-              size={22} 
-            />
-            <Text style={styles.exit}>Deletar conta</Text>
+            {
+              isRequested ? <Loading /> : 
+              <>
+                <Feather 
+                  name="alert-triangle" 
+                  color="#C52233" 
+                  size={22} 
+                />
+                <Text style={styles.exit}>Deletar conta</Text>
+              </>
+            }
           </TouchableOpacity>
         </View>
 
@@ -408,7 +423,7 @@ export default function Profile() {
               styles.otherButton,
               {padding: 20}
             ]} 
-            onPress={handleSignOut} 
+            onPress={signOut} 
           >
             <Feather 
               name="log-out" 
@@ -419,7 +434,6 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <SucessScreen title="Conta deletada!" show={sucessMessage}/>
     </>
   );
 };
