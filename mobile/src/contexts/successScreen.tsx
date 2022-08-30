@@ -1,18 +1,18 @@
 import React, { createContext, useContext, useState } from 'react'
-import SucessScreen from '../components/SucessScreen';
+import { SuccessScreen } from '../components/SucessScreen'
 
 interface SuccessScreenProps {
-  handleShowSuccessMessage: (showSuccessMessage: boolean) => void;
-  handleTitleSuccessMessage: (titleSuccessMessage: string) => void;
+  handleShowSuccessMessage: (showSuccessMessage: boolean) => void
+  handleTitleSuccessMessage: (titleSuccessMessage: string) => void
 }
 
 const SuccessScreenContext = createContext<SuccessScreenProps>(
   {} as SuccessScreenProps
-);
+)
 
 export const SuccessScreenProvider: React.FC = ({ children }) => {
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [titleSuccessMessage, setTitleSuccessMessage] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+  const [titleSuccessMessage, setTitleSuccessMessage] = useState('')
 
   function handleShowSuccessMessage(showSuccessMessage: boolean) {
     setShowSuccessMessage(showSuccessMessage)
@@ -27,13 +27,13 @@ export const SuccessScreenProvider: React.FC = ({ children }) => {
       value={{ handleShowSuccessMessage, handleTitleSuccessMessage }}
     >
       {children}
-      <SucessScreen title={titleSuccessMessage} show={showSuccessMessage}/>
+      <SuccessScreen title={titleSuccessMessage} show={showSuccessMessage} />
     </SuccessScreenContext.Provider>
-  );
-};
+  )
+}
 
 export function useSuccessScreen() {
-  const context = useContext(SuccessScreenContext);
+  const context = useContext(SuccessScreenContext)
 
-  return context;
-};
+  return context
+}

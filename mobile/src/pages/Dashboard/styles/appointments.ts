@@ -1,14 +1,14 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   text: {
-    textAlign: 'center', 
+    textAlign: 'center',
 
     fontFamily: 'Roboto_400Regular',
-    fontSize: 20, 
-    
+    fontSize: 20,
+
     color: '#7a7a7a'
   }
-});
+})
 
-export default styles;
+export default styles

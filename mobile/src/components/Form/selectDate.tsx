@@ -1,30 +1,30 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react'
 
-import '../../config/locale';
+import '../../config/locale'
 
-import { Text } from 'react-native';
+import { Text } from 'react-native'
 
-import styles from './styles/selectDate';
+import styles from './styles/selectDate'
 
-import { MaterialIcons as Icon } from '@expo/vector-icons';
+import { MaterialIcons as Icon } from '@expo/vector-icons'
 
-import { Calendar, DateData } from 'react-native-calendars';
+import { Calendar, DateData } from 'react-native-calendars'
 
-import { useField } from '@unform/core';
-import { useTheme } from '@react-navigation/native';
+import { useField } from '@unform/core'
+import { useTheme } from '@react-navigation/native'
 
 interface SelectDateProps {
-  name: string;
-  selectedDay: string;
-  onDayPress(day: DateData): void;
-};
+  name: string
+  selectedDay: string
+  onDayPress: (day: DateData) => void
+}
 
-export default function SelectDate({name, selectedDay, onDayPress}: SelectDateProps) {
-  const { fieldName, registerField, error } = useField(name);
+export default function SelectDate({ name, selectedDay, onDayPress }: SelectDateProps) {
+  const { fieldName, registerField, error } = useField(name)
 
-  const {colors} = useTheme();
+  const { colors } = useTheme()
 
-  const selectDateRef = useRef(null);
+  const selectDateRef = useRef(null)
 
   useEffect(() => {
     registerField({
@@ -33,12 +33,12 @@ export default function SelectDate({name, selectedDay, onDayPress}: SelectDatePr
       getValue() {
         return selectedDay
       }
-    });
-  }, [fieldName, selectedDay, registerField]);
+    })
+  }, [fieldName, selectedDay, registerField])
 
   return (
     <>
-      <Calendar 
+      <Calendar
         theme={{
           calendarBackground: colors.background,
           dayTextColor: colors.text,
@@ -46,31 +46,31 @@ export default function SelectDate({name, selectedDay, onDayPress}: SelectDatePr
           arrowColor: colors.text,
           textSectionTitleColor: colors.text,
           monthTextColor: colors.text,
-          textMonthFontWeight: "bold",
+          textMonthFontWeight: 'bold',
           textDayFontSize: 16,
           textMonthFontSize: 20,
           textDayHeaderFontSize: 16,
           selectedDayTextColor: colors.background
         }}
         onDayPress={onDayPress}
-        renderArrow={(direction = "left" ) => (
+        renderArrow={(direction = 'left') => (
           <>
-            {direction === "left" ? 
-              <Icon 
-                name="navigate-before" 
+            {direction === 'left'
+              ? <Icon
+                name="navigate-before"
                 color={colors.text}
-                size={25} 
-              /> :
-              <Icon 
-                name="navigate-next" 
+                size={25}
+              />
+              : <Icon
+                name="navigate-next"
                 color={colors.text}
-                size={25} 
+                size={25}
               />
             }
           </>
         )}
         markedDates={{
-          [selectedDay]: {selected: true, selectedColor: colors.text}
+          [selectedDay]: { selected: true, selectedColor: colors.text }
         }}
         hideArrows={true}
         disableMonthChange={true}
@@ -78,7 +78,7 @@ export default function SelectDate({name, selectedDay, onDayPress}: SelectDatePr
         minDate={new Date().toString()}
         disableAllTouchEventsForDisabledDays
       />
-      { error && <Text style={styles.errorMessage} testID="selectDateError">{error}</Text>}
+      {error && <Text style={styles.errorMessage} testID="selectDateError">{error}</Text>}
     </>
-  );
-};
+  )
+}

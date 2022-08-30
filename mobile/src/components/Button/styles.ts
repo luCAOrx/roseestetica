@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
@@ -6,15 +6,15 @@ const styles = StyleSheet.create({
 
     borderRadius: 8,
 
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  
+
   title: {
-    fontFamily: "Roboto_900Black",
+    fontFamily: 'Roboto_900Black',
     fontSize: 15,
     lineHeight: 18
-  },
-});
+  }
+})
 
-export default styles;
+export default styles

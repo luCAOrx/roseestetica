@@ -1,32 +1,32 @@
-import React from 'react';
+import React from 'react'
 
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack'
 
-import Header from '../components/Header';
+import Header from '../components/Header'
 
-import Detail from '../pages/Dashboard/Appointments/Detail';
-import Reschedule from '../pages/Dashboard/Appointments/Reschedule';
-import ChangeProcedure from '../pages/Dashboard/Appointments/ChangeProcedure';
-import ChangePersonalData from '../pages/Dashboard/Profile/ChangePersonalData';
-import ChangeAddress from '../pages/Dashboard/Profile/ChangeAddress';
-import ChangeLoginData from '../pages/Dashboard/Profile/ChangeLoginData';
+import Detail from '../pages/Dashboard/Appointments/Detail'
+import Reschedule from '../pages/Dashboard/Appointments/Reschedule'
+import ChangeProcedure from '../pages/Dashboard/Appointments/ChangeProcedure'
+import ChangePersonalData from '../pages/Dashboard/Profile/ChangePersonalData'
+import ChangeAddress from '../pages/Dashboard/Profile/ChangeAddress'
+import ChangeLoginData from '../pages/Dashboard/Profile/ChangeLoginData'
 
-import Dashboard from './app.tab';
+import Dashboard from './app.tab'
 
-const AppStack = createStackNavigator();
+const AppStack = createStackNavigator()
 
 export default function AppTabs() {
-  return(
-    <AppStack.Navigator screenOptions={{headerShown: false}}>
-      <AppStack.Screen 
-        name="Dashboard" 
+  return (
+    <AppStack.Navigator screenOptions={{ headerShown: false }}>
+      <AppStack.Screen
+        name="Dashboard"
         component={Dashboard}
         options={{ headerShown: false }}
       />
 
-      <AppStack.Screen 
-        name="Detail" 
-        component={ Detail }
+      <AppStack.Screen
+        name="Detail"
+        component={Detail}
         options={{
           headerShown: true,
           header: () => (
@@ -35,35 +35,35 @@ export default function AppTabs() {
         }}
       />
 
-      <AppStack.Screen 
-        name="Reschedule" 
-        component={ Reschedule }
+      <AppStack.Screen
+        name="Reschedule"
+        component={Reschedule}
         options={{ headerShown: false }}
       />
 
-      <AppStack.Screen 
-        name="ChangeProcedure" 
-        component={ ChangeProcedure }
+      <AppStack.Screen
+        name="ChangeProcedure"
+        component={ChangeProcedure}
         options={{ headerShown: false }}
       />
 
-      <AppStack.Screen 
+      <AppStack.Screen
         name="ChangePersonalData"
         component={ChangePersonalData}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
-      <AppStack.Screen 
+      <AppStack.Screen
         name="ChangeAddress"
         component={ChangeAddress}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
-      <AppStack.Screen 
+      <AppStack.Screen
         name="ChangeLoginData"
         component={ChangeLoginData}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </AppStack.Navigator>
-  );
+  )
 }

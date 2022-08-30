@@ -1,48 +1,48 @@
-import React from 'react';
+import React from 'react'
 
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native'
 
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native'
 
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'
 
-import StepIndicator from 'react-native-step-indicator';
+import StepIndicator from 'react-native-step-indicator'
 
-import styles from './styles';
+import styles from './styles'
 
 interface HeaderProps {
-  title: string;
-  showIcon: boolean;
-  fontSize: number;
-  showStep?: boolean;
-  position?: number;
+  title: string
+  showIcon: boolean
+  fontSize: number
+  showStep?: boolean
+  position?: number
 }
 
-export default function Header({title, showIcon, fontSize, showStep, position}: HeaderProps) {
-  const navigation = useNavigation();
+export default function Header({ title, showIcon, fontSize, showStep, position }: HeaderProps) {
+  const navigation = useNavigation()
 
-  const {colors} = useTheme();
+  const { colors } = useTheme()
 
   return (
     <>
       <View style={styles.container} testID="headerContainer">
         {
-          showIcon ?
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={navigation.goBack} 
-            testID="headerButton"
-          >
-            <MaterialIcons name="arrow-back" size={30} color={colors.text}/>
-          </TouchableOpacity> : 
-          <View />
+          showIcon
+            ? <TouchableOpacity
+              style={styles.button}
+              onPress={navigation.goBack}
+              testID="headerButton"
+            >
+              <MaterialIcons name="arrow-back" size={30} color={colors.text} />
+            </TouchableOpacity>
+            : <View />
         }
 
-        <Text 
+        <Text
           style={[
             styles.title,
             {
-              fontSize: fontSize,
+              fontSize,
               color: colors.text
             }
           ]}
@@ -53,9 +53,9 @@ export default function Header({title, showIcon, fontSize, showStep, position}: 
         <View />
       </View>
       {
-        showStep && 
-        <StepIndicator 
-          stepCount={3} 
+        showStep &&
+        <StepIndicator
+          stepCount={3}
           currentPosition={position}
           customStyles={{
             currentStepLabelColor: colors.currentStepLabelColor,
@@ -72,5 +72,5 @@ export default function Header({title, showIcon, fontSize, showStep, position}: 
         />
       }
     </>
-  );
+  )
 }

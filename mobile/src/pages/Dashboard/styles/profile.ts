@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -10,47 +10,47 @@ const styles = StyleSheet.create({
     margin: 20,
     marginTop: 50,
 
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
 
   image: {
     width: 64,
     height: 64,
-    borderRadius: 50,
+    borderRadius: 50
   },
 
   textContainer: {
     flex: 1,
-    flexDirection: "column",
+    flexDirection: 'column',
 
     marginLeft: 21
   },
 
   name: {
-    fontFamily: "Roboto_400Regular",
-    fontStyle: "normal",
-    fontWeight: "bold",
+    fontFamily: 'Roboto_400Regular',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
     fontSize: 20,
-    lineHeight: 29,
+    lineHeight: 29
 
     // color: "#D2D2E3"
   },
 
   description: {
-    fontFamily: "Roboto_400Regular",
-    fontStyle: "normal",
-    fontWeight: "normal",
+    fontFamily: 'Roboto_400Regular',
+    fontStyle: 'normal',
+    fontWeight: 'normal',
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 14
 
     // color: "#5C5C5C"
   },
 
   label: {
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   buttonContainer: {
@@ -62,17 +62,17 @@ const styles = StyleSheet.create({
 
     margin: 20,
 
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
 
   otherButton: {
     height: 60,
     // marginBottom: 50,
 
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center'
   },
 
   themeMode: {
@@ -83,15 +83,15 @@ const styles = StyleSheet.create({
 
   phone: {
     marginLeft: 10,
-    color: "#248E54",
+    color: '#248E54',
     fontSize: 15
   },
 
   exit: {
     marginLeft: 10,
-    color: "#C52233",
+    color: '#C52233',
     fontSize: 15
   }
-});
+})
 
-export default styles;
+export default styles

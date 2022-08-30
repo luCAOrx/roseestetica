@@ -1,15 +1,15 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   errorMessage: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 16,
-    color: "#c52626",
+    color: '#c52626'
   },
 
   imageInputContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
 
   imageInput: {
@@ -20,25 +20,25 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 100,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
 
   imageInputText: {
-    fontFamily: "Roboto_400Regular",
-    fontSize: 15,
+    fontFamily: 'Roboto_400Regular',
+    fontSize: 15
   },
 
   uploadedImageContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
 
   uploadedImage: {
     margin: 15,
     width: 150,
     height: 150,
-    borderRadius: 100,
+    borderRadius: 100
   }
-});
+})
 
-export default styles;
+export default styles

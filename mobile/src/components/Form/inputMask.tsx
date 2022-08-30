@@ -1,36 +1,36 @@
-import React, { useState, useCallback, forwardRef } from 'react';
+import React, { useState, useCallback, forwardRef } from 'react'
 
-import { 
-  TextInputMask, 
-  TextInputMaskProps, 
+import {
+  TextInputMask,
+  TextInputMaskProps,
   TextInputMaskTypeProp
-} from 'react-native-masked-text';
+} from 'react-native-masked-text'
 
-import Input from './input';
+import Input from './input'
 
 interface InputMaskProps extends TextInputMaskProps {
-   type: TextInputMaskTypeProp;
-   icon: string;
-   name: string;
+  type: TextInputMaskTypeProp
+  icon: string
+  name: string
 }
 
 interface InputHandles {
-  focus(): void;
+  focus: () => void
 }
 
-const InputMask: React.ForwardRefRenderFunction<InputHandles,InputMaskProps> = ({
-   type,
-   icon,
-   name,
-  ...rest 
+const InputMask: React.ForwardRefRenderFunction<InputHandles, InputMaskProps> = ({
+  type,
+  icon,
+  name,
+  ...rest
 }, inputRef) => {
-  const [text, setText] = useState<string>('');
-  const [rawText, setRawText] = useState<string>('');
+  const [text, setText] = useState<string>('')
+  const [rawText, setRawText] = useState<string>('')
 
   const handleChangeText = useCallback((maskedText, unmaskedText) => {
-    setText(maskedText);
-    setRawText(unmaskedText);
-  }, []);
+    setText(maskedText)
+    setRawText(unmaskedText)
+  }, [])
 
   return (
     <TextInputMask
@@ -44,11 +44,11 @@ const InputMask: React.ForwardRefRenderFunction<InputHandles,InputMaskProps> = (
         icon,
         name,
         rawText,
-        onInitialData: setText,
+        onInitialData: setText
       }}
       {...rest}
     />
-  );
-};
+  )
+}
 
-export default forwardRef(InputMask);
+export default forwardRef(InputMask)

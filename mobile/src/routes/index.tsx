@@ -1,23 +1,23 @@
-import React from 'react';
+import React from 'react'
 
-import { useAuth } from '../contexts/auth';
+import { useAuth } from '../contexts/auth'
 
-import AuthRoutes from './auth.routes';
-import AppRoutes from './app.routes';
-import { View } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import Loading from '../components/Loading';
+import AuthRoutes from './auth.routes'
+import AppRoutes from './app.routes'
+import { View } from 'react-native'
+import { useTheme } from '@react-navigation/native'
+import Loading from '../components/Loading'
 
 export default function Routes() {
-  const {cliente, loading} = useAuth();
-  const { colors } = useTheme();
+  const { cliente, loading } = useAuth()
+  const { colors } = useTheme()
 
   if (loading) {
     return (
-      <View 
+      <View
         style={{
-          flex: 1, 
-          justifyContent: 'center', 
+          flex: 1,
+          justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: colors.background
         }}
@@ -27,5 +27,5 @@ export default function Routes() {
     )
   }
 
-  return cliente ? <AppRoutes /> : <AuthRoutes />;
+  return cliente ? <AppRoutes /> : <AuthRoutes />
 }

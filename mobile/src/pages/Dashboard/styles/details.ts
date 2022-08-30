@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   card: {
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
 
     color: '#248E54'
-  },
-});
+  }
+})
 
-export default styles;
+export default styles

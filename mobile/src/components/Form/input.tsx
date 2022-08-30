@@ -1,21 +1,21 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 
-import { Text, TextInput, TextInputProps, View, TouchableOpacity } from 'react-native';
+import { Text, TextInput, TextInputProps, View, TouchableOpacity } from 'react-native'
 
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'
 
-import { useField } from '@unform/core';
+import { useField } from '@unform/core'
 
-import { useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native'
 
-import styles from './styles/input';
+import styles from './styles/input'
 
 interface InputProps extends TextInputProps {
-  icon: keyof typeof MaterialIcons.glyphMap;
-  name: string;
-  isPassword?: boolean;
-  rawText?: string;
-  onInitialData?: (defaultValue: any) => void;
+  icon: keyof typeof MaterialIcons.glyphMap
+  name: string
+  isPassword?: boolean
+  rawText?: string
+  onInitialData?: (defaultValue: any) => void
 }
 
 interface InputReference extends TextInput {
@@ -23,99 +23,98 @@ interface InputReference extends TextInput {
 }
 
 interface InputHandles {
-  focus(): void;
+  focus: () => void
 }
 
-const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({ 
+const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
   icon,
   name,
   isPassword,
-  rawText, 
+  rawText,
   onInitialData,
   onChangeText,
   ...rest
 }, ref) => {
-  const [show, setShow] = useState(false);
-  const [visiblePassword, setVisiblePassword] = useState(true);
-  const [focus, setFocus] = useState(false);
+  const [show, setShow] = useState(false)
+  const [visiblePassword, setVisiblePassword] = useState(true)
+  const [focus, setFocus] = useState(false)
 
-  const { fieldName, registerField, defaultValue, error } = useField(name);
-  
-  const inputRef = useRef<InputReference>(null);
+  const { fieldName, registerField, defaultValue, error } = useField(name)
 
-  const {colors} = useTheme();
+  const inputRef = useRef<InputReference>(null)
+
+  const { colors } = useTheme()
 
   const handleChangeText = useCallback(
     (value: string) => {
-      if (inputRef.current) inputRef.current.value = value;
+      if (inputRef.current) inputRef.current.value = value
 
-      if (onChangeText) onChangeText(value);
+      if (onChangeText) onChangeText(value)
     },
     [onChangeText]
-  );
-
+  )
 
   useImperativeHandle(ref, () => ({
     focus() {
-      inputRef.current?.focus();
+      inputRef.current?.focus()
     }
-  }));
+  }))
 
   useEffect(() => {
-    if (onInitialData) onInitialData(defaultValue);
-  }, [defaultValue, onInitialData]);
+    if (onInitialData) onInitialData(defaultValue)
+  }, [defaultValue, onInitialData])
 
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: inputRef.current,
       getValue() {
-        if (rawText) return rawText;
-        if (inputRef.current) return inputRef.current.value;
-        return '';
+        if (rawText) return rawText
+        if (inputRef.current) return inputRef.current.value
+        return ''
       },
       setValue(ref, value: string) {
         if (inputRef.current) {
-          inputRef.current.setNativeProps({ text: value });
-          inputRef.current.value = value;
+          inputRef.current.setNativeProps({ text: value })
+          inputRef.current.value = value
         }
       },
       clearValue() {
         if (inputRef.current) {
-          inputRef.current.setNativeProps({ text: '' });
+          inputRef.current.setNativeProps({ text: '' })
 
-          inputRef.current.value = '';
+          inputRef.current.value = ''
         }
-      },
-    });
-  }, [fieldName, rawText, registerField]);
+      }
+    })
+  }, [fieldName, rawText, registerField])
 
   return (
     <>
-      <View 
+      <View
         style={[
           styles.container,
           {
             backgroundColor: colors.card,
-            borderColor: focus === true ? colors.text : "transparent",
+            borderColor: focus ? colors.text : 'transparent',
             borderWidth: 1
           }
         ]}
         testID="formInputContainer"
       >
-        <MaterialIcons 
-          style={{margin: 10}} 
-          name={icon} 
-          size={20} 
-          color= {focus ? colors.text : colors.primary}
+        <MaterialIcons
+          style={{ margin: 10 }}
+          name={icon}
+          size={20}
+          color={focus ? colors.text : colors.primary}
           testID="formInputIcon"
         />
-        
-        <TextInput 
+
+        <TextInput
           ref={inputRef}
           style={[
             styles.input,
-            {color: colors.text}
+            { color: colors.text }
           ]}
           placeholderTextColor={colors.primary}
           secureTextEntry={isPassword ? visiblePassword : !visiblePassword}
@@ -126,26 +125,26 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
           testID="formInput"
         />
 
-        {isPassword && 
-          <TouchableOpacity 
-            style={{marginRight: 10}} 
+        {isPassword &&
+          <TouchableOpacity
+            style={{ marginRight: 10 }}
             onPress={() => {
-              setShow(!show) 
+              setShow(!show)
               setVisiblePassword(!visiblePassword)
             }}
             testID="formInputButtonPasswordVisibility"
           >
-            <MaterialIcons 
-              name={show === false ? "visibility" : "visibility-off"} 
-              size={20} 
+            <MaterialIcons
+              name={!show ? 'visibility' : 'visibility-off'}
+              size={20}
               color={colors.buttonSecondaryBackground}
             />
           </TouchableOpacity>
         }
       </View>
-      { error && <Text style={styles.errorMessage} testID="formInputError">{error}</Text>}
+      {error && <Text style={styles.errorMessage} testID="formInputError">{error}</Text>}
     </>
   )
-};
+}
 
-export default forwardRef(Input);
+export default forwardRef(Input)

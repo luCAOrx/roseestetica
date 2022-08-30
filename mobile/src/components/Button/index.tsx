@@ -1,28 +1,28 @@
-import React from 'react';
+import React from 'react'
 
-import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 
-import Loading from '../Loading';
+import Loading from '../Loading'
 
-import styles from './styles';
+import styles from './styles'
 
 interface CustomButtonProps extends TouchableOpacityProps {
-  title: string;
-  width?: number;
-  backgroundColor: string;
-  height: number;
-  fontSize: number;
-  marginBottom?: number;
-  color: string;
-  borderColor?: string;
-  borderWidth?: number;
-  isRequested?: Boolean;
+  title: string
+  width?: number
+  backgroundColor: string
+  height: number
+  fontSize: number
+  marginBottom?: number
+  color: string
+  borderColor?: string
+  borderWidth?: number
+  isRequested?: boolean
 }
 
 export default function CustomButton({
-  title, 
-  width, 
-  backgroundColor, 
+  title,
+  width,
+  backgroundColor,
   height,
   fontSize,
   marginBottom,
@@ -32,35 +32,35 @@ export default function CustomButton({
   isRequested,
   ...rest
 }: CustomButtonProps) {
-  return(
-    <TouchableOpacity 
+  return (
+    <TouchableOpacity
       style={[
         styles.container,
         {
-          height: height,
-          width: width,
-          marginBottom: marginBottom,
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
-          borderWidth: borderWidth
+          height,
+          width,
+          marginBottom,
+          backgroundColor,
+          borderColor,
+          borderWidth
         }
-      ]} 
+      ]}
       {...rest}
       testID="button"
     >
-      <Text 
+      <Text
         style={[
           styles.title,
           {
-            fontSize: fontSize,
-            color: color
+            fontSize,
+            color
           }
         ]}
         testID="text"
       >
-        { isRequested ? <Loading /> : title }
+        {isRequested ? <Loading /> : title}
       </Text>
     </TouchableOpacity>
-    
-  );
+
+  )
 }

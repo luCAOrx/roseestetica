@@ -1,4 +1,4 @@
-import { CustomTheme } from '@react-navigation/native';
+import { CustomTheme } from '@react-navigation/native'
 
 export const light: CustomTheme = {
   dark: false,
@@ -18,18 +18,18 @@ export const light: CustomTheme = {
     border: '#C1BCCC',
 
     currentStepLabelColor: '#D2D2E3',
-  
+
     stepStrokeCurrentColor: '#2FB86E',
-  
+
     stepIndicatorLabelCurrentColor: '#D2D2E3',
     stepIndicatorCurrentColor: '#333333',
     stepIndicatorFinishedColor: '#2FB86E',
     stepIndicatorUnFinishedColor: '#333333',
     stepIndicatorLabelFinishedColor: '#D2D2E3',
     stepIndicatorLabelUnFinishedColor: '#D2D2E3',
-  
+
     separatorFinishedColor: '#2FB86E',
     separatorUnFinishedColor: '#333333',
     notification: '#333333'
-  },
+  }
 }
