@@ -12,7 +12,6 @@ import { FormHandles } from '@unform/core';
 import { SelectDate, SelectHour, SelectProcedure } from '../../components/Form';
 import Header from '../../components/Header';
 import CustomButton from '../../components/Button';
-import SucessScreen from '../../components/SucessScreen';
 import Loading from '../../components/Loading';
 
 import { useAuth } from '../../contexts/auth';
@@ -22,6 +21,7 @@ import * as Yup from 'yup';
 import api from '../../services/api';
 
 import getValidationErros from '../../utils/handleErrors';
+import { useSuccessScreen } from '../../contexts/successScreen';
 
 interface Procedure {
   id: number;
@@ -45,6 +45,11 @@ interface AvailableAppointments {
 export default function Schedule() {
   const {cliente, requestRefreshToken} = useAuth();
 
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
+
   const {colors} = useTheme();
 
   const [procedures, setProcedures] = useState<Procedure[]>([]);
@@ -56,7 +61,6 @@ export default function Schedule() {
   const [selectedDay, setSelectedDay] = useState('');
   const [selectedProcedure, setSelectedProcedure] = useState<number[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [sucessMessage, setSucessMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isRequested, setIsRequested] = useState(false);
 
@@ -156,10 +160,11 @@ export default function Schedule() {
 
       await api.post(`agendar/${cliente?.id}`, dataFinal).then(() => {
         setIsRequested(false);
-        setSucessMessage(true);
+        handleTitleSuccessMessage("Agendamento concluído")
+        handleShowSuccessMessage(true);
 
         setTimeout(() => {
-          setSucessMessage(false);
+          handleShowSuccessMessage(false);
 
           navigation.reset({
             index: 0,
@@ -267,7 +272,6 @@ export default function Schedule() {
           />
         </Form>
       </ScrollView>
-      <SucessScreen title="Agendamento concluído!" show={sucessMessage}/>
     </>
   );
 };
