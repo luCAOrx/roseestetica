@@ -12,13 +12,13 @@ import { FormHandles } from '@unform/core';
 import Header from '../../../components/Header';
 import { Input } from '../../../components/Form/index';
 import CustomButton from '../../../components/Button';
-import SucessScreen from '../../../components/SucessScreen';
 
 import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
 import getValidationErros from '../../../utils/handleErrors';
+import { useSuccessScreen } from '../../../contexts/successScreen';
 
 interface Data {
   foto: string;
@@ -46,7 +46,11 @@ export default function LoginData() {
 
   const {colors} = useTheme();
 
-  const [ sucessMessage, setSucessMessage ] = useState(false);
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
+
   const [ isRequested, setIsRequested ] = useState(false);
 
   const navigation = useNavigation();
@@ -126,9 +130,11 @@ export default function LoginData() {
 
       await api.post('cadastro', data, {headers: {'Content-Type': 'multipart/form-data'}}).then(() => {
         setIsRequested(false);
-        setSucessMessage(true);
+        handleTitleSuccessMessage("Cadastro concluído")
+        handleShowSuccessMessage(true);
         
         setTimeout(() => {
+          handleShowSuccessMessage(false);
           handleNavigateToSignIn();
         }, threeSeconds);
       }).catch(error => {
@@ -201,7 +207,6 @@ export default function LoginData() {
           />
         </Form>
       </ScrollView>
-      <SucessScreen title="Cadastro concluído!" show={sucessMessage}/>
     </View>
   );
 };
