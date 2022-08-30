@@ -11,7 +11,6 @@ import Header from '../../../components/Header';
 import { SelectProcedure } from '../../../components/Form';
 import Loading from '../../../components/Loading';
 import CustomButton from '../../../components/Button';
-import SucessScreen from '../../../components/SucessScreen';
 
 import * as Yup from 'yup';
 
@@ -20,6 +19,7 @@ import api from '../../../services/api';
 import getValidationErros from '../../../utils/handleErrors';
 
 import { useAuth } from '../../../contexts/auth';
+import { useSuccessScreen } from '../../../contexts/successScreen';
 
 interface Procedure {
   id: number;
@@ -44,7 +44,6 @@ export default function Schedule() {
   const [procedures, setProcedures] = useState<Procedure[]>([]);
 
   const [selectedProcedure, setSelectedProcedure] = useState<number[]>([]);
-  const [sucessMessage, setSucessMessage] = useState<Boolean>(false);
   const [ isRequested, setIsRequested ] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
@@ -52,6 +51,11 @@ export default function Schedule() {
   const navigation = useNavigation();
 
   const {requestRefreshToken} = useAuth();
+
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
 
   useEffect(() => {
     async function loadProcedures() {
@@ -101,10 +105,11 @@ export default function Schedule() {
 
       await api.put(`alterar_procedimento/${params.agendamento_id}`, data).then(() => {
         setIsRequested(false);
-        setSucessMessage(true);
+        handleTitleSuccessMessage("Procedimento alterado");
+        handleShowSuccessMessage(true);
 
         setTimeout(() => {
-          setSucessMessage(false);
+          handleShowSuccessMessage(false);
 
           handleNavigateToAppointments();
         }, threeSeconds);
@@ -166,7 +171,6 @@ export default function Schedule() {
           />
         </Form>
       </ScrollView>
-      <SucessScreen title="Procedimento alterado!" show={sucessMessage}/>
     </>
   );
 };
