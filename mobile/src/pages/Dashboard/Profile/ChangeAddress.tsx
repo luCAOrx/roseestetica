@@ -8,7 +8,6 @@ import { FormHandles } from '@unform/core';
 import Header from '../../../components/Header';
 import { Input, InputMask, Select } from '../../../components/Form/index';
 import CustomButton from '../../../components/Button';
-import SucessScreen from '../../../components/SucessScreen';
 
 import { useAuth } from '../../../contexts/auth';
 
@@ -19,6 +18,7 @@ import api from '../../../services/api';
 import getValidationErros from '../../../utils/handleErrors';
 
 import { useTheme } from '@react-navigation/native';
+import { useSuccessScreen } from '../../../contexts/successScreen';
 
 interface AdressData {
   cidade_id: number;
@@ -40,8 +40,12 @@ export default function ChangeAddress() {
   const complementRef = useRef<TextInput>(null);
   const cepRef = useRef<TextInput>(null);
 
-  const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
   const [ isRequested, setIsRequested ] = useState(false);
+
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
 
   useEffect(() => {
     formRef.current?.setData({
@@ -125,10 +129,11 @@ export default function ChangeAddress() {
 
         updateProfile(response.data.cliente)
 
-        setSucessMessage(true);
+        handleTitleSuccessMessage("Endereço atualizado");
+        handleShowSuccessMessage(true);
         
         setTimeout(() => {  
-          setSucessMessage(false);
+          handleShowSuccessMessage(false);
         }, threeSeconds);
       }).catch(async error => {
         const apiErrorMessage = error.response.data.erro;
@@ -254,7 +259,6 @@ export default function ChangeAddress() {
           />
         </Form>
       </ScrollView>
-      <SucessScreen title="Endereço atualizado!" show={sucessMessage}/>
     </>
   );
 };
