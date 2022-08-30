@@ -70,8 +70,10 @@ export default function Appointments() {
 
   useEffect(() => {
     loadSchedules();
-    return function cleanup() {
-      loadSchedules();
+    return () => {
+      const controller = new AbortController();
+
+      controller.abort();
     }
   }, []);
 
