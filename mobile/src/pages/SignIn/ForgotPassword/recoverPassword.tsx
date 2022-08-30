@@ -14,13 +14,13 @@ import { FormHandles } from '@unform/core';
 import Header from '../../../components/Header';
 import { Input } from '../../../components/Form';
 import CustomButton from '../../../components/Button';
-import SucessScreen from '../../../components/SucessScreen';
 
 import * as Yup from 'yup';
 
 import api from '../../../services/api';
 
 import getValidationErros from '../../../utils/handleErrors';
+import { useSuccessScreen } from '../../../contexts/successScreen';
 
 interface ForgotPassword {
   email: string;
@@ -29,7 +29,6 @@ interface ForgotPassword {
 };
 
 export default function RecoverPassword() {
-  const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
   const [ isRequested, setIsRequested ] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
@@ -37,6 +36,11 @@ export default function RecoverPassword() {
   const passwordInputRef = useRef<TextInput>(null);
 
   const {colors} = useTheme();
+
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
 
   const navigation = useNavigation();
 
@@ -75,9 +79,11 @@ export default function RecoverPassword() {
       await api.put('atualizar_senha', data).then(() => {
         setIsRequested(false);
 
-        setSucessMessage(true);
+        handleTitleSuccessMessage("Senha recuperada");
+        handleShowSuccessMessage(true);
         
         setTimeout(() => {
+          handleShowSuccessMessage(false);
           handleNavigateToSignIn();
         }, threeSeconds);
       }).catch(error => {
@@ -177,7 +183,6 @@ export default function RecoverPassword() {
           }} 
         />
       </ScrollView>
-      <SucessScreen title="Senha recuperada!" show={sucessMessage}/>
     </>
   );
 };
