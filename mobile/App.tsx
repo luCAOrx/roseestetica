@@ -17,6 +17,8 @@ import { AuthProvider } from './src/contexts/auth';
 
 import ToggleThemeContext from './src/contexts/toogleTheme';
 
+import { SuccessScreenProvider } from './src/contexts/successScreen';
+
 import {NavigationContainer} from '@react-navigation/native';
 
 import Routes from './src/routes';
@@ -55,9 +57,11 @@ export default function App() {
   return (
     <AuthProvider>
       <ToggleThemeContext.Provider value={{toggleTheme, isDarkMode}}>
-        <NavigationContainer theme={theme}>
-          <Routes />
-        </NavigationContainer>
+        <SuccessScreenProvider>
+          <NavigationContainer theme={theme}>
+            <Routes />
+          </NavigationContainer>
+        </SuccessScreenProvider>
       </ToggleThemeContext.Provider>
     </AuthProvider>
   );
