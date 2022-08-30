@@ -8,7 +8,6 @@ import { FormHandles } from '@unform/core';
 import Header from '../../../components/Header';
 import { ImagePicker, Input, InputMask } from '../../../components/Form/index';
 import CustomButton from '../../../components/Button';
-import SucessScreen from '../../../components/SucessScreen';
 import Loading from '../../../components/Loading';
 
 import styles from '../styles/ChangePersonalData';
@@ -27,6 +26,7 @@ import { useTheme } from '@react-navigation/native';
 import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Modalize } from 'react-native-modalize';
+import { useSuccessScreen } from '../../../contexts/successScreen';
 
 interface PersonalData {
   foto: string;
@@ -45,10 +45,13 @@ export default function ChangePersonalData() {
   const cellPhoneNumberInputRef = useRef<TextInput>(null);
   const modalizeRef = useRef<Modalize>(null);
 
-  const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
-  const [ sucessMessagePhoto, setSucessMessagePhoto ] = useState<Boolean>(false);
   const [ isRequested, setIsRequested ] = useState(false);
   const [ isUploadingImage, setUploadingImage ] = useState(false);
+
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
   
   useEffect(() => {
     formRef.current?.setData({
@@ -115,10 +118,11 @@ export default function ChangePersonalData() {
         setIsRequested(false);
         updateProfile(response.data.cliente);
 
-        setSucessMessage(true);
+        handleTitleSuccessMessage("Dados pessoais atualizados")
+        handleShowSuccessMessage(true);
         
         setTimeout(() => {  
-          setSucessMessage(false);
+          handleShowSuccessMessage(false);
         }, threeSeconds);
       }).catch(async error => {
         const apiErrorMessage = error.response.data.erro;
@@ -190,10 +194,11 @@ export default function ChangePersonalData() {
 
         onClose();
 
-        setSucessMessagePhoto(true);
+        handleTitleSuccessMessage("Foto do perfil atualizada")
+        handleShowSuccessMessage(true);
         
         setTimeout(() => {
-          setSucessMessagePhoto(false);
+          handleShowSuccessMessage(false);
         }, threeSeconds);
       }).catch(async error => {
         const apiErrorMessage = error.response.data.erro;
@@ -355,8 +360,6 @@ export default function ChangePersonalData() {
           <ImagePicker name="foto" />
         </Form>
       </Modalize>
-      <SucessScreen title="Foto do perfil atualizada" show={sucessMessagePhoto}/>
-      <SucessScreen title="Dados pessoais atualizados" show={sucessMessage}/>
     </>
   );
 };
