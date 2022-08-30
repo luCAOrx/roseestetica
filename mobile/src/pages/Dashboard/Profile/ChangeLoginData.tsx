@@ -10,7 +10,6 @@ import { useAuth } from '../../../contexts/auth';
 import Header from '../../../components/Header';
 import { Input }  from '../../../components/Form/index';
 import CustomButton from '../../../components/Button';
-import SucessScreen from '../../../components/SucessScreen';
 
 import * as Yup from 'yup';
 
@@ -19,6 +18,7 @@ import api from '../../../services/api';
 import getValidationErros from '../../../utils/handleErrors';
 
 import { useTheme } from '@react-navigation/native';
+import { useSuccessScreen } from '../../../contexts/successScreen';
 
 interface LoginData {
   email: string;
@@ -31,8 +31,12 @@ export default function ChangeLoginData() {
 
   const formRef = useRef<FormHandles>(null);
 
-  const [ sucessMessage, setSucessMessage ] = useState<Boolean>(false);
   const [ isRequested, setIsRequested ] = useState(false);
+
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
 
   useEffect(() => {
     formRef.current?.setData({
@@ -68,10 +72,11 @@ export default function ChangeLoginData() {
 
         updateProfile(response.data.cliente);
 
-        setSucessMessage(true);
+        handleTitleSuccessMessage("Login atualizado")
+        handleShowSuccessMessage(true);
         
         setTimeout(() => {  
-          setSucessMessage(false);
+          handleShowSuccessMessage(false);
         }, threeSeconds);
 
         setIsRequested(false);
@@ -139,7 +144,6 @@ export default function ChangeLoginData() {
           />
         </Form>
       </ScrollView>
-      <SucessScreen title="Login atualizado!" show={sucessMessage}/>
     </>
   );
 };
