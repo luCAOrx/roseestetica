@@ -15,6 +15,7 @@ import CustomButton from '../../components/Button';
 import dayjs from 'dayjs';
 
 import { useAuth } from '../../contexts/auth';
+import { useSuccessScreen } from '../../contexts/successScreen';
 
 interface CardAppointmentsProps {
   text: string;
@@ -34,6 +35,13 @@ function CardAppointments({text, agendamento_id, id, date}: CardAppointmentsProp
 
   const {requestRefreshToken} = useAuth();
 
+  const { 
+    handleShowSuccessMessage, 
+    handleTitleSuccessMessage 
+  } = useSuccessScreen();
+
+  const threeSeconds = 3000;
+
   function handleNavigateToDetail() {
     navigation.navigate('Detail' as never, {agendamento_id} as never);
   };
@@ -47,41 +55,58 @@ function CardAppointments({text, agendamento_id, id, date}: CardAppointmentsProp
   };
 
   async function handleDeleteSchedule() {
-    setIsRequested(true);
-
     Alert.alert('Cancelar agendamento', 'Tem certeza que deseja cancelar seu agendamento?', [
       {
         text: 'Sim',
-        onPress: async () => await api.delete(`cancelar/${id}`).then(() => {
-          setIsRequested(false);
+        onPress: async () => {
+          setIsRequested(true);
 
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Appointments' as never}]
-          });
-        }).catch(async error => {
-          const apiErrorMessage = error.response.data.mensagem
+          await api.delete(`cancelar/${id}`).then(() => {
+            setIsRequested(false);
+            handleTitleSuccessMessage("Deletado com sucesso");
+            handleShowSuccessMessage(true);
+  
+            setTimeout(() => {
+              handleShowSuccessMessage(false);
     
-          if (error.response.status === 401) {
-            await requestRefreshToken();
-    
-            await api.delete(`cancelar/${id}`).then(() => {
-              setIsRequested(false);
-              
               navigation.reset({
                 index: 0,
                 routes: [{name: 'Appointments' as never}]
               });
-            })
-          };
-    
-          if (error.response.status === 400) {
-            Alert.alert('Falha ao cancelar agendamento', apiErrorMessage);
-    
+            }, threeSeconds);
+          }).catch(async error => {
+            const apiErrorMessage = error.response.data.mensagem
+  
             setIsRequested(false);
-          };
-    
-        })
+      
+            if (error.response.status === 401) {
+              await requestRefreshToken();
+      
+              await api.delete(`cancelar/${id}`).then(() => {
+                setIsRequested(false);
+                handleShowSuccessMessage(true);
+  
+                handleTitleSuccessMessage("Deletado com sucesso");
+                
+                setTimeout(() => {
+                  handleShowSuccessMessage(false);
+        
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'Appointments' as never}]
+                  });
+                }, threeSeconds);
+              })
+            };
+      
+            if (error.response.status === 400) {
+              setIsRequested(false);
+              
+              Alert.alert('Falha ao cancelar agendamento', apiErrorMessage);
+            };
+      
+          })
+        }
       },
       {
         text: 'Não',
