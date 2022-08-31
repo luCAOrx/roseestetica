@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-
 import {
   Alert,
   Image,
@@ -11,18 +10,14 @@ import {
 } from 'react-native'
 
 import { MaterialIcons, Feather } from '@expo/vector-icons'
-
 import { useNavigation, useTheme } from '@react-navigation/native'
 
-import { useAuth } from '../../../contexts/auth'
-
-import ToggleThemeContext from '../../../contexts/toogleTheme'
-
-import api from '../../../services/api'
-
-import styles from '../styles/profile'
-import { useSuccessScreen } from '../../../contexts/successScreen'
 import Loading from '../../../components/Loading'
+import { useAuth } from '../../../contexts/auth'
+import { useSuccessScreen } from '../../../contexts/successScreen'
+import ToggleThemeContext from '../../../contexts/toogleTheme'
+import api from '../../../services/api'
+import styles from '../styles/profile'
 
 export default function Profile() {
   const { cliente, imagem_url, requestRefreshToken, signOut } = useAuth()
@@ -329,45 +324,6 @@ export default function Profile() {
             />
           </TouchableOpacity>
         </View>
-
-        {/* <View style={styles.label}>
-          <Text
-            style={[
-              styles.name,
-              {color: colors.text}
-            ]}
-          >
-            Ajuda
-          </Text>
-        </View>
-
-        <View
-          style={[
-            styles.buttonContainer,
-            {
-              borderBottomColor: colors.border,
-              marginBottom: 50
-            }
-          ]}
-        >
-          <TouchableOpacity
-            style={[
-              styles.otherButton,
-              {
-                padding: 20,
-                marginTop: 20,
-                marginBottom: 20
-              }
-            ]}
-          >
-            <FontAwesome5
-              name="whatsapp"
-              color={colors.price}
-              size={22}
-            />
-            <Text style={styles.phone}>Entrar em contato pelo WhatsApp</Text>
-          </TouchableOpacity>
-        </View> */}
 
         <View style={styles.label}>
           <Text
