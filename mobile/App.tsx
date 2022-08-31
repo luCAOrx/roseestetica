@@ -2,29 +2,21 @@ import 'react-native-gesture-handler'
 
 import React, { useState, useCallback } from 'react'
 
-import * as SplashScreen from 'expo-splash-screen'
-
+import { Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti'
 import {
   Roboto_400Regular,
   Roboto_900Black,
   Roboto_700Bold,
   useFonts
 } from '@expo-google-fonts/roboto'
-
-import { Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti'
+import { NavigationContainer } from '@react-navigation/native'
+import * as SplashScreen from 'expo-splash-screen'
 
 import { AuthProvider } from './src/contexts/auth'
-
-import ToggleThemeContext from './src/contexts/toogleTheme'
-
 import { SuccessScreenProvider } from './src/contexts/successScreen'
-
-import { NavigationContainer } from '@react-navigation/native'
-
-import Routes from './src/routes'
-
+import ToggleThemeContext from './src/contexts/toogleTheme'
 import usePersistedState from './src/hooks/usePersistedState'
-
+import Routes from './src/routes'
 import { dark } from './src/themes/dark'
 import { light } from './src/themes/light'
 
