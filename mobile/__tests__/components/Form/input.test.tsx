@@ -4,12 +4,12 @@ import { render } from '@testing-library/react-native'
 
 import '@testing-library/jest-native/extend-expect'
 
-import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
 
 import { Input, InputMask } from '../../../src/components/Form'
-
 import styles from '../../../src/components/Form/styles/input'
+
 import { act } from 'react-test-renderer'
 
 interface UnformProps {

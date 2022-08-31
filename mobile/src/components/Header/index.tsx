@@ -1,12 +1,9 @@
 import React from 'react'
-
 import { Text, View, TouchableOpacity } from 'react-native'
-
-import { useNavigation, useTheme } from '@react-navigation/native'
+import StepIndicator from 'react-native-step-indicator'
 
 import { MaterialIcons } from '@expo/vector-icons'
-
-import StepIndicator from 'react-native-step-indicator'
+import { useNavigation, useTheme } from '@react-navigation/native'
 
 import styles from './styles'
 

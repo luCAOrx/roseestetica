@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-
-import api from '../../services/api'
-
 import { Text, ScrollView, TouchableOpacity, View } from 'react-native'
 
-import styles from './styles/selectHour'
-
-import { useField } from '@unform/core'
 import { useTheme } from '@react-navigation/native'
+import { useField } from '@unform/core'
+
+import api from '../../services/api'
+import styles from './styles/selectHour'
 
 interface SelectHourProps {
   name: string

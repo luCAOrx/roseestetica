@@ -1,12 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-
-import * as SecureStore from 'expo-secure-store'
-
 import { Alert } from 'react-native'
 
-import api from '../services/api'
-
 import dayjs from 'dayjs'
+import * as SecureStore from 'expo-secure-store'
+
+import api from '../services/api'
 
 interface Cliente {
   id: number

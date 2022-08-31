@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import {
   Alert,
   Animated,
@@ -11,25 +10,18 @@ import {
   View
 } from 'react-native'
 
-import styles from './styles/signin'
-
 import { useNavigation, useTheme } from '@react-navigation/native'
-
-import logoDarkTheme from '../../images/logo-dark-theme.png'
-
-import logoLightTheme from '../../images/logo-light-theme.png'
-
-import { Input } from '../../components/Form/index'
-import CustomButton from '../../components/Button'
-
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
 
-import { Form } from '@unform/mobile'
-import { FormHandles } from '@unform/core'
-
+import CustomButton from '../../components/Button'
+import { Input } from '../../components/Form/index'
 import { useAuth } from '../../contexts/auth'
-
+import logoDarkTheme from '../../images/logo-dark-theme.png'
+import logoLightTheme from '../../images/logo-light-theme.png'
 import getValidationErros from '../../utils/handleErrors'
+import styles from './styles/signin'
 
 interface SignInData {
   email: string

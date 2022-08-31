@@ -6,11 +6,10 @@ import '@testing-library/jest-native/extend-expect'
 
 import { act } from 'react-test-renderer'
 
-import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
 
 import { SelectHour } from '../../../src/components/Form'
-
 import styles from '../../../src/components/Form/styles/selectHour'
 
 interface UnformProps {

@@ -1,25 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import { Alert, ScrollView } from 'react-native'
 
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native'
-
-import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
-
-import Header from '../../../components/Header'
-import { SelectProcedure } from '../../../components/Form'
-import Loading from '../../../components/Loading'
-import CustomButton from '../../../components/Button'
-
+import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
 
-import api from '../../../services/api'
-
-import getValidationErros from '../../../utils/handleErrors'
-
+import CustomButton from '../../../components/Button'
+import { SelectProcedure } from '../../../components/Form'
+import Header from '../../../components/Header'
+import Loading from '../../../components/Loading'
 import { useAuth } from '../../../contexts/auth'
 import { useSuccessScreen } from '../../../contexts/successScreen'
+import api from '../../../services/api'
+import getValidationErros from '../../../utils/handleErrors'
 
 interface Procedure {
   id: number

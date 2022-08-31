@@ -1,18 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import { Text, View, TouchableOpacity } from 'react-native'
-
-import { useTheme } from '@react-navigation/native'
-
-import styles from './styles/select'
-
-import { MaterialIcons as Icon } from '@expo/vector-icons'
-
 import { Modalize } from 'react-native-modalize'
 
+import { MaterialIcons as Icon } from '@expo/vector-icons'
+import { useTheme } from '@react-navigation/native'
 import { useField } from '@unform/core'
 
 import api from '../../services/api'
+import styles from './styles/select'
 
 interface SelectProps {
   icon: keyof typeof Icon.glyphMap

@@ -7,7 +7,6 @@ import '@testing-library/jest-native/extend-expect'
 import dayjs from 'dayjs'
 
 import CardAppointments from '../../../src/components/CardAppointments'
-
 import styles from '../../../src/components/CardAppointments/styles'
 
 jest.mock('@react-navigation/native', () => {

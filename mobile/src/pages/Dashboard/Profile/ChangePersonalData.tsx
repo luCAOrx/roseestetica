@@ -1,31 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import { Alert, Image, ScrollView, Text, TextInput, View } from 'react-native'
-
-import { Form } from '@unform/mobile'
-import { FormHandles } from '@unform/core'
-
-import Header from '../../../components/Header'
-import { ImagePicker, Input, InputMask } from '../../../components/Form/index'
-import CustomButton from '../../../components/Button'
-import Loading from '../../../components/Loading'
-
-import styles from '../styles/ChangePersonalData'
-
-import { MaterialIcons as Icon } from '@expo/vector-icons'
-
-import { useAuth } from '../../../contexts/auth'
-
-import * as Yup from 'yup'
-
-import api from '../../../services/api'
-
-import getValidationErros from '../../../utils/handleErrors'
-
-import { useTheme } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Modalize } from 'react-native-modalize'
+
+import { MaterialIcons as Icon } from '@expo/vector-icons'
+import { useTheme } from '@react-navigation/native'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
+import * as Yup from 'yup'
+
+import CustomButton from '../../../components/Button'
+import { ImagePicker, Input, InputMask } from '../../../components/Form/index'
+import Header from '../../../components/Header'
+import Loading from '../../../components/Loading'
+import { useAuth } from '../../../contexts/auth'
 import { useSuccessScreen } from '../../../contexts/successScreen'
+import api from '../../../services/api'
+import getValidationErros from '../../../utils/handleErrors'
+import styles from '../styles/ChangePersonalData'
+
+
+
+
 
 interface PersonalData {
   foto: string

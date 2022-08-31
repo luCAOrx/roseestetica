@@ -1,12 +1,9 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
-
 import { Text, TextInput, TextInputProps, View, TouchableOpacity } from 'react-native'
 
 import { MaterialIcons } from '@expo/vector-icons'
-
-import { useField } from '@unform/core'
-
 import { useTheme } from '@react-navigation/native'
+import { useField } from '@unform/core'
 
 import styles from './styles/input'
 

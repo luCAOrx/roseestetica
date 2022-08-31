@@ -3,7 +3,6 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import Header from '../components/Header'
-
 import Schedule from '../pages/Dashboard'
 import Appointments from '../pages/Dashboard/Appointments'
 import Profile from '../pages/Dashboard/Profile'

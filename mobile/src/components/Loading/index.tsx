@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { ActivityIndicator } from 'react-native'
 
 import { useTheme } from '@react-navigation/native'

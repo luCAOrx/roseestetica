@@ -1,24 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import { ScrollView, TextInput, Alert } from 'react-native'
 
-import { Form } from '@unform/mobile'
+import { useTheme } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
-
-import Header from '../../../components/Header'
-import { Input, InputMask, Select } from '../../../components/Form/index'
-import CustomButton from '../../../components/Button'
-
-import { useAuth } from '../../../contexts/auth'
-
+import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
 
-import api from '../../../services/api'
-
-import getValidationErros from '../../../utils/handleErrors'
-
-import { useTheme } from '@react-navigation/native'
+import CustomButton from '../../../components/Button'
+import { Input, InputMask, Select } from '../../../components/Form/index'
+import Header from '../../../components/Header'
+import { useAuth } from '../../../contexts/auth'
 import { useSuccessScreen } from '../../../contexts/successScreen'
+import api from '../../../services/api'
+import getValidationErros from '../../../utils/handleErrors'
 
 interface AdressData {
   cidade_id: number

@@ -1,27 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import { Alert, RefreshControl, ScrollView } from 'react-native'
-
-import { useNavigation, useTheme } from '@react-navigation/native'
-
 import { DateData } from 'react-native-calendars'
 
-import { Form } from '@unform/mobile'
+import { useNavigation, useTheme } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
-
-import { SelectDate, SelectHour, SelectProcedure } from '../../components/Form'
-import Header from '../../components/Header'
-import CustomButton from '../../components/Button'
-import Loading from '../../components/Loading'
-
-import { useAuth } from '../../contexts/auth'
-
+import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
 
-import api from '../../services/api'
-
-import getValidationErros from '../../utils/handleErrors'
+import CustomButton from '../../components/Button'
+import { SelectDate, SelectHour, SelectProcedure } from '../../components/Form'
+import Header from '../../components/Header'
+import Loading from '../../components/Loading'
+import { useAuth } from '../../contexts/auth'
 import { useSuccessScreen } from '../../contexts/successScreen'
+import api from '../../services/api'
+import getValidationErros from '../../utils/handleErrors'
 
 interface Procedure {
   id: number

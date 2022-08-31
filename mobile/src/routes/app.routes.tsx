@@ -3,14 +3,12 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import Header from '../components/Header'
-
+import ChangeProcedure from '../pages/Dashboard/Appointments/ChangeProcedure'
 import Detail from '../pages/Dashboard/Appointments/Detail'
 import Reschedule from '../pages/Dashboard/Appointments/Reschedule'
-import ChangeProcedure from '../pages/Dashboard/Appointments/ChangeProcedure'
-import ChangePersonalData from '../pages/Dashboard/Profile/ChangePersonalData'
 import ChangeAddress from '../pages/Dashboard/Profile/ChangeAddress'
 import ChangeLoginData from '../pages/Dashboard/Profile/ChangeLoginData'
-
+import ChangePersonalData from '../pages/Dashboard/Profile/ChangePersonalData'
 import Dashboard from './app.tab'
 
 const AppStack = createStackNavigator()

@@ -1,20 +1,16 @@
 import React, { useRef } from 'react'
-
 import { ScrollView, TextInput } from 'react-native'
 
 import { useNavigation } from '@react-navigation/core'
-
-import { Form } from '@unform/mobile'
+import { useTheme } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
-
-import Header from '../../../components/Header'
-import { Input, InputMask, Select, ImagePicker } from '../../../components/Form'
-import CustomButton from '../../../components/Button'
-
+import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
 
+import CustomButton from '../../../components/Button'
+import { Input, InputMask, Select, ImagePicker } from '../../../components/Form'
+import Header from '../../../components/Header'
 import getValidationErros from '../../../utils/handleErrors'
-import { useTheme } from '@react-navigation/native'
 
 interface PersonalDataProps {
   foto: string

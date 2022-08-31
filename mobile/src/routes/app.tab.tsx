@@ -1,10 +1,8 @@
 import React from 'react'
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-
-import { useTheme } from '@react-navigation/native'
-
 import { MaterialIcons as Icon } from '@expo/vector-icons'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { useTheme } from '@react-navigation/native'
 
 import { ScheduleStack, AppointmentsStack, ProfileStack } from './app.stack'
 

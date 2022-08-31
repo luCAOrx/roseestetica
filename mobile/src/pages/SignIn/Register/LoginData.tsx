@@ -1,24 +1,18 @@
 import React, { useRef, useState } from 'react'
-
 import { View, TextInput, Alert } from 'react-native'
-
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native'
-
 import { ScrollView } from 'react-native-gesture-handler'
 
-import { Form } from '@unform/mobile'
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
-
-import Header from '../../../components/Header'
-import { Input } from '../../../components/Form/index'
-import CustomButton from '../../../components/Button'
-
+import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
 
-import api from '../../../services/api'
-
-import getValidationErros from '../../../utils/handleErrors'
+import CustomButton from '../../../components/Button'
+import { Input } from '../../../components/Form/index'
+import Header from '../../../components/Header'
 import { useSuccessScreen } from '../../../contexts/successScreen'
+import api from '../../../services/api'
+import getValidationErros from '../../../utils/handleErrors'
 
 interface Data {
   foto: string

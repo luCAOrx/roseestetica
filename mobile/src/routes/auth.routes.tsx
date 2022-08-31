@@ -3,7 +3,6 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import SignIn from '../pages/SignIn/index'
-
 import { ForgotPasswordScreen, RegisterScreen } from './auth.stack'
 
 const AuthStack = createStackNavigator()

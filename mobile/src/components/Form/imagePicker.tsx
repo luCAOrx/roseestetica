@@ -1,16 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import { Image, Text, View, TouchableOpacity } from 'react-native'
 
 import { MaterialIcons as Icon } from '@expo/vector-icons'
-
-import styles from './styles/imagePicker'
-
+import { useTheme } from '@react-navigation/native'
+import { useField } from '@unform/core'
 import * as ImagePicker from 'expo-image-picker'
 
-import { useField } from '@unform/core'
-
-import { useTheme } from '@react-navigation/native'
+import styles from './styles/imagePicker'
 
 interface ImagePickerInputProps {
   name: string

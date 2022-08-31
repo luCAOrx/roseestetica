@@ -1,21 +1,15 @@
 import React, { memo, useState } from 'react'
-
-import api from '../../services/api'
-
 import { Alert, Text, View } from 'react-native'
 
-import styles from './styles'
-
-import { useNavigation, useTheme } from '@react-navigation/native'
-
 import { MaterialIcons as Icon } from '@expo/vector-icons'
-
-import CustomButton from '../../components/Button'
-
+import { useNavigation, useTheme } from '@react-navigation/native'
 import dayjs from 'dayjs'
 
+import CustomButton from '../../components/Button'
 import { useAuth } from '../../contexts/auth'
 import { useSuccessScreen } from '../../contexts/successScreen'
+import api from '../../services/api'
+import styles from './styles'
 
 interface CardAppointmentsProps {
   text: string

@@ -1,24 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import { Alert, ScrollView } from 'react-native'
 
-import { Form } from '@unform/mobile'
+import { useTheme } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
-
-import { useAuth } from '../../../contexts/auth'
-
-import Header from '../../../components/Header'
-import { Input } from '../../../components/Form/index'
-import CustomButton from '../../../components/Button'
-
+import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
 
-import api from '../../../services/api'
-
-import getValidationErros from '../../../utils/handleErrors'
-
-import { useTheme } from '@react-navigation/native'
+import CustomButton from '../../../components/Button'
+import { Input } from '../../../components/Form/index'
+import Header from '../../../components/Header'
+import { useAuth } from '../../../contexts/auth'
 import { useSuccessScreen } from '../../../contexts/successScreen'
+import api from '../../../services/api'
+import getValidationErros from '../../../utils/handleErrors'
 
 interface LoginData {
   email: string

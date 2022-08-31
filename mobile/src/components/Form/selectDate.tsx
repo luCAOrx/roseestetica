@@ -3,15 +3,13 @@ import React, { useEffect, useRef } from 'react'
 import '../../config/locale'
 
 import { Text } from 'react-native'
-
-import styles from './styles/selectDate'
-
-import { MaterialIcons as Icon } from '@expo/vector-icons'
-
 import { Calendar, DateData } from 'react-native-calendars'
 
-import { useField } from '@unform/core'
+import { MaterialIcons as Icon } from '@expo/vector-icons'
 import { useTheme } from '@react-navigation/native'
+import { useField } from '@unform/core'
+
+import styles from './styles/selectDate'
 
 interface SelectDateProps {
   name: string

@@ -1,26 +1,19 @@
 import React, { useRef, useState } from 'react'
-
 import { Text, ScrollView, View, TextInput } from 'react-native'
 
-import styles from '../styles/recoverPassword'
-
-import { useNavigation, useTheme } from '@react-navigation/native'
-
 import { MaterialIcons } from '@expo/vector-icons'
-
-import { Form } from '@unform/mobile'
+import { useNavigation, useTheme } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
-
-import Header from '../../../components/Header'
-import { Input } from '../../../components/Form'
-import CustomButton from '../../../components/Button'
-
+import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
 
-import api from '../../../services/api'
-
-import getValidationErros from '../../../utils/handleErrors'
+import CustomButton from '../../../components/Button'
+import { Input } from '../../../components/Form'
+import Header from '../../../components/Header'
 import { useSuccessScreen } from '../../../contexts/successScreen'
+import api from '../../../services/api'
+import getValidationErros from '../../../utils/handleErrors'
+import styles from '../styles/recoverPassword'
 
 interface ForgotPassword {
   email: string

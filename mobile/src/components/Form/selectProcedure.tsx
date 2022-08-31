@@ -1,15 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import { Text } from 'react-native'
-
-import styles from './styles/selectProcedure'
-
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
+import { useTheme } from '@react-navigation/native'
+import { useField } from '@unform/core'
 import Checkbox from 'expo-checkbox'
 
-import { useField } from '@unform/core'
-import { useTheme } from '@react-navigation/native'
+import styles from './styles/selectProcedure'
 
 interface CustomCheckboxProps {
   name: string

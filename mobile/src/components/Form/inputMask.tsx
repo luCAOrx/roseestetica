@@ -1,5 +1,4 @@
 import React, { useState, useCallback, forwardRef } from 'react'
-
 import {
   TextInputMask,
   TextInputMaskProps,

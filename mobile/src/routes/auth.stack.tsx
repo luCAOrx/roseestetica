@@ -3,13 +3,11 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import Header from '../components/Header'
-
-import PersonalData from '../pages/SignIn/Register/PersonalData'
-import Address from '../pages/SignIn/Register/Address'
-import LoginData from '../pages/SignIn/Register/LoginData'
-
 import ForgotPassword from '../pages/SignIn/ForgotPassword'
 import RecoverPassword from '../pages/SignIn/ForgotPassword/recoverPassword'
+import Address from '../pages/SignIn/Register/Address'
+import LoginData from '../pages/SignIn/Register/LoginData'
+import PersonalData from '../pages/SignIn/Register/PersonalData'
 
 const AuthStack = createStackNavigator()
 

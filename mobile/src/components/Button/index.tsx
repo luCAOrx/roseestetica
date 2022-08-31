@@ -1,9 +1,7 @@
 import React from 'react'
-
 import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 
 import Loading from '../Loading'
-
 import styles from './styles'
 
 interface CustomButtonProps extends TouchableOpacityProps {

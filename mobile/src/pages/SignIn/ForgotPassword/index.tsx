@@ -1,19 +1,14 @@
 import React, { useRef, useState } from 'react'
-
 import { ScrollView } from 'react-native'
 
 import { useNavigation, useTheme } from '@react-navigation/native'
-
-import { Form } from '@unform/mobile'
 import { FormHandles } from '@unform/core'
-
-import { Input } from '../../../components/Form'
-import CustomButton from '../../../components/Button'
-
+import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
 
+import CustomButton from '../../../components/Button'
+import { Input } from '../../../components/Form'
 import api from '../../../services/api'
-
 import getValidationErros from '../../../utils/handleErrors'
 
 interface Credentials {

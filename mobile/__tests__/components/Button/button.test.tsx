@@ -5,7 +5,6 @@ import { render } from '@testing-library/react-native'
 import '@testing-library/jest-native/extend-expect'
 
 import CustomButton from '../../../src/components/Button'
-
 import styles from '../../../src/components/Button/styles'
 
 describe('The button', () => {

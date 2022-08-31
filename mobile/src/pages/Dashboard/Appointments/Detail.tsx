@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from 'react'
-
-import { useRoute } from '@react-navigation/core'
-
 import { Alert, Text, View } from 'react-native'
-
-import styles from '../styles/details'
-
 import { ScrollView } from 'react-native-gesture-handler'
 
-import { useAuth } from '../../../contexts/auth'
-
-import api from '../../../services/api'
-
+import { useRoute } from '@react-navigation/core'
+import { useTheme } from '@react-navigation/native'
 import { format, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
 import Loading from '../../../components/Loading'
-
-import { useTheme } from '@react-navigation/native'
+import { useAuth } from '../../../contexts/auth'
+import api from '../../../services/api'
+import styles from '../styles/details'
 
 interface Data {
   agendamento: Array<{

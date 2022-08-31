@@ -1,12 +1,12 @@
 import React from 'react'
-
-import { useAuth } from '../contexts/auth'
-
-import AuthRoutes from './auth.routes'
-import AppRoutes from './app.routes'
 import { View } from 'react-native'
+
 import { useTheme } from '@react-navigation/native'
+
 import Loading from '../components/Loading'
+import { useAuth } from '../contexts/auth'
+import AppRoutes from './app.routes'
+import AuthRoutes from './auth.routes'
 
 export default function Routes() {
   const { cliente, loading } = useAuth()

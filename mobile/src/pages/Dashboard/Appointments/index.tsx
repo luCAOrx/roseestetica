@@ -1,20 +1,15 @@
 import React, { useEffect, useState } from 'react'
-
-import api from '../../../services/api'
-
 import { Alert, FlatList, Text, ScrollView, RefreshControl } from 'react-native'
 
-import styles from '../styles/appointments'
-
-import CardAppointments from '../../../components/CardAppointments'
-import Loading from '../../../components/Loading'
-
+import { useTheme } from '@react-navigation/native'
 import { format, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
+import CardAppointments from '../../../components/CardAppointments'
+import Loading from '../../../components/Loading'
 import { useAuth } from '../../../contexts/auth'
-
-import { useTheme } from '@react-navigation/native'
+import api from '../../../services/api'
+import styles from '../styles/appointments'
 
 interface MySchedules {
   id: number
