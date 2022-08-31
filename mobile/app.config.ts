@@ -8,8 +8,7 @@ export default {
   icon: './assets/icon.png',
   splash: {
     image: './assets/splash.png',
-    resizeMode: 'cover',
-    backgroundColor: '#333333'
+    resizeMode: 'cover'
   },
   androidNavigationBar: {
     backgroundColor: '#000000',
@@ -35,7 +34,8 @@ export default {
     package: 'com.roseestetica.roseestetica',
     versionCode: 1,
     adaptiveIcon: {
-      foregroundImage: './assets/icon.png'
+      foregroundImage: './assets/adaptive-icon.png',
+      backgroundColor: '#333333'
     }
   }
 }
