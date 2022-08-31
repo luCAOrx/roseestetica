@@ -2,7 +2,7 @@ import 'dotenv/config'
 
 export default {
   name: 'Rose Estética',
-  slug: 'Rose Estética',
+  slug: 'roseestetica',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
