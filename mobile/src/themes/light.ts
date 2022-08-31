@@ -1,4 +1,4 @@
-import { CustomTheme } from '@react-navigation/native'
+import { CustomTheme } from './theme'
 
 export const light: CustomTheme = {
   dark: false,
