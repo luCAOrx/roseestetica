@@ -10,13 +10,14 @@ import {
 } from 'react-native'
 
 import { MaterialIcons, Feather } from '@expo/vector-icons'
-import { useNavigation, useTheme } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 
 import Loading from '../../../components/Loading'
 import { useAuth } from '../../../contexts/auth'
 import { useSuccessScreen } from '../../../contexts/successScreen'
 import ToggleThemeContext from '../../../contexts/toogleTheme'
 import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
 import styles from '../styles/profile'
 
 export default function Profile() {
@@ -24,7 +25,7 @@ export default function Profile() {
 
   const { toggleTheme } = useContext(ToggleThemeContext)
 
-  const { colors, dark } = useTheme()
+  const { colors, dark } = useCustomTheme()
 
   const navigation = useNavigation()
 

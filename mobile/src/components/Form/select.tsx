@@ -3,10 +3,10 @@ import { Text, View, TouchableOpacity } from 'react-native'
 import { Modalize } from 'react-native-modalize'
 
 import { MaterialIcons as Icon } from '@expo/vector-icons'
-import { useTheme } from '@react-navigation/native'
 import { useField } from '@unform/core'
 
 import api from '../../services/api'
+import { useCustomTheme } from '../../themes/theme'
 import styles from './styles/select'
 
 interface SelectProps {
@@ -56,7 +56,7 @@ export default function Select({
   const modalizeRef = useRef<Modalize>(null)
   const selectRef = useRef(null)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const onOpen = () => {
     modalizeRef.current?.open()

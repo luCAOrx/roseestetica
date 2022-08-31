@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import { useTheme } from '@react-navigation/native'
 import { useField } from '@unform/core'
 import Checkbox from 'expo-checkbox'
 
+import { useCustomTheme } from '../../themes/theme'
 import styles from './styles/selectProcedure'
 
 interface CustomCheckboxProps {
@@ -27,7 +27,7 @@ export default function SelectProcedure({
 }: CustomCheckboxProps) {
   const [isChecked, setChecked] = useState(false)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const { fieldName, registerField, error } = useField(name)
 

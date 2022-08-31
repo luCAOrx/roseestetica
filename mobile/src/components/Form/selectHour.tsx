@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Text, ScrollView, TouchableOpacity, View } from 'react-native'
 
-import { useTheme } from '@react-navigation/native'
 import { useField } from '@unform/core'
 
 import api from '../../services/api'
+import { useCustomTheme } from '../../themes/theme'
 import styles from './styles/selectHour'
 
 interface SelectHourProps {
@@ -23,7 +23,7 @@ export default function SelectHour({ name, available, availableTime, selectedDay
   const [hours, setHours] = useState<Hour[]>([])
   const [selectedHour, setSelectedHour] = useState<number[]>([])
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const { fieldName, registerField, error } = useField(name)
 

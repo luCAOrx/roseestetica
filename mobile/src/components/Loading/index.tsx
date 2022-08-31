@@ -1,10 +1,10 @@
 import React from 'react'
 import { ActivityIndicator } from 'react-native'
 
-import { useTheme } from '@react-navigation/native'
+import { useCustomTheme } from '../../themes/theme'
 
 export default function Loading() {
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   return (
     <ActivityIndicator

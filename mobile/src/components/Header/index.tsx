@@ -3,8 +3,9 @@ import { Text, View, TouchableOpacity } from 'react-native'
 import StepIndicator from 'react-native-step-indicator'
 
 import { MaterialIcons } from '@expo/vector-icons'
-import { useNavigation, useTheme } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 
+import { useCustomTheme } from '../../themes/theme'
 import styles from './styles'
 
 interface HeaderProps {
@@ -18,7 +19,7 @@ interface HeaderProps {
 export default function Header({ title, showIcon, fontSize, showStep, position }: HeaderProps) {
   const navigation = useNavigation()
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   return (
     <>

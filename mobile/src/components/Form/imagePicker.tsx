@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Image, Text, View, TouchableOpacity } from 'react-native'
 
 import { MaterialIcons as Icon } from '@expo/vector-icons'
-import { useTheme } from '@react-navigation/native'
 import { useField } from '@unform/core'
 import * as ImagePicker from 'expo-image-picker'
 
+import { useCustomTheme } from '../../themes/theme'
 import styles from './styles/imagePicker'
 
 interface ImagePickerInputProps {
@@ -19,13 +19,13 @@ export default function ImagePickerInput({ name }: ImagePickerInputProps) {
 
   const imagePickerRef = useRef(null)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   async function handleSelectImages() {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
     if (status !== 'granted') {
-      alert('Eita precisamos de acesso ás suas fotos...')
+      alert('Precisamos de acesso ás suas fotos...')
       return
     }
 

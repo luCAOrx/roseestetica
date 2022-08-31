@@ -3,13 +3,13 @@ import { Alert, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
 import { useRoute } from '@react-navigation/core'
-import { useTheme } from '@react-navigation/native'
 import { format, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
 import Loading from '../../../components/Loading'
 import { useAuth } from '../../../contexts/auth'
 import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
 import styles from '../styles/details'
 
 interface Data {
@@ -39,7 +39,7 @@ export default function Detail() {
 
   const { cliente, requestRefreshToken } = useAuth()
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const [detail, setDetail] = useState<Data>({} as Data)
 

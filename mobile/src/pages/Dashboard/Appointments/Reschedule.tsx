@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Alert, RefreshControl, ScrollView } from 'react-native'
 import { DateData } from 'react-native-calendars'
 
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
@@ -14,6 +14,7 @@ import Loading from '../../../components/Loading'
 import { useAuth } from '../../../contexts/auth'
 import { useSuccessScreen } from '../../../contexts/successScreen'
 import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
 import getValidationErros from '../../../utils/handleErrors'
 
 interface ReScheduleData {
@@ -38,7 +39,7 @@ export default function Schedule() {
   const route = useRoute()
   const params = route.params as ScheduleParams
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const [
     availableAppointments,

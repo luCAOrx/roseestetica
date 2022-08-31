@@ -10,7 +10,7 @@ import {
   View
 } from 'react-native'
 
-import { useNavigation, useTheme } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
@@ -20,6 +20,7 @@ import { Input } from '../../components/Form/index'
 import { useAuth } from '../../contexts/auth'
 import logoDarkTheme from '../../images/logo-dark-theme.png'
 import logoLightTheme from '../../images/logo-light-theme.png'
+import { useCustomTheme } from '../../themes/theme'
 import getValidationErros from '../../utils/handleErrors'
 import styles from './styles/signin'
 
@@ -32,7 +33,7 @@ export default function Login() {
   const formRef = useRef<FormHandles>(null)
   const passwordRef = useRef<TextInput>(null)
 
-  const { colors, dark } = useTheme()
+  const { colors, dark } = useCustomTheme()
 
   const { signIn } = useAuth()
 

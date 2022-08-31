@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { View, TextInput, Alert } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
@@ -12,6 +12,7 @@ import { Input } from '../../../components/Form/index'
 import Header from '../../../components/Header'
 import { useSuccessScreen } from '../../../contexts/successScreen'
 import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
 import getValidationErros from '../../../utils/handleErrors'
 
 interface Data {
@@ -38,7 +39,7 @@ export default function LoginData() {
   const formRef = useRef<FormHandles>(null)
   const passwordRef = useRef<TextInput>(null)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const {
     handleShowSuccessMessage,

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
 
-import { useNavigation, useTheme } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import CustomButton from '../../../components/Button'
 import { Input } from '../../../components/Form'
 import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
 import getValidationErros from '../../../utils/handleErrors'
 
 interface Credentials {
@@ -18,7 +19,7 @@ interface Credentials {
 export default function ForgotMyPassword() {
   const [isRequested, setIsRequested] = useState(false)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const formRef = useRef<FormHandles>(null)
 

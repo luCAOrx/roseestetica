@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, FlatList, Text, ScrollView, RefreshControl } from 'react-native'
 
-import { useTheme } from '@react-navigation/native'
 import { format, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
@@ -9,6 +8,7 @@ import CardAppointments from '../../../components/CardAppointments'
 import Loading from '../../../components/Loading'
 import { useAuth } from '../../../contexts/auth'
 import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
 import styles from '../styles/appointments'
 
 interface MySchedules {
@@ -20,7 +20,7 @@ interface MySchedules {
 export default function Appointments() {
   const { cliente, requestRefreshToken } = useAuth()
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const [mySchedules, setMySchedules] = useState<MySchedules[]>([])
 

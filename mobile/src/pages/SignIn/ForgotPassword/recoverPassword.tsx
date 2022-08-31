@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Text, ScrollView, View, TextInput } from 'react-native'
 
 import { MaterialIcons } from '@expo/vector-icons'
-import { useNavigation, useTheme } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
@@ -12,6 +12,7 @@ import { Input } from '../../../components/Form'
 import Header from '../../../components/Header'
 import { useSuccessScreen } from '../../../contexts/successScreen'
 import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
 import getValidationErros from '../../../utils/handleErrors'
 import styles from '../styles/recoverPassword'
 
@@ -28,7 +29,7 @@ export default function RecoverPassword() {
   const tokenInputRef = useRef<TextInput>(null)
   const passwordInputRef = useRef<TextInput>(null)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const {
     handleShowSuccessMessage,

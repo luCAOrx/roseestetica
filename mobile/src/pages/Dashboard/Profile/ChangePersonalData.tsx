@@ -4,7 +4,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Modalize } from 'react-native-modalize'
 
 import { MaterialIcons as Icon } from '@expo/vector-icons'
-import { useTheme } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
@@ -16,12 +15,9 @@ import Loading from '../../../components/Loading'
 import { useAuth } from '../../../contexts/auth'
 import { useSuccessScreen } from '../../../contexts/successScreen'
 import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
 import getValidationErros from '../../../utils/handleErrors'
 import styles from '../styles/ChangePersonalData'
-
-
-
-
 
 interface PersonalData {
   foto: string
@@ -33,7 +29,7 @@ interface PersonalData {
 export default function ChangePersonalData() {
   const { cliente, imagem_url, updateProfile, updatePhoto, requestRefreshToken } = useAuth()
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const formRef = useRef<FormHandles>(null)
   const phoneNumberInputRef = useRef<TextInput>(null)

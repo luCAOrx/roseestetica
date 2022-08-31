@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { View, TextInput } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import CustomButton from '../../../components/Button'
 import { Input, InputMask, Select } from '../../../components/Form/index'
 import Header from '../../../components/Header'
+import { useCustomTheme } from '../../../themes/theme'
 import getValidationErros from '../../../utils/handleErrors'
 
 interface PersonalData {
@@ -37,7 +38,7 @@ export default function Address() {
   const complementRef = useRef<TextInput>(null)
   const cepRef = useRef<TextInput>(null)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const navigation = useNavigation()
   const route = useRoute()

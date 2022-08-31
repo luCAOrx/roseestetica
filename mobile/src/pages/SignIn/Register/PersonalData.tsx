@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import { ScrollView, TextInput } from 'react-native'
 
 import { useNavigation } from '@react-navigation/core'
-import { useTheme } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
@@ -10,6 +9,7 @@ import * as Yup from 'yup'
 import CustomButton from '../../../components/Button'
 import { Input, InputMask, Select, ImagePicker } from '../../../components/Form'
 import Header from '../../../components/Header'
+import { useCustomTheme } from '../../../themes/theme'
 import getValidationErros from '../../../utils/handleErrors'
 
 interface PersonalDataProps {
@@ -27,7 +27,7 @@ export default function PersonalData() {
   const phoneNumberInputRef = useRef<TextInput>(null)
   const cellPhoneNumberInputRef = useRef<TextInput>(null)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const navigation = useNavigation()
 

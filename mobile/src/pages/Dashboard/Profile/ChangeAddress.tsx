@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView, TextInput, Alert } from 'react-native'
 
-import { useTheme } from '@react-navigation/native'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/mobile'
 import * as Yup from 'yup'
@@ -12,6 +11,7 @@ import Header from '../../../components/Header'
 import { useAuth } from '../../../contexts/auth'
 import { useSuccessScreen } from '../../../contexts/successScreen'
 import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
 import getValidationErros from '../../../utils/handleErrors'
 
 interface AdressData {
@@ -26,7 +26,7 @@ interface AdressData {
 export default function ChangeAddress() {
   const { cliente, updateProfile, requestRefreshToken } = useAuth()
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const formRef = useRef<FormHandles>(null)
   const streetRef = useRef<TextInput>(null)

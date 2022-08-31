@@ -1,14 +1,13 @@
 import React, { useEffect, useRef } from 'react'
-
-import '../../config/locale'
-
 import { Text } from 'react-native'
 import { Calendar, DateData } from 'react-native-calendars'
 
+import '../../config/locale'
+
 import { MaterialIcons as Icon } from '@expo/vector-icons'
-import { useTheme } from '@react-navigation/native'
 import { useField } from '@unform/core'
 
+import { useCustomTheme } from '../../themes/theme'
 import styles from './styles/selectDate'
 
 interface SelectDateProps {
@@ -20,7 +19,7 @@ interface SelectDateProps {
 export default function SelectDate({ name, selectedDay, onDayPress }: SelectDateProps) {
   const { fieldName, registerField, error } = useField(name)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const selectDateRef = useRef(null)
 

@@ -2,9 +2,9 @@ import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef,
 import { Text, TextInput, TextInputProps, View, TouchableOpacity } from 'react-native'
 
 import { MaterialIcons } from '@expo/vector-icons'
-import { useTheme } from '@react-navigation/native'
 import { useField } from '@unform/core'
 
+import { useCustomTheme } from '../../themes/theme'
 import styles from './styles/input'
 
 interface InputProps extends TextInputProps {
@@ -40,7 +40,7 @@ const Input: React.ForwardRefRenderFunction<InputHandles, InputProps> = ({
 
   const inputRef = useRef<InputReference>(null)
 
-  const { colors } = useTheme()
+  const { colors } = useCustomTheme()
 
   const handleChangeText = useCallback(
     (value: string) => {
