@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { Text, View } from 'react-native'
 
 import { Feather } from '@expo/vector-icons'
@@ -11,18 +10,16 @@ interface SucessScreenProps {
   title: string
 }
 
-export const SuccessScreen: React.FC<SucessScreenProps> = ({
-  title,
-  show
-}): JSX.Element => {
+export function SuccessScreen({ title, show }: SucessScreenProps) {
   return (
     <>
       {
-        show ??
-        <View style={styles.container} testID="sucessScreenContainer">
-          <Feather name="check-circle" color="#34CB79" size={50} />
-          <Text style={styles.text} testID="successScreenTitle">{title}</Text>
-        </View>
+        show
+          ? <View style={styles.container} testID="sucessScreenContainer">
+            <Feather name="check-circle" color="#34CB79" size={50} />
+            <Text style={styles.text} testID="successScreenTitle">{title}</Text>
+          </View>
+          : null
       }
     </>
   )
