@@ -23,9 +23,9 @@ import styles from '../styles/profile'
 export default function Profile() {
   const { cliente, imagem_url, requestRefreshToken, signOut } = useAuth()
 
-  const { toggleTheme } = useContext(ToggleThemeContext)
+  const { toggleTheme, isDarkMode } = useContext(ToggleThemeContext)
 
-  const { colors, dark } = useCustomTheme()
+  const { colors } = useCustomTheme()
 
   const navigation = useNavigation()
 
@@ -303,7 +303,7 @@ export default function Profile() {
             onPress={toggleTheme}
           >
             <Feather
-              name={dark ? 'moon' : 'sun'}
+              name={!isDarkMode ? 'moon' : 'sun'}
               color={colors.text}
               size={25}
             />
@@ -320,7 +320,7 @@ export default function Profile() {
             <Switch
               thumbColor={colors.text}
               trackColor={{ false: '#ccc', true: '#4CAF50' }}
-              value={dark}
+              value={!isDarkMode}
               onValueChange={toggleTheme}
             />
           </TouchableOpacity>
