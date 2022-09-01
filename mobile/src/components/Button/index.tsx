@@ -46,18 +46,23 @@ export default function CustomButton({
       {...rest}
       testID="button"
     >
-      <Text
-        style={[
-          styles.title,
-          {
-            fontSize,
-            color
-          }
-        ]}
-        testID="text"
-      >
-        {isRequested ? <Loading /> : title}
-      </Text>
+      {
+        isRequested
+          ? <Loading />
+          : <Text
+            style={[
+              styles.title,
+              {
+                fontSize,
+                color
+              }
+            ]}
+            testID="text"
+          >
+            {title}
+          </Text>
+
+      }
     </TouchableOpacity>
 
   )
