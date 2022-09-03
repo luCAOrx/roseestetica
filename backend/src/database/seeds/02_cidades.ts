@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import { Knex } from 'knex'
 
 export async function seed(knex: Knex) {
   await knex('cidades').insert([
@@ -7,5 +7,5 @@ export async function seed(knex: Knex) {
     { cidade: 'Pendências' },
     { cidade: 'Assu' },
     { cidade: 'Angicos' }
-  ]);
-};
+  ])
+}

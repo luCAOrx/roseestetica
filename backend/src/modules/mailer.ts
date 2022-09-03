@@ -1,36 +1,35 @@
-import nodemailer from 'nodemailer';
-import handlebars from 'nodemailer-express-handlebars';
+import nodemailer from 'nodemailer'
+import handlebars from 'nodemailer-express-handlebars'
+import path from 'path'
 
-import path from 'path';
+import mailConfig from '../config/mail'
 
-import mailConfig from '../config/mail';
-
-const { host, port, secure, user, pass, ciphers } = mailConfig;
+const { host, port, secure, user, pass, ciphers } = mailConfig
 
 const transport = nodemailer.createTransport({
-  host,
-  port,
+  host: String(host),
+  port: Number(port),
   secure,
   auth: {
-    user,
-    pass
+    user: String(user),
+    pass: String(pass)
   },
   tls: {
     ciphers
   }
-});
+})
 
 const handlebarOptions = {
   viewEngine: {
     extName: '.html',
     partialsDir: path.resolve('./src/resources/mail/auth/'),
     layoutsDir: path.resolve('./src/resources/mail/auth/'),
-    defaultLayout: 'esqueci_minha_senha.html',
+    defaultLayout: 'esqueci_minha_senha.html'
   },
   viewPath: path.resolve('./src/resources/mail/auth/'),
-  extName: '.html',
-};
+  extName: '.html'
+}
 
-transport.use('compile', handlebars(handlebarOptions));
+transport.use('compile', handlebars(handlebarOptions))
 
-export default transport;
+export default transport
