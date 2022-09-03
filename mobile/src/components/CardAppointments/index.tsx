@@ -1,161 +1,183 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState } from 'react'
+import { Alert, Text, View } from 'react-native'
 
-import api from '../../services/api';
+import { MaterialIcons as Icon } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import dayjs from 'dayjs'
 
-import { Alert, Text, View } from 'react-native';
-
-import styles from './styles';
-
-import { useNavigation, useTheme } from '@react-navigation/native';
-
-import { MaterialIcons as Icon } from '@expo/vector-icons';
-
-import CustomButton from '../../components/Button';
-
-import dayjs from 'dayjs';
-
-import { useAuth } from '../../contexts/auth';
+import CustomButton from '../../components/Button'
+import { useAuth } from '../../contexts/auth'
+import { useSuccessScreen } from '../../contexts/successScreen'
+import api from '../../services/api'
+import { useCustomTheme } from '../../themes/theme'
+import styles from './styles'
 
 interface CardAppointmentsProps {
-  text: string;
-  agendamento_id: number;
-  id: number;
-  data: string;
-};
+  text: string
+  agendamento_id: number
+  id: number
+  date: string
+}
 
-function CardAppointments({text, agendamento_id, id, data}: CardAppointmentsProps) {
-  const [ isRequested, setIsRequested] = useState(false);
+function CardAppointments({ text, agendamento_id, id, date }: CardAppointmentsProps) {
+  const [isRequested, setIsRequested] = useState(false)
 
-  const {colors} = useTheme();
+  const { colors } = useCustomTheme()
 
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
-  const dataDeAgora = dayjs().format('YYYY/MM/DD');
+  const dateOfNow = dayjs().format('YYYY/MM/DD')
 
-  const {requestRefreshToken} = useAuth();
+  const { requestRefreshToken } = useAuth()
+
+  const {
+    handleShowSuccessMessage,
+    handleTitleSuccessMessage
+  } = useSuccessScreen()
+
+  const threeSeconds = 3000
 
   function handleNavigateToDetail() {
-    navigation.navigate('Detail' as never, {agendamento_id} as never);
-  };
+    navigation.navigate('Detail' as never, { agendamento_id } as never)
+  }
 
   function handleNavigateToReschedule() {
-    navigation.navigate('Reschedule' as never, {id} as never);
-  };
+    navigation.navigate('Reschedule' as never, { id } as never)
+  }
 
   function handleNavigateToChangeProcedure() {
-    navigation.navigate('ChangeProcedure' as never, {agendamento_id} as never);
-  };
+    navigation.navigate('ChangeProcedure' as never, { agendamento_id } as never)
+  }
 
   async function handleDeleteSchedule() {
-    setIsRequested(true);
-
     Alert.alert('Cancelar agendamento', 'Tem certeza que deseja cancelar seu agendamento?', [
       {
         text: 'Sim',
-        onPress: async () => await api.delete(`cancelar/${id}`).then(() => {
-          setIsRequested(false);
+        onPress: async () => {
+          setIsRequested(true)
 
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Appointments' as never}]
-          });
-        }).catch(async error => {
-          const apiErrorMessage = error.response.data.mensagem
-    
-          if (error.response.status === 401) {
-            await requestRefreshToken();
-    
-            await api.delete(`cancelar/${id}`).then(() => {
-              setIsRequested(false);
-              
+          await api.delete(`cancelar/${id}`).then(() => {
+            setIsRequested(false)
+            handleTitleSuccessMessage('Deletado com sucesso')
+            handleShowSuccessMessage(true)
+
+            setTimeout(() => {
+              handleShowSuccessMessage(false)
+
               navigation.reset({
                 index: 0,
-                routes: [{name: 'Appointments' as never}]
-              });
-            })
-          };
-    
-          if (error.response.status === 400) {
-            Alert.alert('Falha ao cancelar agendamento', apiErrorMessage);
-    
-            setIsRequested(false);
-          };
-    
-        })
+                routes: [{ name: 'Appointments' as never }]
+              })
+            }, threeSeconds)
+          }).catch(async error => {
+            const apiErrorMessage = error.response.data.mensagem
+
+            setIsRequested(false)
+
+            if (error.response.status === 401) {
+              await requestRefreshToken()
+
+              await api.delete(`cancelar/${id}`).then(() => {
+                setIsRequested(false)
+                handleShowSuccessMessage(true)
+
+                handleTitleSuccessMessage('Deletado com sucesso')
+
+                setTimeout(() => {
+                  handleShowSuccessMessage(false)
+
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Appointments' as never }]
+                  })
+                }, threeSeconds)
+              })
+            }
+
+            if (error.response.status === 400) {
+              setIsRequested(false)
+
+              Alert.alert('Falha ao cancelar agendamento', apiErrorMessage)
+            }
+          })
+        }
       },
       {
         text: 'Não',
         onPress: () => { setIsRequested(false) }
       }
-    ]);
-  };
+    ])
+  }
 
   return (
-    <View 
+    <View
       style={[
         styles.card,
         {
           backgroundColor: colors.card,
-          height: dayjs(data).isBefore(dayjs(dataDeAgora)) ? 160 : 400
+          height: dayjs(date).isBefore(dayjs(dateOfNow)) ? 160 : 400
         }
       ]}
       testID="card"
     >
       <View style={styles.header}>
-        <Icon name="event-available" size={20} color={colors.text}/>
-        <Text 
+        <Icon name="event-available" size={20} color={colors.text} />
+        <Text
           style={[
             styles.text,
-            {color: colors.text}
+            { color: colors.text }
           ]}
           testID="text-card"
         >
           {text}
         </Text>
       </View>
-      <CustomButton 
-        title="VER DETALHES" 
-        backgroundColor={colors.buttonSecondaryBackground} 
+      <CustomButton
+        title="VER DETALHES"
+        backgroundColor={colors.buttonSecondaryBackground}
         color={colors.buttonText}
         height={50}
         fontSize={15}
         onPress={handleNavigateToDetail}
       />
-      {dayjs(data).isBefore(dataDeAgora) ? (
-          <View />
-        ) : (
-          <>
-            <CustomButton 
-              title="REMARCAR" 
-              backgroundColor={colors.buttonSecondaryBackground} 
-              color={colors.buttonText}
-              height={50}
-              fontSize={15}
-              onPress={handleNavigateToReschedule}
-            />
-            <CustomButton 
-              title="ALTERAR PROCEDIMENTO" 
-              backgroundColor={colors.buttonSecondaryBackground} 
-              color={colors.buttonText}
-              height={50}
-              fontSize={15}
-              onPress={handleNavigateToChangeProcedure}
-            />
-            <CustomButton 
-              title="CANCELAR" 
-              backgroundColor={colors.buttonTertiaryBackground} 
-              color={colors.buttonText}
-              height={50}
-              fontSize={15}
-              isRequested={isRequested}
-              onPress={() => {
-                handleDeleteSchedule();
-              }}
-            />
-          </>
-        )}
-    </View>
-  );
-};
+      {dayjs(date).isBefore(dateOfNow)
+        ? <View />
 
-export default memo(CardAppointments);
+        : <>
+          <CustomButton
+            title="REMARCAR"
+            backgroundColor={colors.buttonSecondaryBackground}
+            color={colors.buttonText}
+            height={50}
+            fontSize={15}
+            onPress={handleNavigateToReschedule}
+            disabled={!!dayjs(date).isBefore(dateOfNow)}
+          />
+          <CustomButton
+            title="ALTERAR PROCEDIMENTO"
+            backgroundColor={colors.buttonSecondaryBackground}
+            color={colors.buttonText}
+            height={50}
+            fontSize={15}
+            onPress={handleNavigateToChangeProcedure}
+            disabled={!!dayjs(date).isBefore(dateOfNow)}
+          />
+          <CustomButton
+            title="CANCELAR"
+            backgroundColor={colors.buttonTertiaryBackground}
+            color={colors.buttonText}
+            height={50}
+            fontSize={15}
+            isRequested={isRequested}
+            onPress={() => {
+              handleDeleteSchedule()
+            }}
+            disabled={!!dayjs(date).isBefore(dateOfNow)}
+          />
+        </>
+      }
+    </View>
+  )
+}
+
+export default memo(CardAppointments)

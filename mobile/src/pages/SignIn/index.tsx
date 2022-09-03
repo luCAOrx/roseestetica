@@ -1,109 +1,102 @@
-import React, { useEffect, useRef, useState } from 'react';
-
-import { 
+import React, { useEffect, useRef, useState } from 'react'
+import {
   Alert,
-  Animated, 
-  Keyboard, 
-  KeyboardAvoidingView, 
-  Platform, 
-  ScrollView, 
-  TextInput, 
-  View 
-} from 'react-native';
+  Animated,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  View
+} from 'react-native'
 
-import styles from './styles/signin';
+import { useNavigation } from '@react-navigation/native'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
+import * as Yup from 'yup'
 
-import { useNavigation, useTheme } from '@react-navigation/native';
-
-import logoDarkTheme from '../../images/logo-dark-theme.png';
-
-import logoLightTheme from '../../images/logo-light-theme.png';
-
-import { Input } from '../../components/Form/index';
-import CustomButton from '../../components/Button';
-
-import * as Yup from 'yup';
-
-import { Form } from '@unform/mobile';
-import { FormHandles } from '@unform/core';
-
-import { useAuth } from '../../contexts/auth';
-
-import getValidationErros from '../../utils/handleErrors';
+import CustomButton from '../../components/Button'
+import { Input } from '../../components/Form/index'
+import { useAuth } from '../../contexts/auth'
+import logoDarkTheme from '../../images/logo-dark-theme.png'
+import logoLightTheme from '../../images/logo-light-theme.png'
+import { useCustomTheme } from '../../themes/theme'
+import getValidationErros from '../../utils/handleErrors'
+import styles from './styles/signin'
 
 interface SignInData {
-  email: string;
-  senha: string;
-};
+  email: string
+  senha: string
+}
 
 export default function Login() {
-  const formRef = useRef<FormHandles>(null);
-  const passwordRef = useRef<TextInput>(null);
+  const formRef = useRef<FormHandles>(null)
+  const passwordRef = useRef<TextInput>(null)
 
-  const {colors, dark} = useTheme();
+  const { colors, dark } = useCustomTheme()
 
-  const {signIn} = useAuth();
-  
-  const navigation = useNavigation();
+  const { signIn } = useAuth()
 
-  const [ isRequested, setIsRequested] = useState(false);
+  const navigation = useNavigation()
+
+  const [isRequested, setIsRequested] = useState(false)
 
   const [logo] = useState(new Animated.ValueXY({
     x: 350, y: 55
-  }));
+  }))
 
   function handleNavigateToRegister() {
-    navigation.navigate("Register" as never);
-  };
+    navigation.navigate('Register' as never)
+  }
 
   function handleNavigateToForgotPassword() {
-    navigation.navigate("ForgotPassword" as never);
-  };
+    navigation.navigate('ForgotPassword' as never)
+  }
 
   async function handleSignIn(signInData: SignInData) {
-    const {email, senha} = signInData;
+    const { email, senha } = signInData
 
-    const data = {email, senha};
+    const data = { email, senha }
 
     try {
       const schema = Yup.object().shape({
         email: Yup.string()
-          .email("O campo e-mail precisa ser um e-mail válido!")
-          .max(80, "No máximo 80 caracteres!")
-          .required("O campo e-mail é obrigatório!"),
+          .email('O campo e-mail precisa ser um e-mail válido!')
+          .max(80, 'No máximo 80 caracteres!')
+          .required('O campo e-mail é obrigatório!'),
         senha: Yup.string()
-          .min(8, "No mínimo 8 caracteres!")
-          .max(50, "No máximo 50 caracteres!")
-          .required("O campo senha é obrigatório!"),
-      });
+          .min(8, 'No mínimo 8 caracteres!')
+          .max(50, 'No máximo 50 caracteres!')
+          .required('O campo senha é obrigatório!')
+      })
 
       await schema.validate(data, {
         abortEarly: false
-      });
+      })
 
-      formRef.current?.setErrors({});
+      formRef.current?.setErrors({})
 
-      setIsRequested(true);
-      
+      setIsRequested(true)
+
       await signIn(data).catch(error => {
-        const apiErrorMessage = error.response.data.erro;
+        const apiErrorMessage = error.response.data.erro
 
         if (error.response?.status === 400) {
-          setIsRequested(false);
+          setIsRequested(false)
 
-          Alert.alert('Erro', apiErrorMessage);
-        };
-      });
+          Alert.alert('Erro', apiErrorMessage)
+        }
+      })
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
-        setIsRequested(false);
+        setIsRequested(false)
 
-        const errors = getValidationErros(err);
-        
-        formRef.current?.setErrors(errors);
-      };
-    };
-  };
+        const errors = getValidationErros(err)
+
+        formRef.current?.setErrors(errors)
+      }
+    }
+  }
 
   function keyboardDidShow() {
     Animated.parallel([
@@ -116,8 +109,8 @@ export default function Login() {
         useNativeDriver: false,
         toValue: 30,
         duration: 100
-      }),
-    ]).start();
+      })
+    ]).start()
   }
 
   function keyboardDidHide() {
@@ -131,33 +124,33 @@ export default function Login() {
         useNativeDriver: false,
         toValue: 55,
         duration: 100
-      }),
-    ]).start();
+      })
+    ]).start()
   }
 
   useEffect(() => {
     Keyboard.addListener(
       'keyboardDidShow', keyboardDidShow
-    );
+    )
 
     Keyboard.addListener(
       'keyboardDidHide', keyboardDidHide
-    );
-  }, []);
+    )
+  }, [])
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.container} keyboardDismissMode="interactive">
         <View style={styles.logo}>
-          <Animated.Image 
+          <Animated.Image
             style={{
-              height: logo.y, 
-              width: logo.x,
-            }} 
-            source={dark ? logoDarkTheme : logoLightTheme} 
+              height: logo.y,
+              width: logo.x
+            }}
+            source={dark ? logoDarkTheme : logoLightTheme}
           />
         </View>
         <Form ref={formRef} onSubmit={handleSignIn}>
@@ -182,29 +175,29 @@ export default function Login() {
             isPassword
             returnKeyType="send"
             onSubmitEditing={() => {
-              setIsRequested(true);
+              setIsRequested(true)
 
-              formRef.current?.submitForm();
+              formRef.current?.submitForm()
             }}
           />
 
-          <CustomButton 
-            title="Entrar" 
+          <CustomButton
+            title="Entrar"
             backgroundColor={colors.buttonPrimaryBackground}
             color={colors.buttonText}
             height={50}
             fontSize={18}
             isRequested={isRequested}
             onPress={() => {
-              setIsRequested(true);
+              setIsRequested(true)
 
-              formRef.current?.submitForm();
+              formRef.current?.submitForm()
             }}
           />
         </Form>
 
-        <CustomButton 
-          title="Criar uma conta" 
+        <CustomButton
+          title="Criar uma conta"
           backgroundColor="transparent"
           color={colors.text}
           borderColor={colors.border}
@@ -214,8 +207,8 @@ export default function Login() {
           onPress={handleNavigateToRegister}
         />
 
-        <CustomButton 
-          title="Esqueci minha senha" 
+        <CustomButton
+          title="Esqueci minha senha"
           backgroundColor="transparent"
           color={colors.text}
           borderColor={colors.border}
@@ -226,5 +219,5 @@ export default function Login() {
         />
       </ScrollView>
     </KeyboardAvoidingView>
-  );
-};
+  )
+}

@@ -1,47 +1,42 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react'
+import { Text, View, TouchableOpacity } from 'react-native'
+import { Modalize } from 'react-native-modalize'
 
-import { Text, View, TouchableOpacity } from 'react-native';
+import { MaterialIcons as Icon } from '@expo/vector-icons'
+import { useField } from '@unform/core'
 
-import { useTheme } from '@react-navigation/native';
-
-import styles from './styles/select';
-
-import { MaterialIcons as Icon } from '@expo/vector-icons';
-
-import { Modalize } from 'react-native-modalize';
-
-import { useField } from '@unform/core';
-
-import api from '../../services/api';
+import api from '../../services/api'
+import { useCustomTheme } from '../../themes/theme'
+import styles from './styles/select'
 
 interface SelectProps {
-  icon: keyof typeof Icon.glyphMap;
-  placeholder: string;
-  modalHeight: number;
-  snapPoint: number;
-  isGender: boolean;
-  name: string;
-  placeholderTextColor?: string;
-  value?: number;
-};
+  icon: keyof typeof Icon.glyphMap
+  placeholder: string
+  modalHeight: number
+  snapPoint: number
+  isGender: boolean
+  name: string
+  placeholderTextColor?: string
+  value?: number
+}
 
 // interface SelectReference extends TouchableOpacity {
 //   value: number;
 // }
 
 interface Gender {
-  id: number;
-  sexo: string;
-};
+  id: number
+  sexo: string
+}
 
 interface City {
-  id: number;
-  cidade: string;
-};
+  id: number
+  cidade: string
+}
 
 export default function Select({
-  icon, 
-  placeholder, 
+  icon,
+  placeholder,
   modalHeight,
   snapPoint,
   isGender,
@@ -49,162 +44,153 @@ export default function Select({
   placeholderTextColor,
   value
 }: SelectProps) {
-  const [genders, setGenders] = useState<Gender[]>([]);
-  const [selectedGender, setSelectedGender] = useState<string>();
-  const [selectedGenderId, setSelectedGenderId] = useState<number>();
-  const [cities, setCities] = useState<City[]>([]);
-  const [selectedCity, setSelectedCity] = useState<string>();
-  const [selectedCityId, setSelectedCityId] = useState<number>();
+  const [genders, setGenders] = useState<Gender[]>([])
+  const [selectedGender, setSelectedGender] = useState<string>()
+  const [selectedGenderId, setSelectedGenderId] = useState<number>()
+  const [cities, setCities] = useState<City[]>([])
+  const [selectedCity, setSelectedCity] = useState<string>()
+  const [selectedCityId, setSelectedCityId] = useState<number>()
 
-  const { fieldName, registerField, error } = useField(name);
+  const { fieldName, registerField, error } = useField(name)
 
-  const modalizeRef = useRef<Modalize>(null);
-  const selectRef = useRef(null);
+  const modalizeRef = useRef<Modalize>(null)
+  const selectRef = useRef(null)
 
-  const {colors} = useTheme();
+  const { colors } = useCustomTheme()
 
   const onOpen = () => {
-    modalizeRef.current?.open();
-  };
+    modalizeRef.current?.open()
+  }
 
   const onClose = () => {
-    modalizeRef.current?.close();
-  };
+    modalizeRef.current?.close()
+  }
 
   function handleSelectGender(sex: string, id: number) {
-    setSelectedGender(sex);
-    setSelectedGenderId(id);
-  };
+    setSelectedGender(sex)
+    setSelectedGenderId(id)
+  }
 
   function handleSelectCity(city: string, id: number) {
-    setSelectedCity(city);
-    setSelectedCityId(id);
-  };
+    setSelectedCity(city)
+    setSelectedCityId(id)
+  }
 
   useEffect(() => {
     api.get('generos').then(response => {
-      setGenders(response.data);
-    });
-  }, []);
+      setGenders(response.data)
+    })
+  }, [])
 
   useEffect(() => {
     api.get('cidades').then(response => {
-      setCities(response.data);
-    });
-  }, []);
+      setCities(response.data)
+    })
+  }, [])
 
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: selectRef.current,
       getValue() {
-        return isGender ? selectedGenderId : selectedCityId;
+        return isGender ? selectedGenderId : selectedCityId
       },
       setValue() {
         if (selectRef.current) {
           if (isGender) {
-            setSelectedGenderId(value);
+            setSelectedGenderId(value)
 
-            return selectedGenderId;
+            return selectedGenderId
           } else {
-            setSelectedCityId(value);
+            setSelectedCityId(value)
 
             return selectedCityId
           }
         }
       }
-    });
-  }, [fieldName, selectedGenderId, selectedCityId, registerField]);
+    })
+  }, [fieldName, selectedGenderId, selectedCityId, registerField])
 
   return (
     <>
-      <TouchableOpacity 
+      <TouchableOpacity
         ref={selectRef}
         style={[
           styles.container,
-          {backgroundColor: colors.card}
-        ]} 
+          { backgroundColor: colors.card }
+        ]}
         onPress={onOpen}
         testID="selectButtonContainer"
       >
-        <Icon 
-          style={{margin: 10}} 
-          name={icon} 
-          size={20} 
-          color={colors.primary} 
+        <Icon
+          style={{ margin: 10 }}
+          name={icon}
+          size={20}
+          color={colors.primary}
           testID="selectPrimaryIcon"
         />
-        
-        {isGender ? (
-          <Text 
+
+        {isGender
+          ? <Text
             style={
-              selectedGender?.length || placeholderTextColor ?
-              [styles.selected, 
-                {color: colors.text}
-              ] : 
-              [styles.placeholder,
-                {color: colors.primary}
-              ]
+              selectedGender?.length ?? placeholderTextColor
+                ? [styles.selected, { color: colors.text }]
+                : [styles.placeholder, { color: colors.primary }]
             }
             testID="selectPlaceholderGender"
           >
             {selectedGender?.length ? selectedGender : placeholder}
           </Text>
 
-        ) : (
-          <Text 
+          : <Text
             style={
-              selectedCity?.length || placeholderTextColor ?
-              [styles.selected, 
-                {color: colors.text}
-              ] : 
-              [styles.placeholder,
-                {color: colors.primary}
-              ]
+              selectedCity?.length ?? placeholderTextColor
+                ? [styles.selected, { color: colors.text }]
+                : [styles.placeholder, { color: colors.primary }]
             }
             testID="selectPlaceholderCity"
           >
             {selectedCity?.length ? selectedCity : placeholder}
           </Text>
-        )}
+        }
 
-        <Icon 
-          style={{margin: 10}} 
+        <Icon
+          style={{ margin: 10 }}
           name="keyboard-arrow-down"
-          size={20} 
-          color={colors.primary} 
+          size={20}
+          color={colors.primary}
           testID="selectSecondaryIcon"
         />
       </TouchableOpacity>
 
-      <Modalize 
+      <Modalize
         ref={modalizeRef}
         snapPoint={snapPoint}
         modalHeight={modalHeight}
         modalStyle={[
           styles.modal,
-          {backgroundColor: colors.secondary}
+          { backgroundColor: colors.secondary }
         ]}
       >
         {isGender && genders.map(gender => (
-          <View 
+          <View
             style={[
               styles.itemContainer,
-              {borderBottomColor: colors.separator}
+              { borderBottomColor: colors.separator }
             ]}
             key={gender.id}
           >
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.item]}
               onPress={() => {
-                onClose();
-                handleSelectGender(gender.sexo, gender.id);
+                onClose()
+                handleSelectGender(gender.sexo, gender.id)
               }}
             >
-              <Text 
+              <Text
                 style={[
                   styles.itemTitle,
-                  {color: colors.text}
+                  { color: colors.text }
                 ]}
               >
                 {gender.sexo}
@@ -214,24 +200,24 @@ export default function Select({
         ))}
 
         {!isGender && cities.map(city => (
-          <View 
+          <View
             style={[
               styles.itemContainer,
-              {borderBottomColor: colors.separator}
+              { borderBottomColor: colors.separator }
             ]}
             key={city.id}
           >
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.item}
               onPress={() => {
-                onClose();
-                handleSelectCity(city.cidade, city.id);
+                onClose()
+                handleSelectCity(city.cidade, city.id)
               }}
             >
-              <Text 
+              <Text
                 style={[
                   styles.itemTitle,
-                  {color: colors.text}
+                  { color: colors.text }
                 ]}
               >
                 {city.cidade}
@@ -240,7 +226,7 @@ export default function Select({
           </View>
         ))}
       </Modalize>
-      { error && <Text style={styles.errorMessage} testID="selectErrorMessage">{error}</Text>}
+      {error && <Text style={styles.errorMessage} testID="selectErrorMessage">{error}</Text>}
     </>
-  );
-};
+  )
+}

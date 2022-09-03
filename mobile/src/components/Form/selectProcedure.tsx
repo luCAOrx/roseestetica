@@ -1,56 +1,52 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react'
+import { Text } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import { Text } from 'react-native';
+import { useField } from '@unform/core'
+import Checkbox from 'expo-checkbox'
 
-import styles from './styles/selectProcedure';
-
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import Checkbox from 'expo-checkbox';
-
-import { useField } from '@unform/core';
-import { useTheme } from '@react-navigation/native';
+import { useCustomTheme } from '../../themes/theme'
+import styles from './styles/selectProcedure'
 
 interface CustomCheckboxProps {
-  name: string;
-  procedure: string;
-  price: string;
-  id: number;
-  handleSelectProcedure(id: number): void;
-  selectedProcedure: Array<number>;
-};
+  name: string
+  procedure: string
+  price: string
+  id: number
+  handleSelectProcedure: (id: number) => void
+  selectedProcedure: number[]
+}
 
 export default function SelectProcedure({
-  name, 
-  procedure, 
-  price, 
-  id, 
-  handleSelectProcedure, 
+  name,
+  procedure,
+  price,
+  id,
+  handleSelectProcedure,
   selectedProcedure
 }: CustomCheckboxProps) {
-  
-  const [isChecked, setChecked] = useState(false);
+  const [isChecked, setChecked] = useState(false)
 
-  const {colors} = useTheme();
+  const { colors } = useCustomTheme()
 
-  const { fieldName, registerField, error } = useField(name);
+  const { fieldName, registerField, error } = useField(name)
 
-  const selectProcedureRef = useRef(null);
+  const selectProcedureRef = useRef(null)
 
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: selectProcedureRef.current,
       getValue() {
-        return selectedProcedure;
+        return selectedProcedure
       }
-    });
-  }, [fieldName, selectedProcedure, registerField]);
+    })
+  }, [fieldName, selectedProcedure, registerField])
 
   return (
     <>
-      <TouchableOpacity 
-        style={styles.container} 
+      <TouchableOpacity
+        style={styles.container}
         onPress={() => {
           setChecked(!isChecked)
           handleSelectProcedure(id)
@@ -61,24 +57,24 @@ export default function SelectProcedure({
           value={isChecked}
           color={colors.primary}
         />
-        <Text 
+        <Text
           style={[
             styles.text,
-            {color: colors.text}
+            { color: colors.text }
           ]}
         >
           {procedure}
         </Text>
-        <Text 
+        <Text
           style={[
             styles.price,
-            {color: colors.price}
+            { color: colors.price }
           ]}
         >
           {price}
         </Text>
       </TouchableOpacity>
-      { error && <Text style={styles.errorMessage}>{error}</Text>}
-    </>  
-  );
-};
+      {error && <Text style={styles.errorMessage}>{error}</Text>}
+    </>
+  )
+}

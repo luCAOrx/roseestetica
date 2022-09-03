@@ -1,64 +1,70 @@
-import 'react-native-gesture-handler';
+import 'react-native-gesture-handler'
 
-import React, { useState, useCallback } from 'react';
+import React, { useEffect } from 'react'
 
-import * as SplashScreen from 'expo-splash-screen';
+import { Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti'
+import {
+  Roboto_400Regular,
+  Roboto_900Black,
+  Roboto_700Bold,
+  useFonts
+} from '@expo-google-fonts/roboto'
+import { NavigationContainer } from '@react-navigation/native'
+import * as SecureStore from 'expo-secure-store'
+import * as SplashScreen from 'expo-splash-screen'
 
-import { 
-  Roboto_400Regular, 
-  Roboto_900Black, 
-  Roboto_700Bold, 
-  useFonts 
-} from '@expo-google-fonts/roboto';
+import { AuthProvider } from './src/contexts/auth'
+import { SuccessScreenProvider } from './src/contexts/successScreen'
+import ToggleThemeContext from './src/contexts/toogleTheme'
+import usePersistedState from './src/hooks/usePersistedState'
+import Routes from './src/routes'
+import { dark } from './src/themes/dark'
+import { light } from './src/themes/light'
 
-import { Calligraffitti_400Regular } from '@expo-google-fonts/calligraffitti';
-
-import { AuthProvider } from './src/contexts/auth';
-
-import ToggleThemeContext from './src/contexts/toogleTheme';
-
-import {NavigationContainer} from '@react-navigation/native';
-
-import Routes from './src/routes';
-
-import usePersistedState from './src/hooks/usePersistedState';
-
-import { dark } from './src/themes/dark';
-import { light } from './src/themes/light';
-
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = usePersistedState('isDarkMode', true)
+  const [theme, setTheme] = usePersistedState('theme', dark)
 
-  const [theme, setTheme] = usePersistedState("theme", dark);
-
-  const toggleTheme = useCallback(() => {
-    setIsDarkMode(!isDarkMode);
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode)
 
     setTheme(isDarkMode ? dark : light)
-  }, [theme]);
-  
+  }
+
+  async function loadStorageTheme() {
+    const customTheme = await SecureStore.getItemAsync('theme')
+
+    if (customTheme?.length === 0 || customTheme?.length === undefined) {
+      setTheme(dark)
+    }
+  }
+
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_900Black,
     Roboto_700Bold,
     Calligraffitti_400Regular
-  });
+  })
+
+  useEffect(() => { loadStorageTheme() }, [])
 
   if (!fontsLoaded) {
     return null
   }
 
-  SplashScreen.hideAsync();
+  SplashScreen.hideAsync()
 
   return (
     <AuthProvider>
-      <ToggleThemeContext.Provider value={{toggleTheme, isDarkMode}}>
-        <NavigationContainer theme={theme}>
-          <Routes />
-        </NavigationContainer>
+      <ToggleThemeContext.Provider value={{ toggleTheme, isDarkMode }}>
+        <SuccessScreenProvider>
+          <NavigationContainer theme={theme}>
+            <Routes />
+          </NavigationContainer>
+        </SuccessScreenProvider>
       </ToggleThemeContext.Provider>
     </AuthProvider>
-  );
+  )
 }

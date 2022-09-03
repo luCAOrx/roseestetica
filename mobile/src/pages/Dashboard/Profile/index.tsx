@@ -1,142 +1,146 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react'
+import {
+  Alert,
+  Image,
+  Switch,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity
+} from 'react-native'
 
-import { 
-  Alert, 
-  Image, 
-  Switch, 
-  Text, 
-  View, 
-  ScrollView, 
-  TouchableOpacity 
-} from 'react-native';
+import { MaterialIcons, Feather } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 
-import { MaterialIcons, Feather } from '@expo/vector-icons';
-
-import { useNavigation, useTheme } from '@react-navigation/native';
-
-import { useAuth } from '../../../contexts/auth';
-
-import ToggleThemeContext from '../../../contexts/toogleTheme';
-
-import api from '../../../services/api';
-
-import SucessScreen from '../../../components/SucessScreen';
-
-import styles from '../styles/profile';
+import Loading from '../../../components/Loading'
+import { useAuth } from '../../../contexts/auth'
+import { useSuccessScreen } from '../../../contexts/successScreen'
+import ToggleThemeContext from '../../../contexts/toogleTheme'
+import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
+import styles from '../styles/profile'
 
 export default function Profile() {
-  const {cliente, imagem_url, requestRefreshToken, signOut} = useAuth();
+  const { cliente, imagem_url, requestRefreshToken, signOut } = useAuth()
 
-  const {toggleTheme} = useContext(ToggleThemeContext);
+  const { toggleTheme, isDarkMode } = useContext(ToggleThemeContext)
 
-  const {colors, dark} = useTheme();
+  const { colors } = useCustomTheme()
 
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
-  const [ sucessMessage, setSucessMessage ] = useState(false);
+  const {
+    handleShowSuccessMessage,
+    handleTitleSuccessMessage
+  } = useSuccessScreen()
+
+  const [isRequested, setIsRequested] = useState(false)
 
   function handleNavigateToPersonalData() {
-    navigation.navigate("ChangePersonalData" as never);
-  };
+    navigation.navigate('ChangePersonalData' as never)
+  }
 
   function handleNavigateToAddress() {
-    navigation.navigate("ChangeAddress" as never);
-  };
+    navigation.navigate('ChangeAddress' as never)
+  }
 
   function handleNavigateToLoginData() {
-    navigation.navigate("ChangeLoginData" as never);
-  };
+    navigation.navigate('ChangeLoginData' as never)
+  }
 
-  async function handleDeleteClient () {
-    const threeSeconds = 3000;
+  async function handleDeleteClient() {
+    const threeSeconds = 3000
 
     Alert.alert('Dletar conta', 'Tem certeza que deseja deletar a sua conta?', [
       {
         text: 'Sim',
-        onPress: async () => await api.delete(`deletar/${cliente.id}`).then(() => {
-          setSucessMessage(true);
-        
-          setTimeout(() => {  
-            setSucessMessage(false);
-          }, threeSeconds);
+        onPress: async () => {
+          setIsRequested(true)
 
-          handleSignOut();
-        }).catch(async error => {
-          const apiErrorMessage = error.response.data.erro;
-    
-          if (error.response.status === 401) {
-            await requestRefreshToken();
-    
-            await api.delete(`deletar/${cliente.id}`).then(() => {
-              setSucessMessage(true);
-            
-              setTimeout(() => {  
-                setSucessMessage(false);
-              }, threeSeconds);
-    
-              handleSignOut();
-            })
-          };
-    
-          if (error.response.status === 400) {
-            Alert.alert('Erro', apiErrorMessage);
-          };
-        })
+          await api.delete(`deletar/${cliente.id}`).then(() => {
+            setIsRequested(false)
+
+            handleTitleSuccessMessage('Conta deletada')
+            handleShowSuccessMessage(true)
+
+            setTimeout(() => {
+              handleShowSuccessMessage(false)
+              signOut()
+            }, threeSeconds)
+          }).catch(async error => {
+            const apiErrorMessage = error.response.data.erro
+
+            if (error.response.status === 401) {
+              await requestRefreshToken()
+
+              await api.delete(`deletar/${cliente.id}`).then(() => {
+                setIsRequested(false)
+
+                handleTitleSuccessMessage('Conta deletada')
+                handleShowSuccessMessage(true)
+
+                setTimeout(() => {
+                  handleShowSuccessMessage(false)
+                  signOut()
+                }, threeSeconds)
+              })
+            }
+
+            if (error.response.status === 400) {
+              Alert.alert('Erro', apiErrorMessage)
+            }
+          })
+        }
       },
       {
         text: 'Não',
-        onPress: () => {}
+        onPress: () => { setIsRequested(false) }
       }
-    ]);
-    
-  };
+    ])
+  }
 
-  function handleSignOut() {
-    signOut();
-  };
-  
   return (
     <>
       <ScrollView>
-        <View 
+        <View
           style={[
             styles.headerContainer,
             {
               borderBottomColor: colors.border,
               marginBottom: 50
             }
-          ]} 
+          ]}
         >
           <View style={styles.header} >
-            <Image 
+            <Image
               style={styles.image}
-              source={{uri: imagem_url}}
+              source={{ uri: imagem_url.split('.com//uploads').join('/uploads') }}
             />
             <View style={styles.textContainer} >
-              <Text 
+              <Text
                 style={[
-                  styles.name, 
-                  {color: colors.text}
+                  styles.name,
+                  { color: colors.text }
                 ]}
               >
-                {cliente?.nome.split(' ').slice(0, 3).join(' ')}
+                {cliente?.nome.split(' ').slice(0, 2).join(' ')}
               </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.label}>
-          <Text 
+          <Text
             style={[
               styles.name,
-              {color: colors.text}
+              { color: colors.text }
             ]}
           >
             Conta
           </Text>
         </View>
 
-        <View 
+        <View
           style={[
             styles.buttonContainer,
             {
@@ -145,17 +149,17 @@ export default function Profile() {
             }
           ]}
         >
-          <TouchableOpacity 
-            style={styles.button} 
+          <TouchableOpacity
+            style={styles.button}
             onPress={handleNavigateToPersonalData}
           >
-            <Feather 
+            <Feather
               name="user"
               color={colors.text}
               size={25}
             />
             <View style={styles.textContainer}>
-              <Text 
+              <Text
                 style={[
                   styles.name,
                   {
@@ -166,16 +170,16 @@ export default function Profile() {
               >
                 Dados pessoais
               </Text>
-              <Text 
+              <Text
                 style={[
                   styles.description,
-                  {color: colors.primary}
+                  { color: colors.primary }
                 ]}
               >
                 Meus dados pessoais
               </Text>
             </View>
-            <MaterialIcons 
+            <MaterialIcons
               name="keyboard-arrow-right"
               color={colors.border}
               size={28}
@@ -183,23 +187,23 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
 
-        <View 
+        <View
           style={[
             styles.buttonContainer,
-            {borderBottomColor: colors.border}
+            { borderBottomColor: colors.border }
           ]}
         >
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.button}
             onPress={handleNavigateToAddress}
           >
-            <Feather 
+            <Feather
               name="map"
               color={colors.text}
               size={25}
             />
             <View style={styles.textContainer}>
-              <Text 
+              <Text
                 style={[
                   styles.name,
                   {
@@ -210,16 +214,16 @@ export default function Profile() {
               >
                 Endereço
               </Text>
-              <Text 
+              <Text
                 style={[
                   styles.description,
-                  {color: colors.primary}
+                  { color: colors.primary }
                 ]}
               >
                 Meu endereço
               </Text>
             </View>
-            <MaterialIcons 
+            <MaterialIcons
               name="keyboard-arrow-right"
               color={colors.border}
               size={28}
@@ -227,7 +231,7 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
 
-        <View 
+        <View
           style={[
             styles.buttonContainer,
             {
@@ -236,17 +240,17 @@ export default function Profile() {
             }
           ]}
         >
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.button}
             onPress={handleNavigateToLoginData}
           >
-            <Feather 
+            <Feather
               name="lock"
               color={colors.text}
               size={25}
             />
             <View style={styles.textContainer}>
-              <Text 
+              <Text
                 style={[
                   styles.name,
                   {
@@ -257,16 +261,16 @@ export default function Profile() {
               >
                 Login
               </Text>
-              <Text 
+              <Text
                 style={[
                   styles.description,
-                  {color: colors.primary}
+                  { color: colors.primary }
                 ]}
               >
                 Meu login
               </Text>
             </View>
-            <MaterialIcons 
+            <MaterialIcons
               name="keyboard-arrow-right"
               color={colors.border}
               size={28}
@@ -275,17 +279,17 @@ export default function Profile() {
         </View>
 
         <View style={styles.label}>
-          <Text 
+          <Text
             style={[
               styles.name,
-              {color: colors.text}
+              { color: colors.text }
             ]}
           >
             Configuração
           </Text>
         </View>
 
-        <View 
+        <View
           style={[
             styles.buttonContainer,
             {
@@ -294,132 +298,98 @@ export default function Profile() {
             }
           ]}
         >
-          <TouchableOpacity 
-            style={styles.button} 
+          <TouchableOpacity
+            style={styles.button}
             onPress={toggleTheme}
           >
-            <Feather 
-              name={dark ? "moon" : "sun"}
+            <Feather
+              name={!isDarkMode ? 'moon' : 'sun'}
               color={colors.text}
               size={25}
             />
             <View style={styles.textContainer}>
-              <Text 
+              <Text
                 style={[
                   styles.themeMode,
-                  {color: colors.text}
+                  { color: colors.text }
                 ]}
               >
                 Modo escuro
               </Text>
             </View>
-            <Switch 
+            <Switch
               thumbColor={colors.text}
               trackColor={{ false: '#ccc', true: '#4CAF50' }}
-              value={dark}
+              value={!isDarkMode}
               onValueChange={toggleTheme}
             />
           </TouchableOpacity>
         </View>
 
-        {/* <View style={styles.label}>
-          <Text 
-            style={[
-              styles.name,
-              {color: colors.text}
-            ]}
-          >
-            Ajuda
-          </Text>
-        </View>
-
-        <View 
-          style={[
-            styles.buttonContainer,
-            {
-              borderBottomColor: colors.border,
-              marginBottom: 50
-            }
-          ]}
-        >
-          <TouchableOpacity 
-            style={[
-              styles.otherButton,
-              {
-                padding: 20,
-                marginTop: 20,
-                marginBottom: 20
-              }
-            ]} 
-          >
-            <FontAwesome5 
-              name="whatsapp" 
-              color={colors.price} 
-              size={22} 
-            />
-            <Text style={styles.phone}>Entrar em contato pelo WhatsApp</Text>
-          </TouchableOpacity>
-        </View> */}
-
         <View style={styles.label}>
-          <Text 
+          <Text
             style={[
               styles.name,
-              {color: colors.text}
+              { color: colors.text }
             ]}
           >
             Segurança
           </Text>
         </View>
 
-        <View 
+        <View
           style={[
             styles.buttonContainer,
-            {borderBottomColor: colors.border}
+            { borderBottomColor: colors.border }
           ]}
         >
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
               styles.otherButton,
               {
                 padding: 20,
                 marginTop: 20
               }
-            ]} 
-            onPress={handleDeleteClient} 
+            ]}
+            onPress={handleDeleteClient}
           >
-            <Feather 
-              name="alert-triangle" 
-              color="#C52233" 
-              size={22} 
-            />
-            <Text style={styles.exit}>Deletar conta</Text>
+            {
+              isRequested
+                ? <Loading />
+                : <>
+                  <Feather
+                    name="alert-triangle"
+                    color="#C52233"
+                    size={22}
+                  />
+                  <Text style={styles.exit}>Deletar conta</Text>
+                </>
+            }
           </TouchableOpacity>
         </View>
 
-        <View 
+        <View
           style={[
             styles.buttonContainer,
-            {borderBottomWidth: 0}
+            { borderBottomWidth: 0 }
           ]}
         >
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
               styles.otherButton,
-              {padding: 20}
-            ]} 
-            onPress={handleSignOut} 
+              { padding: 20 }
+            ]}
+            onPress={signOut}
           >
-            <Feather 
-              name="log-out" 
-              color="#C52233" 
-              size={22} 
+            <Feather
+              name="log-out"
+              color="#C52233"
+              size={22}
             />
             <Text style={styles.exit}>Sair</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <SucessScreen title="Conta deletada!" show={sucessMessage}/>
     </>
-  );
-};
+  )
+}

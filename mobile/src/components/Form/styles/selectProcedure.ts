@@ -1,10 +1,10 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
 
     marginBottom: 20
   },
@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
   text: {
     flex: 1,
     padding: 10,
-    textAlign: "left",
-    fontFamily: "Roboto_400Regular",
+    textAlign: 'left',
+    fontFamily: 'Roboto_400Regular',
     lineHeight: 18,
     fontSize: 15
   },
@@ -25,19 +25,19 @@ const styles = StyleSheet.create({
   price: {
     marginRight: 20,
 
-    fontFamily: "Roboto_400Regular",
+    fontFamily: 'Roboto_400Regular',
     fontSize: 15
   },
 
   errorMessage: {
     marginBottom: 10,
-    
+
     textAlign: 'center',
 
     fontSize: 16,
 
-    color: "#c52626",
+    color: '#c52626'
   }
-});
+})
 
-export default styles;
+export default styles

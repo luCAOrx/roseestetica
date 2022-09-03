@@ -1,145 +1,138 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
+import { Alert, Text, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 
-import { useRoute } from '@react-navigation/core';
+import { useRoute } from '@react-navigation/core'
+import { format, parseISO } from 'date-fns'
+import ptBR from 'date-fns/locale/pt-BR'
 
-import { Alert, Text, View } from 'react-native';
-
-import styles from '../styles/details';
-
-import { ScrollView } from 'react-native-gesture-handler';
-
-import { useAuth } from '../../../contexts/auth';
-
-import api from '../../../services/api';
-
-import { format, parseISO } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
-
-import Loading from '../../../components/Loading';
-
-import { useTheme } from '@react-navigation/native';
+import Loading from '../../../components/Loading'
+import { useAuth } from '../../../contexts/auth'
+import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
+import styles from '../styles/details'
 
 interface Data {
-  agendamento: {
-    id: number;
-    data: string;
-    horario: string;
-    agendado_em: string;
-    remarcado_em: string;
-  }[];
+  agendamento: Array<{
+    id: number
+    data: string
+    horario: string
+    agendado_em: string
+    remarcado_em: string
+  }>
 
-  procedimentos: {
-    id: number;
-    procedimento: string;
-    preco: string;
-    procedimento_alterado_em: string;
-  }[];
-};
+  procedimentos: Array<{
+    id: number
+    procedimento: string
+    preco: string
+    procedimento_alterado_em: string
+  }>
+}
 
 interface ScheduleParams {
-  agendamento_id: number;
-};
+  agendamento_id: number
+}
 
 export default function Detail() {
-  const route = useRoute();
-  const params = route.params as ScheduleParams;
+  const route = useRoute()
+  const params = route.params as ScheduleParams
 
-  const {cliente, requestRefreshToken} = useAuth();
+  const { cliente, requestRefreshToken } = useAuth()
 
-  const {colors} = useTheme();
+  const { colors } = useCustomTheme()
 
-  const [detail, setDetail] = useState<Data>({} as Data);
-  
+  const [detail, setDetail] = useState<Data>({} as Data)
+
   useEffect(() => {
     async function loadDetail() {
       await api.get(`detalhes_do_agendamento/${cliente?.id}/${params.agendamento_id}`)
-      .then(response => {
-        setDetail(response.data);
-      }).catch(async error => {
-        const apiErrorMessage = error.response.data.erro;
+        .then(response => {
+          setDetail(response.data)
+        }).catch(async error => {
+          const apiErrorMessage = error.response.data.erro
 
-        if (error.response.status === 401) {
-          await requestRefreshToken();
-          await loadDetail();
-        };
+          if (error.response.status === 401) {
+            await requestRefreshToken()
+            await loadDetail()
+          }
 
-        if (error.response.status === 400) {
-          Alert.alert('Erro', apiErrorMessage);
-        };
-      });
-    };
+          if (error.response.status === 400) {
+            Alert.alert('Erro', apiErrorMessage)
+          }
+        })
+    }
 
-    loadDetail();
-  }, []);
+    loadDetail()
+  }, [])
 
   if (!detail.agendamento) {
     return <Loading />
-  };
+  }
 
   return (
     <ScrollView>
       <View style={styles.card}>
-        <View 
+        <View
           style={[
             styles.header,
-            {backgroundColor: colors.detailHeaderBackground}
+            { backgroundColor: colors.detailHeaderBackground }
           ]}
         >
-          <Text 
+          <Text
             style={[
               styles.text,
-              {color: colors.buttonText}
+              { color: colors.buttonText }
             ]}
           >
             Data e hora
           </Text>
-        </View>  
+        </View>
         {detail.agendamento.map(schedule => (
           <View key={schedule.id} style={styles.detail}>
-            <Text 
+            <Text
               style={[
                 styles.text,
-                {color: colors.text}
+                { color: colors.text }
               ]}
             >
-              {`${format(parseISO(schedule.data), 
-                  "eeeeee dd 'de' MMM 'de' yyyy" , {
-                  locale: ptBR
-                })} às ${schedule.horario}h`
+              {`${format(parseISO(schedule.data),
+                "eeeeee dd 'de' MMM 'de' yyyy", {
+                locale: ptBR
+              })} às ${schedule.horario}h`
               }
             </Text>
           </View>
         ))}
 
-        <View 
+        <View
           style={[
             styles.header,
-            {backgroundColor: colors.detailHeaderBackground}
+            { backgroundColor: colors.detailHeaderBackground }
           ]}
         >
-          <Text 
+          <Text
             style={[
               styles.text,
-              {color: colors.buttonText}
+              { color: colors.buttonText }
             ]}
           >
             Procedimento e preço
           </Text>
-        </View>  
+        </View>
         {detail.procedimentos.map(procedure => (
           <View key={procedure.id} style={styles.detailChild}>
-            <Text 
+            <Text
               style={[
                 styles.text,
-                {color: colors.text}
+                { color: colors.text }
               ]}
             >
               {procedure.procedimento}
             </Text>
-            <Text 
+            <Text
               style={[
                 styles.price,
-                {color: colors.price}
+                { color: colors.price }
               ]}
             >
               {procedure.preco}
@@ -147,119 +140,109 @@ export default function Detail() {
           </View>
         ))}
 
-        <View 
+        <View
           style={[
             styles.header,
-            {backgroundColor: colors.detailHeaderBackground}
+            { backgroundColor: colors.detailHeaderBackground }
           ]}
         >
-          <Text 
+          <Text
             style={[
               styles.text,
-              {color: colors.buttonText}
+              { color: colors.buttonText }
             ]}
           >
             Data do agendamento
           </Text>
-        </View>  
+        </View>
         {detail.agendamento.map(schedule => (
           <View key={schedule.id} style={styles.detail}>
-            <Text 
+            <Text
               style={[
                 styles.text,
-                {color: colors.text}
+                { color: colors.text }
               ]}
             >
-              {`${format(parseISO(schedule.agendado_em), 
-                  "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm" , {
-                  locale: ptBR
-                })}`
+              {`${format(parseISO(schedule.agendado_em),
+                "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm", {
+                locale: ptBR
+              })}`
               }
             </Text>
           </View>
         ))}
 
-        <View 
+        <View
           style={[
             styles.header,
-            {backgroundColor: colors.detailHeaderBackground}
+            { backgroundColor: colors.detailHeaderBackground }
           ]}
         >
-          <Text 
+          <Text
             style={[
               styles.text,
-              {color: colors.buttonText}
+              { color: colors.buttonText }
             ]}
           >
             Data do remarque
           </Text>
-        </View>  
+        </View>
         {detail.agendamento.map(detail => (
           <View key={detail.id} style={styles.detail}>
-            <Text 
+            <Text
               style={[
-                !detail.remarcado_em ? 
-                [
-                  styles.text, 
-                  {color: colors.primary}
-                ] : [
-                  styles.text,
-                  {color: colors.text}
-                ]
+                !detail.remarcado_em
+                  ? [styles.text, { color: colors.primary }]
+                  : [styles.text, { color: colors.text }]
               ]}
             >
-              {detail.remarcado_em === null ?
-                'Ainda não houve um remarque' : 
-                `${format(parseISO(detail.remarcado_em), 
-                    "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm" , {
-                    locale: ptBR
-                  })
+              {detail.remarcado_em === null
+                ? 'Ainda não houve um remarque'
+                : `${format(parseISO(detail.remarcado_em),
+                  "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm", {
+                  locale: ptBR
+                })
                 }`
               }
             </Text>
           </View>
         ))}
 
-        <View 
+        <View
           style={[
             styles.header,
-            {backgroundColor: colors.detailHeaderBackground}
+            { backgroundColor: colors.detailHeaderBackground }
           ]}
         >
-          <Text 
+          <Text
             style={[
               styles.text,
-              {color: colors.buttonText}
+              { color: colors.buttonText }
             ]}
           >
             Data da alteração do procedimento
           </Text>
-        </View>  
+        </View>
         {detail.procedimentos.map(procedure => (
           <View key={procedure.id} style={styles.detail}>
-            <Text 
+            <Text
               style={[
-                !procedure.procedimento_alterado_em ? 
-                [
-                  styles.text, 
-                  {color: colors.primary}
-                ] : [
-                  styles.text,
-                  {color: colors.text}
-                ]
+                !procedure.procedimento_alterado_em
+                  ? [styles.text, { color: colors.primary }]
+                  : [styles.text, { color: colors.text }]
               ]}
             >
-              {procedure.procedimento_alterado_em === null ? 
-                'Ainda não houve alteração do procedimento' : 
-                `${format(parseISO(procedure.procedimento_alterado_em), 
-                  "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm" , {
+              {procedure.procedimento_alterado_em === null
+                ? 'Ainda não houve alteração do procedimento'
+                : `${format(parseISO(procedure.procedimento_alterado_em),
+                  "eeeeee dd 'de' MMM 'de' yyyy 'às' HH:mm", {
                   locale: ptBR
-                })}`  
+                })}`
               }
             </Text>
           </View>
         ))[0]}
       </View>
     </ScrollView>
-  );
-};
+  )
+}

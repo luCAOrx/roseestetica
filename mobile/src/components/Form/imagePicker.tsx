@@ -1,75 +1,71 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react'
+import { Image, Text, View, TouchableOpacity } from 'react-native'
 
-import { Image, Text, View, TouchableOpacity } from 'react-native';
+import { MaterialIcons as Icon } from '@expo/vector-icons'
+import { useField } from '@unform/core'
+import * as ImagePicker from 'expo-image-picker'
 
-import { MaterialIcons as Icon } from '@expo/vector-icons';
-
-import styles from './styles/imagePicker';
-
-import * as ImagePicker from 'expo-image-picker';
-
-import { useField } from '@unform/core';
-
-import { useTheme } from '@react-navigation/native';
+import { useCustomTheme } from '../../themes/theme'
+import styles from './styles/imagePicker'
 
 interface ImagePickerInputProps {
-  name: string;
-};
+  name: string
+}
 
-export default function ImagePickerInput({name}: ImagePickerInputProps) {
-  const [image, setImage] = useState('');
+export default function ImagePickerInput({ name }: ImagePickerInputProps) {
+  const [image, setImage] = useState('')
 
-  const { fieldName, registerField, error } = useField(name);
+  const { fieldName, registerField, error } = useField(name)
 
-  const imagePickerRef = useRef(null);
+  const imagePickerRef = useRef(null)
 
-  const {colors} = useTheme();
+  const { colors } = useCustomTheme()
 
   async function handleSelectImages() {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
     if (status !== 'granted') {
-      alert('Eita precisamos de acesso ás suas fotos...');
-      return;
+      alert('Precisamos de acesso ás suas fotos...')
+      return
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       quality: 1,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
+      mediaTypes: ImagePicker.MediaTypeOptions.Images
+    })
 
     if (result.cancelled) {
-      return;
+      return
     }
 
-    const { uri: image } = result;
+    const { uri: image } = result
 
-    setImage(image);
-  };
-  
+    setImage(image)
+  }
+
   useEffect(() => {
     registerField({
       name: fieldName,
       ref: imagePickerRef.current,
       getValue() {
-        return image;
+        return image
       }
-    });
-  }, [fieldName, image, registerField]);
+    })
+  }, [fieldName, image, registerField])
 
   return (
     <>
-      {image ? (
-        <View style={styles.uploadedImageContainer}>
-          <Image 
+      {image
+        ? <View style={styles.uploadedImageContainer}>
+          <Image
             source={{ uri: image }}
             style={styles.uploadedImage}
           />
         </View>
-      ) : (
-        <View style={styles.imageInputContainer} testID="imageInputContainer">
-          <TouchableOpacity 
+
+        : <View style={styles.imageInputContainer} testID="imageInputContainer">
+          <TouchableOpacity
             ref={imagePickerRef}
             style={[
               styles.imageInput,
@@ -77,24 +73,24 @@ export default function ImagePickerInput({name}: ImagePickerInputProps) {
                 backgroundColor: colors.card,
                 borderColor: colors.primary
               }
-            ]} 
+            ]}
             onPress={handleSelectImages}
             testID="imageInputButton"
           >
             <Icon name="add" size={30} color={colors.primary} />
-            <Text 
+            <Text
               style={[
                 styles.imageInputText,
-                {color: colors.primary}
+                { color: colors.primary }
               ]}
               testID="imageInputText"
             >
-                Sua foto
-              </Text>
+              Sua foto
+            </Text>
           </TouchableOpacity>
-          { error && <Text style={styles.errorMessage} testID="imagePickerErrorMessage">{error}</Text>}
+          {error && <Text style={styles.errorMessage} testID="imagePickerErrorMessage">{error}</Text>}
         </View>
-      )}
+      }
     </>
-  );
-};
+  )
+}

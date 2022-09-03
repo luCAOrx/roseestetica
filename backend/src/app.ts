@@ -1,30 +1,25 @@
-import dotenv from 'dotenv';
+import cors from 'cors'
+import dotenv from 'dotenv'
+import express from 'express'
+import path from 'path'
+import 'express-async-errors'
 
-dotenv.config();
+import errorHandler from './errors/handler'
+import routes from './routes'
 
-import express from 'express';
+dotenv.config()
 
-import 'express-async-errors';
+const app = express()
 
-import cors from 'cors';
-
-import routes from './routes';
-
-import path from 'path';
-
-import errorHandler from './errors/handler';
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-app.use(routes);
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use(cors())
+app.use(express.json())
+app.use(routes)
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
 
 app.use((request, response, next) => {
-  next(response.status(404).json({ erro: 'Página não encontrada' }));
-});
+  next(response.status(404).json({ erro: 'Página não encontrada' }))
+})
 
-app.use(errorHandler);
+app.use(errorHandler)
 
-export default app;
+export default app

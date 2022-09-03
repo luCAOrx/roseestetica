@@ -1,84 +1,80 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react'
+import { ScrollView } from 'react-native'
 
-import { ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
+import * as Yup from 'yup'
 
-import { useNavigation, useTheme } from '@react-navigation/native';
-
-import { Form } from '@unform/mobile';
-import { FormHandles } from '@unform/core';
-
-import { Input } from '../../../components/Form';
-import CustomButton from '../../../components/Button';
-
-import * as Yup from 'yup';
-
-import api from '../../../services/api';
-
-import getValidationErros from '../../../utils/handleErrors';
+import CustomButton from '../../../components/Button'
+import { Input } from '../../../components/Form'
+import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
+import getValidationErros from '../../../utils/handleErrors'
 
 interface Credentials {
-  email: string;
-};
+  email: string
+}
 
 export default function ForgotMyPassword() {
-  const [ isRequested, setIsRequested ] = useState(false);
+  const [isRequested, setIsRequested] = useState(false)
 
-  const {colors} = useTheme();
+  const { colors } = useCustomTheme()
 
-  const formRef = useRef<FormHandles>(null);
+  const formRef = useRef<FormHandles>(null)
 
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   function handleNavigateToRecoverPassword() {
-    navigation.navigate("RecoverPassword" as never);
-  };
+    navigation.navigate('RecoverPassword' as never)
+  }
 
   async function handleSubmit(credentials: Credentials) {
-    const { email } = credentials;
+    const { email } = credentials
 
-    const data = { email };
+    const data = { email }
 
     try {
       const schema = Yup.object().shape({
         email: Yup.string()
-          .email("O campo e-mail precisa ser um e-mail válido!")
-          .max(80, "No máximo 80 caracteres!")
-          .required("O campo email é obrigatório!")
-      });
+          .email('O campo e-mail precisa ser um e-mail válido!')
+          .max(80, 'No máximo 80 caracteres!')
+          .required('O campo email é obrigatório!')
+      })
 
       await schema.validate(credentials, {
         abortEarly: false
-      });
+      })
 
-      formRef.current?.setErrors({});
+      formRef.current?.setErrors({})
 
-      setIsRequested(true);
+      setIsRequested(true)
 
       await api.post('esqueci_minha_senha', data).then(() => {
-        handleNavigateToRecoverPassword();
+        handleNavigateToRecoverPassword()
       }).catch(error => {
-        setIsRequested(false);
+        setIsRequested(false)
 
-        const apiErrorMessage = error.response.data.erro;
+        const apiErrorMessage = error.response.data.erro
 
-        formRef.current?.setFieldError("email", apiErrorMessage);
-      });
+        formRef.current?.setFieldError('email', apiErrorMessage)
+      })
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
-        setIsRequested(false);
+        setIsRequested(false)
 
-        const errors = getValidationErros(err);
-        
-        formRef.current?.setErrors(errors);
-      };
-    };
-  };
+        const errors = getValidationErros(err)
+
+        formRef.current?.setErrors(errors)
+      }
+    }
+  }
 
   return (
 
     <ScrollView>
       <Form ref={formRef} onSubmit={handleSubmit}>
-        <Input 
+        <Input
           placeholder="E-mail"
           icon="email"
           name="email"
@@ -88,24 +84,24 @@ export default function ForgotMyPassword() {
           returnKeyType="next"
           textContentType="emailAddress"
           onSubmitEditing={() => {
-            setIsRequested(true);
+            setIsRequested(true)
 
-            formRef.current?.submitForm();
+            formRef.current?.submitForm()
           }}
         />
       </Form>
 
-      <CustomButton 
-        title="Próximo" 
+      <CustomButton
+        title="Próximo"
         backgroundColor={colors.buttonPrimaryBackground}
         color={colors.buttonText}
         height={50}
         fontSize={18}
         isRequested={isRequested}
         onPress={() => {
-          formRef.current?.submitForm();
+          formRef.current?.submitForm()
         }}
       />
     </ScrollView>
-  );
-};
+  )
+}

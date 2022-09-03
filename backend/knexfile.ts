@@ -1,4 +1,4 @@
-require('dotenv/config');
+require('dotenv/config')
 
 module.exports = {
 
@@ -6,11 +6,11 @@ module.exports = {
     client: 'pg',
     version: '14.4',
     connection: {
-      host : process.env.KNEX_HOST,
+      host: process.env.KNEX_HOST,
       port: process.env.KNEX_PORT,
-      user : process.env.KNEX_USER,
-      password : process.env.KNEX_PASSWORD,
-      database : process.env.KNEX_DATABASE,
+      user: process.env.KNEX_USER,
+      password: process.env.KNEX_PASSWORD,
+      database: process.env.KNEX_DATABASE
     },
     useNullAsDefault: true,
     migrations: {
@@ -20,7 +20,7 @@ module.exports = {
     seeds: {
       extension: 'ts',
       directory: './src/database/seeds'
-    },
+    }
   },
 
   test: {
@@ -36,14 +36,14 @@ module.exports = {
       extension: 'ts',
       directory: './src/database/seeds'
     },
-    useNullAsDefault: true,
+    useNullAsDefault: true
   },
 
   staging: {
     client: 'postgresql',
     connection: {
       database: 'my_db',
-      user:     'username',
+      user: 'username',
       password: 'password'
     },
     pool: {
@@ -59,11 +59,11 @@ module.exports = {
     client: 'pg',
     version: '14.4',
     connection: {
-      host : process.env.RDS_HOST,
+      host: process.env.RDS_HOST,
       port: process.env.RDS_PORT,
-      user : process.env.RDS_USER,
-      password : process.env.RDS_PASSWORD,
-      database : process.env.RDS_DATABASE,
+      user: process.env.RDS_USER,
+      password: process.env.RDS_PASSWORD,
+      database: process.env.RDS_DATABASE,
       ssl: {
         require: true,
         rejectUnauthorized: false
@@ -83,4 +83,4 @@ module.exports = {
       max: 1
     }
   }
-};
+}

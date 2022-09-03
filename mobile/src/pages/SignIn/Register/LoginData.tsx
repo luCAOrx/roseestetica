@@ -1,148 +1,155 @@
 import React, { useRef, useState } from 'react'
+import { View, TextInput, Alert } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 
-import { View, TextInput, Alert } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/mobile'
+import * as Yup from 'yup'
 
-import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
-
-import { ScrollView } from 'react-native-gesture-handler';
-
-import { Form } from '@unform/mobile';
-import { FormHandles } from '@unform/core';
-
-import Header from '../../../components/Header';
-import { Input } from '../../../components/Form/index';
-import CustomButton from '../../../components/Button';
-import SucessScreen from '../../../components/SucessScreen';
-
-import * as Yup from 'yup';
-
-import api from '../../../services/api';
-
-import getValidationErros from '../../../utils/handleErrors';
+import CustomButton from '../../../components/Button'
+import { Input } from '../../../components/Form/index'
+import Header from '../../../components/Header'
+import { useSuccessScreen } from '../../../contexts/successScreen'
+import api from '../../../services/api'
+import { useCustomTheme } from '../../../themes/theme'
+import getValidationErros from '../../../utils/handleErrors'
 
 interface Data {
-  foto: string;
-  nome: string;
-  cpf: string;
-  telefone: string;
-  celular: string;
-  sexo_id: number;
-  cidade_id: number;
-  bairro: string;
-  logradouro: string;
-  numero: string;
-  complemento: string;
-  cep: string;
-};
+  foto: string
+  nome: string
+  cpf: string
+  telefone: string
+  celular: string
+  sexo_id: number
+  cidade_id: number
+  bairro: string
+  logradouro: string
+  numero: string
+  complemento: string
+  cep: string
+}
 
-interface LoginData {
-  email: string;
-  senha: string;
-};
+interface LoginDataProps {
+  email: string
+  senha: string
+}
 
 export default function LoginData() {
-  const formRef = useRef<FormHandles>(null);
-  const passwordRef = useRef<TextInput>(null);
+  const formRef = useRef<FormHandles>(null)
+  const passwordRef = useRef<TextInput>(null)
 
-  const {colors} = useTheme();
+  const { colors } = useCustomTheme()
 
-  const [ sucessMessage, setSucessMessage ] = useState(false);
-  const [ isRequested, setIsRequested ] = useState(false);
+  const {
+    handleShowSuccessMessage,
+    handleTitleSuccessMessage
+  } = useSuccessScreen()
 
-  const navigation = useNavigation();
-  const route = useRoute();
-  const params = route.params as Data;
+  const [isRequested, setIsRequested] = useState(false)
+
+  const navigation = useNavigation()
+  const route = useRoute()
+  const params = route.params as Data
 
   function handleNavigateToSignIn() {
-    navigation.navigate("SignIn" as never);
-  };
-  
-  async function handleSubmit(loginData: LoginData) {
+    navigation.navigate('SignIn' as never)
+  }
+
+  async function handleSubmit(loginData: LoginDataProps) {
     const {
       foto,
-      nome, 
-      cpf, 
-      telefone, 
-      celular, 
-      sexo_id, 
-      cidade_id, 
-      bairro, 
-      logradouro, 
-      numero, 
-      complemento, 
-      cep 
-    } = params;
+      nome,
+      cpf,
+      telefone,
+      celular,
+      sexo_id,
+      cidade_id,
+      bairro,
+      logradouro,
+      numero,
+      complemento,
+      cep
+    } = params
 
-    const { email, senha } = loginData;
+    const { email, senha } = loginData
 
-    const threeSeconds = 3000;
+    const threeSeconds = 3000
 
-    const data = new FormData();
+    const data = new FormData()
+
+    const localUri = foto
+    const filename = localUri.split('/').pop()
+
+    const match = /\.(\w+)$/.exec(String(filename))
+    const type = (match != null) ? `image/${match[1]}` : 'image/jpg'
 
     try {
       const schema = Yup.object().shape({
         email: Yup.string()
-          .email("O campo e-mail precisa ser um e-mail válido!")
-          .max(80, "No máximo 80 caracteres!")
-          .required("O campo e-mail é obrigatório!"),
+          .email('O campo e-mail precisa ser um e-mail válido!')
+          .max(80, 'No máximo 80 caracteres!')
+          .required('O campo e-mail é obrigatório!'),
         senha: Yup.string()
-          .min(8, "No mínimo 8 caracteres!")
-          .max(50, "No máximo 50 caracteres!")
-          .required("O campo senha é obrigatório!"),
-      });
+          .min(8, 'No mínimo 8 caracteres!')
+          .max(50, 'No máximo 50 caracteres!')
+          .required('O campo senha é obrigatório!')
+      })
 
       await schema.validate(loginData, {
         abortEarly: false
-      });
+      })
 
-      formRef.current?.setErrors({});
+      formRef.current?.setErrors({})
 
       data.append('foto', {
-        name: 'image_mobile.jpg',
-        type: 'image/jpg',
+        name: filename,
+        type,
         uri: foto
-      } as any);
-      data.append('nome', nome); 
-      data.append('cpf', cpf); 
-      data.append('telefone', telefone); 
-      data.append('celular', celular); 
-      data.append('sexo_id', String(sexo_id)); 
-      data.append('cidade_id', String(cidade_id)); 
-      data.append('bairro', bairro); 
-      data.append('logradouro', logradouro); 
-      data.append('numero', numero); 
-      data.append('complemento', complemento); 
-      data.append('cep', cep);
-      data.append('email', email);
-      data.append('senha', senha);
+      } as any)
+      data.append('nome', nome)
+      data.append('cpf', cpf)
+      data.append('telefone', telefone)
+      data.append('celular', celular)
+      data.append('sexo_id', String(sexo_id))
+      data.append('cidade_id', String(cidade_id))
+      data.append('bairro', bairro)
+      data.append('logradouro', logradouro)
+      data.append('numero', numero)
+      data.append('complemento', complemento)
+      data.append('cep', cep)
+      data.append('email', email)
+      data.append('senha', senha)
 
-      setIsRequested(true);
+      setIsRequested(true)
 
-      await api.post('cadastro', data, {headers: {'Content-Type': 'multipart/form-data'}}).then(() => {
-        setIsRequested(false);
-        setSucessMessage(true);
-        
+      await api.post('cadastro', data, { headers: { 'Content-Type': 'multipart/form-data' } }).then(() => {
+        setIsRequested(false)
+        handleTitleSuccessMessage('Cadastro concluído')
+        handleShowSuccessMessage(true)
+
         setTimeout(() => {
-          handleNavigateToSignIn();
-        }, threeSeconds);
+          handleShowSuccessMessage(false)
+          handleNavigateToSignIn()
+        }, threeSeconds)
       }).catch(error => {
-        setIsRequested(false);
+        setIsRequested(false)
 
-        const apiErrorMessage = error.response.data.message;
+        const apiErrorMessage = error.response.data.message
 
         if (error.response.status === 400) {
-          setIsRequested(false);
+          setIsRequested(false)
 
-          Alert.alert('Erro', apiErrorMessage);
-        };
-      });
+          Alert.alert('Erro', apiErrorMessage)
+        }
+      })
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
-        setIsRequested(false);
+        setIsRequested(false)
 
-        const errors = getValidationErros(err);
-        
-        formRef.current?.setErrors(errors);
+        const errors = getValidationErros(err)
+
+        formRef.current?.setErrors(errors)
       }
     }
   }
@@ -152,8 +159,8 @@ export default function LoginData() {
       <ScrollView>
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Header title="Dados de Login" showIcon showStep position={2} fontSize={26} />
-          <View style={{marginTop: 20}} />
-          <Input 
+          <View style={{ marginTop: 20 }} />
+          <Input
             placeholder="E-mail"
             icon="email"
             name="email"
@@ -165,7 +172,7 @@ export default function LoginData() {
             blurOnSubmit={false}
           />
 
-          <Input 
+          <Input
             ref={passwordRef}
             placeholder="Senha"
             icon="lock"
@@ -174,28 +181,27 @@ export default function LoginData() {
             isPassword
             returnKeyType="send"
             onSubmitEditing={() => {
-              setIsRequested(true);
-              
-              formRef.current?.submitForm();
+              setIsRequested(true)
+
+              formRef.current?.submitForm()
             }}
           />
 
-          <CustomButton 
-            title="Finalizar" 
+          <CustomButton
+            title="Finalizar"
             backgroundColor={colors.buttonPrimaryBackground}
             color={colors.buttonText}
             height={50}
             fontSize={18}
             isRequested={isRequested}
             onPress={() => {
-              setIsRequested(true);
-              
-              formRef.current?.submitForm();
-            }} 
+              setIsRequested(true)
+
+              formRef.current?.submitForm()
+            }}
           />
         </Form>
       </ScrollView>
-      <SucessScreen title="Cadastro concluído!" show={sucessMessage}/>
     </View>
-  );
-};
+  )
+}
