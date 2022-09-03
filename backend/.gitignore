@@ -1,7 +1,5 @@
 node_modules
 test.sqlite
-src/config/*
 uploads/*
-!src/config/.gitkeep
 !uploads/.gitkeep
 .env
