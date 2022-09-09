@@ -40,22 +40,24 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
 
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
-      const message = error.message = 'O arquivo não pode ter mais que 2mb.'
+      if (request.file) {
+        const { key: imagem } = request.file as Express.MulterS3.File
 
-      const { key: imagem } = request.file as Express.MulterS3.File
+        process.env.STORAGE_TYPE === 'local'
 
-      process.env.STORAGE_TYPE === 'local'
+          ? promisify(fileSystem.unlink)(path.resolve(
+            __dirname, '..', '..', `uploads/${imagem}`
+          ))
 
-        ? promisify(fileSystem.unlink)(path.resolve(
-          __dirname, '..', '..', `uploads/${imagem}`
-        ))
+          : s3.deleteObject({
+            Bucket: 'roseestetica-upload',
+            Key: imagem
+          }).promise()
+      }
 
-        : s3.deleteObject({
-          Bucket: 'roseestetica-upload',
-          Key: imagem
-        }).promise()
-
-      return response.status(400).json({ message })
+      return response.status(400).json({
+        erro: 'O arquivo não pode ter mais que 2mb.'
+      })
     }
   }
 
