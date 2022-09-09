@@ -161,10 +161,6 @@ export default {
       const emailExiste = await connection('clientes')
         .where({ email }).select('email').first()
 
-      if (!imagem) {
-        return response.status(400).json({ erro: 'O campo imagem é obrigatório.' })
-      }
-
       if (cpfExiste) {
         process.env.STORAGE_TYPE === 'local'
 
@@ -255,6 +251,10 @@ export default {
           : clienteSerializado.imagem_aws_url
       })
     } catch (erro) {
+      if (!request.file) {
+        return response.status(400).json({ erro: 'O campo foto é obrigatório.' })
+      }
+
       if (request.file) {
         const { key: imagem } = request.file as Express.MulterS3.File
 
@@ -540,6 +540,10 @@ export default {
           : clienteSerializado.imagemAtualizada.imagem_aws_url
       })
     } catch (error) {
+      if (!request.file) {
+        return response.status(400).json({ erro: 'O campo foto é obrigatório.' })
+      }
+
       if (request.file) {
         const { key: imagem } = request.file as Express.MulterS3.File
 
