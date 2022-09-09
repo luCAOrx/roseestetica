@@ -255,18 +255,20 @@ export default {
           : clienteSerializado.imagem_aws_url
       })
     } catch (erro) {
-      const { key: imagem } = request.file as Express.MulterS3.File
+      if (request.file) {
+        const { key: imagem } = request.file as Express.MulterS3.File
 
-      process.env.STORAGE_TYPE === 'local'
+        process.env.STORAGE_TYPE === 'local'
 
-        ? promisify(fileSystem.unlink)(path.resolve(
-          __dirname, '..', '..', `uploads/${imagem}`
-        ))
+          ? promisify(fileSystem.unlink)(path.resolve(
+            __dirname, '..', '..', `uploads/${imagem}`
+          ))
 
-        : s3.deleteObject({
-          Bucket: 'roseestetica-upload',
-          Key: imagem
-        }).promise()
+          : s3.deleteObject({
+            Bucket: 'roseestetica-upload',
+            Key: imagem
+          }).promise()
+      }
 
       return response.status(400).json({ erro: 'Falha ao se cadastrar.' })
     }
@@ -538,17 +540,19 @@ export default {
           : clienteSerializado.imagemAtualizada.imagem_aws_url
       })
     } catch (error) {
-      const { key: imagem } = request.file as Express.MulterS3.File
+      if (request.file) {
+        const { key: imagem } = request.file as Express.MulterS3.File
 
-      if (process.env.STORAGE_TYPE === 'local') {
-        promisify(fileSystem.unlink)(path.resolve(
-          __dirname, '..', '..', `uploads/${imagem}`
-        ))
-      } else {
-        s3.deleteObject({
-          Bucket: 'roseestetica-upload',
-          Key: imagem
-        }).promise()
+        if (process.env.STORAGE_TYPE === 'local') {
+          promisify(fileSystem.unlink)(path.resolve(
+            __dirname, '..', '..', `uploads/${imagem}`
+          ))
+        } else {
+          s3.deleteObject({
+            Bucket: 'roseestetica-upload',
+            Key: imagem
+          }).promise()
+        }
       }
 
       return response.status(400).json({ erro: 'Erro ao atualizar a foto.' })
