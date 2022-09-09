@@ -59,6 +59,25 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
     }
   }
 
+  if (error.message === 'Tipo de arquivo inválido.') {
+    if (request.file) {
+      const { key: imagem } = request.file as Express.MulterS3.File
+
+      if (process.env.STORAGE_TYPE === 'local') {
+        promisify(fileSystem.unlink)(path.resolve(
+          __dirname, '..', '..', `uploads/${imagem}`
+        ))
+      } else {
+        s3.deleteObject({
+          Bucket: 'roseestetica-upload',
+          Key: imagem
+        }).promise()
+      }
+    }
+
+    return response.status(400).json({ erro: 'Tipo de arquivo inválido.' })
+  }
+
   console.log(error)
   return response.status(500).json({ message: 'Internal server error' })
 }
