@@ -1,5 +1,5 @@
 import aws from 'aws-sdk'
-import bcrypt, { compare, hashSync } from 'bcryptjs'
+import bcrypt, { compare } from 'bcryptjs'
 import { randomBytes } from 'crypto'
 import dayjs from 'dayjs'
 import { Request, Response } from 'express'
@@ -640,7 +640,7 @@ export default {
   async atualizarSenha(request: Request, response: Response) {
     const { email, token } = request.body
 
-    const senha = hashSync(request.body.senha, 8)
+    const senha = await bcrypt.hash(request.body.senha, 8)
 
     const cliente = await connection('clientes')
       .where({ email })
