@@ -136,7 +136,7 @@ export default {
     try {
       const senha = await bcrypt.hash(request.body.senha, 8)
 
-      const {
+      let {
         nome,
         cpf,
         telefone,
@@ -190,6 +190,17 @@ export default {
 
         return response.status(400).json({ erro: 'Esse e-mail já existe.' })
       }
+
+      nome = nome.trim()
+      cpf = cpf.trim()
+      telefone = telefone.trim()
+      celular = celular.trim()
+      bairro = bairro.trim()
+      logradouro = logradouro.trim()
+      numero = numero.trim()
+      complemento = complemento.trim()
+      cep = cep.trim()
+      email = email.trim()
 
       const transaction = await connection.transaction()
 
@@ -280,11 +291,15 @@ export default {
 
       const dataEhoraDeAgora = new Date()
 
-      const {
+      let {
         nome,
         telefone,
         celular
       } = request.body
+
+      nome = nome.trim()
+      telefone = telefone.trim()
+      celular = celular.trim()
 
       await connection('clientes')
         .update({
@@ -350,7 +365,7 @@ export default {
 
       const dataEhoraDeAgora = new Date()
 
-      const {
+      let {
         cidade_id,
         bairro,
         logradouro,
@@ -358,6 +373,12 @@ export default {
         complemento,
         cep
       } = request.body
+
+      bairro = bairro.trim()
+      logradouro = logradouro.trim()
+      numero = numero.trim()
+      complemento = complemento.trim()
+      cep = cep.trim()
 
       await connection('clientes')
         .update({
@@ -423,7 +444,9 @@ export default {
   async atualizarLogin(request: Request, response: Response) {
     try {
       const { id } = request.params
-      const { email } = request.body
+      let { email } = request.body
+
+      email = email.trim()
 
       const dataEhoraDeAgora = new Date()
 
@@ -565,7 +588,9 @@ export default {
 
   async esqueciMinhaSenha(request: Request, response: Response) {
     try {
-      const { email } = request.body
+      let { email } = request.body
+
+      email = email.trim()
 
       const cliente = await connection('clientes')
         .where({ email }).select('email').first()
