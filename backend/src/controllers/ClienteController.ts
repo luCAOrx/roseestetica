@@ -660,7 +660,12 @@ export default {
       atualizado_em: dataEhoraDeAgora
     }).where({ email })
 
-    response.status(201).json({ mensagem: 'Sua senha foi alterada com sucesso.' })
+    await connection('clientes').update({
+      token_reset_senha: null,
+      expiracao_reset_senha: null
+    }).where({ email })
+
+    return response.status(201).json({ mensagem: 'Sua senha foi alterada com sucesso.' })
   },
 
   async deletar(request: Request, response: Response) {
