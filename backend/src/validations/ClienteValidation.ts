@@ -40,26 +40,27 @@ export default {
     const regexNumeros = /^([0-9]|\s+)+$/
 
     const schema = yup.object().shape({
-      nome: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      nome: yup.string()
         .matches(regexLetras, 'O campo nome completo não aceita números!')
         .min(5, 'No mínimo 5 caracteres!')
         .max(90, 'No máximo 90 caracteres!')
         .required('O campo nome é obrigatório!'),
 
-      cpf: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      cpf: yup.string()
         .matches(regexNumeros, 'O campo cpf não aceita letras!')
         .min(11, 'No mínimo 11 caracteres!')
         .max(11, 'No máximo 11 caracteres!')
         .required('O campo CPF é obrigatório!'),
 
-      telefone: yup.string().optional().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
-        .max(10, 'No máximo 10 caracteres!'),
+      telefone: yup.string()
+        .matches(/.{10,}/, {
+          excludeEmptyString: true,
+          message: 'No mínimo 10 caracteres!'
+        })
+        .max(10, 'No máximo 10 caracteres!')
+        .notRequired(),
 
-      celular: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      celular: yup.string()
         .matches(regexNumeros, 'O campo celular não aceita letras!')
         .min(11, 'No mínimo 11 caracteres!')
         .max(11, 'No máximo 11 caracteres!')
@@ -71,46 +72,43 @@ export default {
       cidade_id: yup.number().required('O campo cidade_id é obrigatório!')
         .min(1, 'No minímo 1'),
 
-      bairro: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
-        .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, 'O campo bairro só aceita letras!')
+      bairro: yup.string()
+        .matches(regexLetras, 'O campo bairro só aceita letras!')
         .min(3, 'No mínimo 3 caracteres!')
         .max(90, 'No máximo 90 caracteres!')
         .required('O campo bairro é obrigatório!'),
 
-      logradouro: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
-        .matches(/^([a-zA-Zà-úÀ-Ú]|\s+)+$/, 'O campo logradouro só aceita letras!')
+      logradouro: yup.string()
+        .matches(regexLetras, 'O campo logradouro só aceita letras!')
         .min(5, 'No mínimo 5 caracteres!')
         .max(90, 'No máximo 90 caracteres!')
         .required('O campo logradouro é obrigatório!'),
 
-      numero: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      numero: yup.string()
         .matches(regexNumeros, 'O campo numero não aceita letras!')
         .min(1, 'No mínimo 1 caractere!')
         .max(6, 'No máximo 6 caracteres!')
         .required('O campo número é obrigatório!'),
 
-      complemento: yup.string().optional().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      complemento: yup.string().optional()
+        .matches(/.{5,}/, {
+          excludeEmptyString: true,
+          message: 'No mínimo 5 caracteres!'
+        })
         .max(90, 'No máximo 90 caracteres!'),
 
-      cep: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      cep: yup.string()
         .matches(regexNumeros, 'O campo cep não aceita letras!')
         .min(8, 'No mínimo 8 caracteres!')
         .max(8, 'No máximo 8 caracteres!')
         .required('O campo CEP é obrigatório!'),
 
-      email: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      email: yup.string()
         .email('O campo e-mail precisa ser um e-mail válido!')
         .max(80, 'No máximo 80 caracteres!')
         .required('O campo email é obrigatório!'),
 
-      senha: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      senha: yup.string()
         .min(8, 'No mínimo 8 caracteres!')
         .max(50, 'No máximo 50 caracteres!')
         .required('O campo senha é obrigatório!')
@@ -141,20 +139,22 @@ export default {
     const regexNumeros = /^([0-9]|\s+)+$/
 
     const schema = yup.object().shape({
-      nome: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      nome: yup.string()
         .matches(regexLetras, 'O campo nome completo não aceita números!')
         .min(5, 'No mínimo 5 caracteres!')
         .max(90, 'No máximo 90 caracteres!')
         .required('O campo nome é obrigatório!'),
 
-      telefone: yup.string().optional().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
-        .max(10, 'No máximo 10 caracteres!'),
+      telefone: yup.string()
+        .matches(/.{10,}/, {
+          excludeEmptyString: true,
+          message: 'No mínimo 10 caracteres!'
+        })
+        .max(10, 'No máximo 10 caracteres!')
+        .notRequired(),
 
-      celular: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
-        .matches(regexNumeros, 'O campo celular só aceita letras!')
+      celular: yup.string()
+        .matches(regexNumeros, 'O campo celular não aceita letras!')
         .min(11, 'No mínimo 11 caracteres!')
         .max(11, 'No máximo 11 caracteres!')
         .required('O campo número de celular é obrigatório!')
@@ -194,33 +194,32 @@ export default {
       cidade_id: yup.number().required('O campo cidade_id é obrigatório!')
         .min(1, 'No minímo 1'),
 
-      bairro: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      bairro: yup.string()
         .matches(regexLetras, 'O campo bairro só aceita letras!')
         .min(3, 'No mínimo 3 caracteres!')
         .max(90, 'No máximo 90 caracteres!')
         .required('O campo bairro é obrigatório!'),
 
-      logradouro: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      logradouro: yup.string()
         .matches(regexLetras, 'O campo logradouro só aceita letras!')
         .min(5, 'No mínimo 5 caracteres!')
         .max(90, 'No máximo 90 caracteres!')
         .required('O campo logradouro é obrigatório!'),
 
-      numero: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      numero: yup.string()
         .matches(regexNumeros, 'O campo numero não aceita letras!')
         .min(1, 'No mínimo 1 caractere!')
         .max(6, 'No máximo 6 caracteres!')
         .required('O campo número é obrigatório!'),
 
-      complemento: yup.string().optional().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      complemento: yup.string().optional()
+        .matches(/.{5,}/, {
+          excludeEmptyString: true,
+          message: 'No mínimo 5 caracteres!'
+        })
         .max(90, 'No máximo 90 caracteres!'),
 
-      cep: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      cep: yup.string()
         .matches(regexNumeros, 'O campo cep não aceita letras!')
         .min(8, 'No mínimo 8 caracteres!')
         .max(8, 'No máximo 8 caracteres!')
@@ -240,8 +239,7 @@ export default {
     const data = { email }
 
     const schema = yup.object().shape({
-      email: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      email: yup.string()
         .email('O campo e-mail precisa ser um e-mail válido!')
         .max(80, 'No máximo 80 caracteres!')
         .required('O campo email é obrigatório!')
@@ -260,8 +258,7 @@ export default {
     const data = { email }
 
     const schema = yup.object().shape({
-      email: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      email: yup.string()
         .email('O campo e-mail precisa ser um e-mail válido!')
         .max(80, 'No máximo 80 caracteres!')
         .required('O campo email é obrigatório!')
@@ -280,20 +277,17 @@ export default {
     const data = { email, senha, token }
 
     const schema = yup.object().shape({
-      email: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      email: yup.string()
         .email('O campo e-mail precisa ser um e-mail válido!')
         .max(80, 'No máximo 80 caracteres!')
         .required('O campo email é obrigatório!'),
 
-      senha: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      senha: yup.string()
         .min(8, 'No mínimo 8 caracteres!')
         .max(50, 'No máximo 50 caracteres!')
         .required('O campo senha é obrigatório!'),
 
-      token: yup.string().strict(true)
-        .trim('Não são permitidos espaços no começo ou no fim!')
+      token: yup.string()
         .required('O campo token é obrigatório!')
     })
 
