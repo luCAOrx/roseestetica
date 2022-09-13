@@ -135,7 +135,7 @@ export default function LoginData() {
       }).catch(error => {
         setIsRequested(false)
 
-        const apiErrorMessage = error.response.data.message
+        const apiErrorMessage = error.response.data.erro
 
         if (error.response.status === 400) {
           setIsRequested(false)

@@ -1,5 +1,5 @@
 import aws from 'aws-sdk'
-import bcrypt, { compare, hashSync } from 'bcryptjs'
+import bcrypt, { compare } from 'bcryptjs'
 import { randomBytes } from 'crypto'
 import dayjs from 'dayjs'
 import { Request, Response } from 'express'
@@ -136,7 +136,7 @@ export default {
     try {
       const senha = await bcrypt.hash(request.body.senha, 8)
 
-      const {
+      let {
         nome,
         cpf,
         telefone,
@@ -160,10 +160,6 @@ export default {
 
       const emailExiste = await connection('clientes')
         .where({ email }).select('email').first()
-
-      if (!imagem) {
-        return response.status(400).json({ erro: 'O campo imagem é obrigatório.' })
-      }
 
       if (cpfExiste) {
         process.env.STORAGE_TYPE === 'local'
@@ -194,6 +190,17 @@ export default {
 
         return response.status(400).json({ erro: 'Esse e-mail já existe.' })
       }
+
+      nome = nome.trim()
+      cpf = cpf.trim()
+      telefone = telefone.trim()
+      celular = celular.trim()
+      bairro = bairro.trim()
+      logradouro = logradouro.trim()
+      numero = numero.trim()
+      complemento = complemento.trim()
+      cep = cep.trim()
+      email = email.trim()
 
       const transaction = await connection.transaction()
 
@@ -255,18 +262,24 @@ export default {
           : clienteSerializado.imagem_aws_url
       })
     } catch (erro) {
-      const { key: imagem } = request.file as Express.MulterS3.File
+      if (!request.file) {
+        return response.status(400).json({ erro: 'O campo foto é obrigatório.' })
+      }
 
-      process.env.STORAGE_TYPE === 'local'
+      if (request.file) {
+        const { key: imagem } = request.file as Express.MulterS3.File
 
-        ? promisify(fileSystem.unlink)(path.resolve(
-          __dirname, '..', '..', `uploads/${imagem}`
-        ))
+        process.env.STORAGE_TYPE === 'local'
 
-        : s3.deleteObject({
-          Bucket: 'roseestetica-upload',
-          Key: imagem
-        }).promise()
+          ? promisify(fileSystem.unlink)(path.resolve(
+            __dirname, '..', '..', `uploads/${imagem}`
+          ))
+
+          : s3.deleteObject({
+            Bucket: 'roseestetica-upload',
+            Key: imagem
+          }).promise()
+      }
 
       return response.status(400).json({ erro: 'Falha ao se cadastrar.' })
     }
@@ -278,11 +291,15 @@ export default {
 
       const dataEhoraDeAgora = new Date()
 
-      const {
+      let {
         nome,
         telefone,
         celular
       } = request.body
+
+      nome = nome.trim()
+      telefone = telefone.trim()
+      celular = celular.trim()
 
       await connection('clientes')
         .update({
@@ -348,7 +365,7 @@ export default {
 
       const dataEhoraDeAgora = new Date()
 
-      const {
+      let {
         cidade_id,
         bairro,
         logradouro,
@@ -356,6 +373,12 @@ export default {
         complemento,
         cep
       } = request.body
+
+      bairro = bairro.trim()
+      logradouro = logradouro.trim()
+      numero = numero.trim()
+      complemento = complemento.trim()
+      cep = cep.trim()
 
       await connection('clientes')
         .update({
@@ -421,7 +444,9 @@ export default {
   async atualizarLogin(request: Request, response: Response) {
     try {
       const { id } = request.params
-      const { email } = request.body
+      let { email } = request.body
+
+      email = email.trim()
 
       const dataEhoraDeAgora = new Date()
 
@@ -538,17 +563,23 @@ export default {
           : clienteSerializado.imagemAtualizada.imagem_aws_url
       })
     } catch (error) {
-      const { key: imagem } = request.file as Express.MulterS3.File
+      if (!request.file) {
+        return response.status(400).json({ erro: 'O campo foto é obrigatório.' })
+      }
 
-      if (process.env.STORAGE_TYPE === 'local') {
-        promisify(fileSystem.unlink)(path.resolve(
-          __dirname, '..', '..', `uploads/${imagem}`
-        ))
-      } else {
-        s3.deleteObject({
-          Bucket: 'roseestetica-upload',
-          Key: imagem
-        }).promise()
+      if (request.file) {
+        const { key: imagem } = request.file as Express.MulterS3.File
+
+        if (process.env.STORAGE_TYPE === 'local') {
+          promisify(fileSystem.unlink)(path.resolve(
+            __dirname, '..', '..', `uploads/${imagem}`
+          ))
+        } else {
+          s3.deleteObject({
+            Bucket: 'roseestetica-upload',
+            Key: imagem
+          }).promise()
+        }
       }
 
       return response.status(400).json({ erro: 'Erro ao atualizar a foto.' })
@@ -557,7 +588,9 @@ export default {
 
   async esqueciMinhaSenha(request: Request, response: Response) {
     try {
-      const { email } = request.body
+      let { email } = request.body
+
+      email = email.trim()
 
       const cliente = await connection('clientes')
         .where({ email }).select('email').first()
@@ -607,7 +640,7 @@ export default {
   async atualizarSenha(request: Request, response: Response) {
     const { email, token } = request.body
 
-    const senha = hashSync(request.body.senha, 8)
+    const senha = await bcrypt.hash(request.body.senha, 8)
 
     const cliente = await connection('clientes')
       .where({ email })
@@ -627,7 +660,12 @@ export default {
       atualizado_em: dataEhoraDeAgora
     }).where({ email })
 
-    response.status(201).json({ mensagem: 'Sua senha foi alterada com sucesso.' })
+    await connection('clientes').update({
+      token_reset_senha: null,
+      expiracao_reset_senha: null
+    }).where({ email })
+
+    return response.status(201).json({ mensagem: 'Sua senha foi alterada com sucesso.' })
   },
 
   async deletar(request: Request, response: Response) {

@@ -20,44 +20,66 @@ const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
       errors[`${err.path}`] = err.errors
     })
 
-    const { key: imagem } = request.file as Express.MulterS3.File
+    if (request.file) {
+      const { key: imagem } = request.file as Express.MulterS3.File
 
-    process.env.STORAGE_TYPE === 'local'
-
-      ? promisify(fileSystem.unlink)(path.resolve(
-        __dirname, '..', '..', `uploads/${imagem}`
-      ))
-
-      : s3.deleteObject({
-        Bucket: 'roseestetica-upload',
-        Key: imagem
-      }).promise()
+      if (process.env.STORAGE_TYPE === 'local') {
+        promisify(fileSystem.unlink)(path.resolve(
+          __dirname, '..', '..', `uploads/${imagem}`
+        ))
+      } else {
+        s3.deleteObject({
+          Bucket: 'roseestetica-upload',
+          Key: imagem
+        }).promise()
+      }
+    }
 
     return response.status(400).json({ message: 'Validation fails', errors })
   }
 
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
-      const message = error.message = 'O arquivo não pode ter mais que 2mb.'
+      if (request.file) {
+        const { key: imagem } = request.file as Express.MulterS3.File
 
-      const { key: imagem } = request.file as Express.MulterS3.File
+        process.env.STORAGE_TYPE === 'local'
 
-      process.env.STORAGE_TYPE === 'local'
+          ? promisify(fileSystem.unlink)(path.resolve(
+            __dirname, '..', '..', `uploads/${imagem}`
+          ))
 
-        ? promisify(fileSystem.unlink)(path.resolve(
-          __dirname, '..', '..', `uploads/${imagem}`
-        ))
+          : s3.deleteObject({
+            Bucket: 'roseestetica-upload',
+            Key: imagem
+          }).promise()
+      }
 
-        : s3.deleteObject({
-          Bucket: 'roseestetica-upload',
-          Key: imagem
-        }).promise()
-
-      return response.status(400).json({ message })
+      return response.status(400).json({
+        erro: 'O arquivo não pode ter mais que 2mb.'
+      })
     }
   }
 
-  console.log(error)
+  if (error.message === 'Tipo de arquivo inválido.') {
+    if (request.file) {
+      const { key: imagem } = request.file as Express.MulterS3.File
+
+      if (process.env.STORAGE_TYPE === 'local') {
+        promisify(fileSystem.unlink)(path.resolve(
+          __dirname, '..', '..', `uploads/${imagem}`
+        ))
+      } else {
+        s3.deleteObject({
+          Bucket: 'roseestetica-upload',
+          Key: imagem
+        }).promise()
+      }
+    }
+
+    return response.status(400).json({ erro: 'Tipo de arquivo inválido.' })
+  }
+
   return response.status(500).json({ message: 'Internal server error' })
 }
 

@@ -69,7 +69,7 @@ export default function ChangePersonalData() {
 
     const regexNumeros = /^([0-9]|\s+)+$/
 
-    const { nome, telefone, celular } = personalData
+    let { nome, telefone, celular } = personalData
 
     const data = { nome, telefone, celular }
 
@@ -77,8 +77,7 @@ export default function ChangePersonalData() {
 
     try {
       const schema = Yup.object().shape({
-        nome: Yup.string().strict(true)
-          .trim('Não são permitidos espaços no começo ou no fim!')
+        nome: Yup.string()
           .matches(regexLetras, 'O campo nome completo só aceita letras!')
           .min(5, 'No mínimo 5 caracteres!')
           .max(90, 'No máximo 90 caracteres!')
@@ -102,6 +101,8 @@ export default function ChangePersonalData() {
       })
 
       formRef.current?.setErrors({})
+
+      nome = nome.trim()
 
       setIsRequested(true)
 

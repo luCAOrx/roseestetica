@@ -9,7 +9,6 @@ import GenerosController from './controllers/GenerosController'
 import HorariosController from './controllers/HorariosController'
 import ProcedimentosController from './controllers/ProcedimentosController'
 import authMiddleware from './middlewares/authMidleware'
-import authMidlewareWithFile from './middlewares/authMidlewareWithFile'
 import AgendamentoValidation from './validations/AgendamentoValidation'
 import ClienteValidation from './validations/ClienteValidation'
 
@@ -57,7 +56,7 @@ routes.put('/atualizar_login/:id',
 
 routes.post('/atualizar_foto/:id',
   upload.single('foto'),
-  authMidlewareWithFile,
+  authMiddleware,
   ClienteController.atualizarFoto
 )
 
