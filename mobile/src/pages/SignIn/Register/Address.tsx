@@ -79,29 +79,25 @@ export default function Address() {
     try {
       const schema = Yup.object().shape({
         cidade_id: Yup.string().required('O campo cidade é obrigatório!'),
-        bairro: Yup.string().strict(true)
-          .trim('Não são permitidos espaços no começo ou no fim!')
+        bairro: Yup.string()
           .matches(regexLetras, 'O campo bairro só aceita letras!')
           .min(3, 'No mínimo 3 caracteres!')
           .max(90, 'No máximo 90 caracteres!')
           .required('O campo bairro é obrigatório!'),
-        logradouro: Yup.string().strict(true)
-          .trim('Não são permitidos espaços no começo ou no fim!')
+        logradouro: Yup.string()
           .matches(regexLetras, 'O campo logradouro só aceita letras!')
           .min(5, 'No mínimo 5 caracteres!')
           .max(90, 'No máximo 90 caracteres!')
           .required('O campo logradouro é obrigatório!'),
-        numero: Yup.string().strict(true)
-          .trim('Não são permitidos espaços no começo ou no fim!')
+        numero: Yup.string()
           .min(1, 'No mínimo 1 caractere!')
           .max(6, 'No máximo 6 caracteres!')
           .required('O campo número é obrigatório!'),
-        complemento: Yup.string().optional().strict(true)
+        complemento: Yup.string().optional()
           .matches(/.{5,}/, {
             excludeEmptyString: true,
             message: 'No mínimo 5 caracteres!'
           })
-          .trim('Não são permitidos espaços no começo ou no fim!')
           .max(90, 'No máximo 90 caracteres!'),
         cep: Yup.string()
           .min(8, 'No mínimo 8 caracteres!')
@@ -114,6 +110,10 @@ export default function Address() {
       })
 
       formRef.current?.setErrors({})
+
+      bairro = bairro.trim()
+      logradouro = logradouro.trim()
+      complemento = complemento.trim()
 
       handleNavigateToLoginData({
         foto, nome, cpf, telefone, celular, sexo_id
