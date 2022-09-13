@@ -49,8 +49,7 @@ export default function PersonalData() {
     try {
       const schema = Yup.object().shape({
         foto: Yup.string().required('O campo foto é obrigatório.'),
-        nome: Yup.string().strict(true)
-          .trim('Não são permitidos espaços no começo ou no fim!')
+        nome: Yup.string()
           .matches(regexLetras, 'O campo nome completo só aceita letras!')
           .min(5, 'No mínimo 5 caracteres!')
           .max(90, 'No máximo 90 caracteres!')
@@ -76,6 +75,8 @@ export default function PersonalData() {
       })
 
       formRef.current?.setErrors({})
+
+      nome = nome.trim()
 
       handleNavigateToAddress({ foto, nome, cpf, telefone, celular, sexo_id })
     } catch (err) {
