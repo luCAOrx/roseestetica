@@ -8,7 +8,7 @@ type Response<T> = [
 ]
 
 function usePersistedState<T>(key: string, initialState: T): Response<T> {
-  const [state, setState] = useState<any>(() => { })
+  const [state, setState] = useState<any>(() => {})
 
   useEffect(() => {
     async function loadStoragedValue() {
@@ -24,7 +24,7 @@ function usePersistedState<T>(key: string, initialState: T): Response<T> {
     loadStoragedValue()
   }, [key])
 
-  function setPersistedState(value: {}) {
+  function setPersistedState(value: any) {
     SecureStore.setItemAsync(key, JSON.stringify(value))
 
     setState(value)
