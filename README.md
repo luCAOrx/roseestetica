@@ -39,4 +39,4 @@ Rose Estética é um simples projeto de agentamentos de procedimentos de estéti
 
 ## :memo: Licença
 
-Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
+Esse projeto está sob a licença Expat. Veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
