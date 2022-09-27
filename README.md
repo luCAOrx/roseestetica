@@ -5,6 +5,7 @@
 <p align="center">
   <a href="#rocket-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-instalação">Instalação</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#memo-licença">Licença</a>
 </p>
 
@@ -36,6 +37,10 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 ## 💻 Projeto
 
 Rose Estética é um simples projeto de agentamentos de procedimentos de estética.
+
+## :iphone: Instalação
+
+A versão 1.0.0 está disponível. Veja o arquivo [INSTALAÇÃO](https://github.com/luCAOrx/roseestetica/releases/tag/v1.0.0) para mais detalhes.
 
 ## :memo: Licença
 
